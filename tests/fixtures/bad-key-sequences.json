@@ -1,0 +1,31 @@
+{
+  "wrong modifier order": [
+    "Alt+Ctrl+P",
+    "Ctrl+Super+Alt+L"
+  ],
+  "lowercase key": [
+    "Ctrl+t"
+  ],
+  "plus key alias": [
+    "Ctrl++"
+  ],
+  "platform alias": [
+    "Cmd+T"
+  ],
+  "bad spacing": [
+    "Ctrl+K  Ctrl+S"
+  ],
+  "unsupported function keys": [
+    "F0",
+    "F25"
+  ],
+  "duplicate modifier": [
+    "Ctrl+Ctrl+P"
+  ],
+  "modifier chain without key": [
+    "Ctrl+Alt"
+  ],
+  "unknown key name": [
+    "Ctrl+Pageup"
+  ]
+}

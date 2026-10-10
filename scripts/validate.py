@@ -40,7 +40,7 @@ KEY_NAMES = {
     "NumpadMultiply", "NumpadDivide", "NumpadDecimal", "NumpadEnter", "VolumeUp", "VolumeDown",
     "VolumeMute", "MediaPlayPause", "MediaNext", "MediaPrevious", "MediaStop", "BrightnessUp",
     "BrightnessDown", "MouseLeft", "MouseRight", "MouseMiddle", "MouseBack", "MouseForward", "WheelUp",
-    "WheelDown",
+    "WheelDown", "MicMute", "WheelLeft", "WheelRight",
 }
 MATCH_FIELDS = {"class", "exe", "bundle"}
 INSTALL_KEYS = {"arch", "debian", "fedora", "windows", "macos"}
@@ -664,6 +664,7 @@ def _validate_shortcut_sheet(file: str, sheet: Any, reporter: Reporter) -> None:
 
             if context is None:
                 continue
+            reported_alternative_conflicts: set[tuple[str, tuple[str, ...], tuple[str, ...]]] = set()
             for os_name in OS_NAMES:
                 if os_name in keys:
                     value = keys[os_name]
@@ -677,6 +678,19 @@ def _validate_shortcut_sheet(file: str, sheet: Any, reporter: Reporter) -> None:
                 ]
                 if not parsed_alternatives:
                     continue
+                binding_path = f"{keys_path}/{os_name if os_name in keys else 'default'}"
+                for alternative_index, sequence in enumerate(parsed_alternatives):
+                    for previous in parsed_alternatives[:alternative_index]:
+                        if not _sequences_conflict(sequence, previous):
+                            continue
+                        conflict = (binding_path, previous, sequence)
+                        if conflict not in reported_alternative_conflicts:
+                            reporter.error(
+                                file,
+                                binding_path,
+                                f"alternative bindings conflict with each other in context {context!r} on {os_name}",
+                            )
+                            reported_alternative_conflicts.add(conflict)
                 context_os = (context, os_name)
                 for previous_id, _previous_path, previous_sequences in bindings.get(context_os, []):
                     conflict = any(
@@ -687,7 +701,7 @@ def _validate_shortcut_sheet(file: str, sheet: Any, reporter: Reporter) -> None:
                     if conflict:
                         reporter.error(
                             file,
-                            f"{keys_path}/{os_name if os_name in keys else 'default'}",
+                            binding_path,
                             f"binding conflicts with shortcut {previous_id!r} in context {context!r} on {os_name}",
                         )
                 if shortcut_id is not None:

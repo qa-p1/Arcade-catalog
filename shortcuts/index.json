@@ -2,6 +2,28 @@
   "schema": 1,
   "sheets": [
     {
+      "id": "alacritty",
+      "name": "Alacritty",
+      "file": "shortcuts/alacritty.json",
+      "match": {
+        "linux": {
+          "class": [
+            "Alacritty"
+          ]
+        },
+        "windows": {
+          "exe": [
+            "alacritty.exe"
+          ]
+        },
+        "macos": {
+          "bundle": [
+            "org.alacritty"
+          ]
+        }
+      }
+    },
+    {
       "id": "blender",
       "name": "Blender",
       "file": "shortcuts/blender.json",
@@ -19,6 +41,44 @@
         "macos": {
           "bundle": [
             "org.blenderfoundation.blender"
+          ]
+        }
+      }
+    },
+    {
+      "id": "chromium",
+      "name": "Chromium-family browsers",
+      "file": "shortcuts/chromium.json",
+      "match": {
+        "linux": {
+          "class": [
+            "chromium",
+            "Google-chrome",
+            "google-chrome",
+            "brave-browser",
+            "Brave-browser",
+            "microsoft-edge",
+            "Microsoft-edge",
+            "vivaldi-stable",
+            "Vivaldi-stable"
+          ]
+        },
+        "windows": {
+          "exe": [
+            "chromium.exe",
+            "chrome.exe",
+            "brave.exe",
+            "msedge.exe",
+            "vivaldi.exe"
+          ]
+        },
+        "macos": {
+          "bundle": [
+            "org.chromium.Chromium",
+            "com.google.Chrome",
+            "com.brave.Browser",
+            "com.microsoft.edgemac",
+            "com.vivaldi.Vivaldi"
           ]
         }
       }
@@ -60,6 +120,42 @@
       }
     },
     {
+      "id": "firefox",
+      "name": "Firefox",
+      "file": "shortcuts/firefox.json",
+      "match": {
+        "linux": {
+          "class": [
+            "firefox",
+            "org.mozilla.firefox"
+          ]
+        },
+        "windows": {
+          "exe": [
+            "firefox.exe"
+          ]
+        },
+        "macos": {
+          "bundle": [
+            "org.mozilla.firefox"
+          ]
+        }
+      }
+    },
+    {
+      "id": "foot",
+      "name": "foot",
+      "file": "shortcuts/foot.json",
+      "match": {
+        "linux": {
+          "class": [
+            "foot",
+            "footclient"
+          ]
+        }
+      }
+    },
+    {
       "id": "gimp",
       "name": "GIMP",
       "file": "shortcuts/gimp.json",
@@ -83,6 +179,18 @@
       }
     },
     {
+      "id": "gnome-terminal",
+      "name": "GNOME Terminal",
+      "file": "shortcuts/gnome-terminal.json",
+      "match": {
+        "linux": {
+          "class": [
+            "org.gnome.Terminal"
+          ]
+        }
+      }
+    },
+    {
       "id": "inkscape",
       "name": "Inkscape",
       "file": "shortcuts/inkscape.json",
@@ -101,6 +209,90 @@
         "macos": {
           "bundle": [
             "org.inkscape.Inkscape"
+          ]
+        }
+      }
+    },
+    {
+      "id": "jetbrains",
+      "name": "JetBrains IDEs",
+      "file": "shortcuts/jetbrains.json",
+      "match": {
+        "linux": {
+          "class": [
+            "jetbrains-idea",
+            "jetbrains-pycharm",
+            "jetbrains-webstorm",
+            "jetbrains-clion",
+            "jetbrains-goland",
+            "jetbrains-rustrover",
+            "jetbrains-rider",
+            "jetbrains-datagrip",
+            "jetbrains-phpstorm",
+            "jetbrains-rubymine"
+          ]
+        },
+        "windows": {
+          "exe": [
+            "idea64.exe",
+            "pycharm64.exe",
+            "webstorm64.exe",
+            "clion64.exe",
+            "goland64.exe",
+            "rustrover64.exe",
+            "rider64.exe",
+            "datagrip64.exe",
+            "phpstorm64.exe",
+            "rubymine64.exe"
+          ]
+        },
+        "macos": {
+          "bundle": [
+            "com.jetbrains.IntelliJIdea",
+            "com.jetbrains.PyCharm",
+            "com.jetbrains.WebStorm",
+            "com.jetbrains.CLion",
+            "com.jetbrains.GoLand",
+            "com.jetbrains.RustRover",
+            "com.jetbrains.Rider",
+            "com.jetbrains.DataGrip",
+            "com.jetbrains.PhpStorm",
+            "com.jetbrains.RubyMine"
+          ]
+        }
+      }
+    },
+    {
+      "id": "kitty",
+      "name": "kitty",
+      "file": "shortcuts/kitty.json",
+      "match": {
+        "linux": {
+          "class": [
+            "kitty"
+          ]
+        },
+        "windows": {
+          "exe": [
+            "kitty.exe"
+          ]
+        },
+        "macos": {
+          "bundle": [
+            "net.kovidgoyal.kitty"
+          ]
+        }
+      }
+    },
+    {
+      "id": "konsole",
+      "name": "Konsole",
+      "file": "shortcuts/konsole.json",
+      "match": {
+        "linux": {
+          "class": [
+            "org.kde.konsole",
+            "konsole"
           ]
         }
       }
@@ -140,6 +332,18 @@
       }
     },
     {
+      "id": "macos-system",
+      "name": "macOS system shortcuts",
+      "file": "shortcuts/macos-system.json",
+      "match": {
+        "macos": {
+          "bundle": [
+            "*"
+          ]
+        }
+      }
+    },
+    {
       "id": "mpv",
       "name": "mpv",
       "file": "shortcuts/mpv.json",
@@ -170,6 +374,40 @@
           "class": [
             "nautilus",
             "org.gnome.Nautilus"
+          ]
+        }
+      }
+    },
+    {
+      "id": "obsidian",
+      "name": "Obsidian",
+      "file": "shortcuts/obsidian.json",
+      "match": {
+        "linux": {
+          "class": [
+            "obsidian"
+          ]
+        },
+        "windows": {
+          "exe": [
+            "Obsidian.exe"
+          ]
+        },
+        "macos": {
+          "bundle": [
+            "md.obsidian"
+          ]
+        }
+      }
+    },
+    {
+      "id": "ptyxis",
+      "name": "Ptyxis",
+      "file": "shortcuts/ptyxis.json",
+      "match": {
+        "linux": {
+          "class": [
+            "org.gnome.Ptyxis"
           ]
         }
       }
@@ -216,6 +454,28 @@
         "macos": {
           "bundle": [
             "com.spotify.client"
+          ]
+        }
+      }
+    },
+    {
+      "id": "t3-code",
+      "name": "T3 Code",
+      "file": "shortcuts/t3-code.json",
+      "match": {
+        "linux": {
+          "class": [
+            "com.t3tools.T3Code"
+          ]
+        },
+        "windows": {
+          "exe": [
+            "T3 Code (Alpha).exe"
+          ]
+        },
+        "macos": {
+          "bundle": [
+            "com.t3tools.t3code"
           ]
         }
       }
@@ -299,6 +559,90 @@
         "macos": {
           "bundle": [
             "org.videolan.vlc"
+          ]
+        }
+      }
+    },
+    {
+      "id": "vscode",
+      "name": "Visual Studio Code",
+      "file": "shortcuts/vscode.json",
+      "match": {
+        "linux": {
+          "class": [
+            "code",
+            "code-oss",
+            "codium"
+          ]
+        },
+        "windows": {
+          "exe": [
+            "Code.exe",
+            "Code - OSS.exe",
+            "VSCodium.exe"
+          ]
+        },
+        "macos": {
+          "bundle": [
+            "com.microsoft.VSCode",
+            "com.vscodium",
+            "com.visualstudio.code.oss"
+          ]
+        }
+      }
+    },
+    {
+      "id": "wezterm",
+      "name": "WezTerm",
+      "file": "shortcuts/wezterm.json",
+      "match": {
+        "linux": {
+          "class": [
+            "org.wezfurlong.wezterm"
+          ]
+        },
+        "windows": {
+          "exe": [
+            "wezterm-gui.exe"
+          ]
+        },
+        "macos": {
+          "bundle": [
+            "org.wezfurlong.wezterm"
+          ]
+        }
+      }
+    },
+    {
+      "id": "windows-system",
+      "name": "Windows system shortcuts",
+      "file": "shortcuts/windows-system.json",
+      "match": {
+        "windows": {
+          "exe": [
+            "*"
+          ]
+        }
+      }
+    },
+    {
+      "id": "zed",
+      "name": "Zed",
+      "file": "shortcuts/zed.json",
+      "match": {
+        "linux": {
+          "class": [
+            "dev.zed.Zed"
+          ]
+        },
+        "windows": {
+          "exe": [
+            "zed.exe"
+          ]
+        },
+        "macos": {
+          "bundle": [
+            "dev.zed.Zed"
           ]
         }
       }

@@ -1,0 +1,152 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/qa-p1/Arcade-catalog/main/schema/engines.schema.json",
+  "title": "Arcade engines",
+  "type": "object",
+  "required": [
+    "schema",
+    "engines"
+  ],
+  "properties": {
+    "schema": {
+      "const": 1
+    },
+    "engines": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/engine"
+      }
+    }
+  },
+  "$defs": {
+    "semver": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(-(0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*)(\\.(0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*))*)?(\\+[0-9A-Za-z-]+(\\.[0-9A-Za-z-]+)*)?$"
+    },
+    "engine": {
+      "type": "object",
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "linkDownload": {
+                "const": true
+              }
+            },
+            "required": [
+              "linkDownload"
+            ]
+          },
+          "then": {
+            "properties": {
+              "id": {
+                "const": "tesseract"
+              }
+            }
+          }
+        }
+      ],
+      "required": [
+        "id",
+        "name",
+        "homepage",
+        "detect",
+        "usedBy",
+        "install",
+        "linkDownload"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*$"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "homepage": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://"
+        },
+        "detect": {
+          "type": "object",
+          "required": [
+            "binaries",
+            "versionArgs"
+          ],
+          "properties": {
+            "binaries": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "versionArgs": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "string"
+              }
+            },
+            "minVersion": {
+              "$ref": "#/$defs/semver"
+            }
+          }
+        },
+        "usedBy": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "app",
+              "for"
+            ],
+            "properties": {
+              "app": {
+                "type": "string",
+                "pattern": "^arcade\\.[a-z][a-z0-9-]*$"
+              },
+              "for": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        "install": {
+          "type": "object",
+          "properties": {
+            "arch": {
+              "type": "string",
+              "minLength": 1
+            },
+            "debian": {
+              "type": "string",
+              "minLength": 1
+            },
+            "fedora": {
+              "type": "string",
+              "minLength": 1
+            },
+            "windows": {
+              "type": "string",
+              "minLength": 1
+            },
+            "macos": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "additionalProperties": false
+        },
+        "linkDownload": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

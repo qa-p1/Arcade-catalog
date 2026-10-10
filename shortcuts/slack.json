@@ -28,7 +28,7 @@
   "groups": [
     {
       "title": "Slack basics",
-      "context": "global",
+      "context": "app",
       "shortcuts": [
         {
           "id": "compose-message",

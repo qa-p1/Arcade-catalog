@@ -1,4 +1,307 @@
 {
   "schema": 1,
-  "sheets": []
+  "sheets": [
+    {
+      "id": "blender",
+      "name": "Blender",
+      "file": "shortcuts/blender.json",
+      "match": {
+        "linux": {
+          "class": [
+            "blender"
+          ]
+        },
+        "windows": {
+          "exe": [
+            "blender.exe"
+          ]
+        },
+        "macos": {
+          "bundle": [
+            "org.blenderfoundation.blender"
+          ]
+        }
+      }
+    },
+    {
+      "id": "discord",
+      "name": "Discord",
+      "file": "shortcuts/discord.json",
+      "match": {
+        "linux": {
+          "class": [
+            "discord",
+            "Discord"
+          ]
+        },
+        "windows": {
+          "exe": [
+            "Discord.exe"
+          ]
+        },
+        "macos": {
+          "bundle": [
+            "com.hnc.Discord"
+          ]
+        }
+      }
+    },
+    {
+      "id": "dolphin",
+      "name": "Dolphin",
+      "file": "shortcuts/dolphin.json",
+      "match": {
+        "linux": {
+          "class": [
+            "dolphin",
+            "org.kde.dolphin"
+          ]
+        }
+      }
+    },
+    {
+      "id": "gimp",
+      "name": "GIMP",
+      "file": "shortcuts/gimp.json",
+      "match": {
+        "linux": {
+          "class": [
+            "gimp",
+            "org.gimp.GIMP"
+          ]
+        },
+        "windows": {
+          "exe": [
+            "gimp-3.0.exe"
+          ]
+        },
+        "macos": {
+          "bundle": [
+            "org.gimp.GIMP"
+          ]
+        }
+      }
+    },
+    {
+      "id": "inkscape",
+      "name": "Inkscape",
+      "file": "shortcuts/inkscape.json",
+      "match": {
+        "linux": {
+          "class": [
+            "inkscape",
+            "org.inkscape.Inkscape"
+          ]
+        },
+        "windows": {
+          "exe": [
+            "inkscape.exe"
+          ]
+        },
+        "macos": {
+          "bundle": [
+            "org.inkscape.Inkscape"
+          ]
+        }
+      }
+    },
+    {
+      "id": "libreoffice-calc",
+      "name": "LibreOffice Calc",
+      "file": "shortcuts/libreoffice-calc.json",
+      "match": {
+        "linux": {
+          "class": [
+            "libreoffice-calc"
+          ]
+        },
+        "windows": {
+          "exe": [
+            "scalc.exe"
+          ]
+        }
+      }
+    },
+    {
+      "id": "libreoffice-writer",
+      "name": "LibreOffice Writer",
+      "file": "shortcuts/libreoffice-writer.json",
+      "match": {
+        "linux": {
+          "class": [
+            "libreoffice-writer"
+          ]
+        },
+        "windows": {
+          "exe": [
+            "swriter.exe"
+          ]
+        }
+      }
+    },
+    {
+      "id": "mpv",
+      "name": "mpv",
+      "file": "shortcuts/mpv.json",
+      "match": {
+        "linux": {
+          "class": [
+            "mpv"
+          ]
+        },
+        "windows": {
+          "exe": [
+            "mpv.exe"
+          ]
+        },
+        "macos": {
+          "bundle": [
+            "io.mpv"
+          ]
+        }
+      }
+    },
+    {
+      "id": "nautilus",
+      "name": "GNOME Files",
+      "file": "shortcuts/nautilus.json",
+      "match": {
+        "linux": {
+          "class": [
+            "nautilus",
+            "org.gnome.Nautilus"
+          ]
+        }
+      }
+    },
+    {
+      "id": "slack",
+      "name": "Slack",
+      "file": "shortcuts/slack.json",
+      "match": {
+        "linux": {
+          "class": [
+            "slack",
+            "Slack"
+          ]
+        },
+        "windows": {
+          "exe": [
+            "slack.exe"
+          ]
+        },
+        "macos": {
+          "bundle": [
+            "com.tinyspeck.slackmacgap"
+          ]
+        }
+      }
+    },
+    {
+      "id": "spotify",
+      "name": "Spotify",
+      "file": "shortcuts/spotify.json",
+      "match": {
+        "linux": {
+          "class": [
+            "spotify",
+            "Spotify"
+          ]
+        },
+        "windows": {
+          "exe": [
+            "Spotify.exe"
+          ]
+        },
+        "macos": {
+          "bundle": [
+            "com.spotify.client"
+          ]
+        }
+      }
+    },
+    {
+      "id": "telegram",
+      "name": "Telegram Desktop",
+      "file": "shortcuts/telegram.json",
+      "match": {
+        "linux": {
+          "class": [
+            "org.telegram.desktop",
+            "TelegramDesktop"
+          ]
+        },
+        "windows": {
+          "exe": [
+            "Telegram.exe",
+            "TelegramDesktop.exe"
+          ]
+        },
+        "macos": {
+          "bundle": [
+            "org.telegram.desktop"
+          ]
+        }
+      }
+    },
+    {
+      "id": "thunar",
+      "name": "Thunar",
+      "file": "shortcuts/thunar.json",
+      "match": {
+        "linux": {
+          "class": [
+            "thunar",
+            "Thunar"
+          ]
+        }
+      }
+    },
+    {
+      "id": "thunderbird",
+      "name": "Thunderbird",
+      "file": "shortcuts/thunderbird.json",
+      "match": {
+        "linux": {
+          "class": [
+            "thunderbird",
+            "org.mozilla.Thunderbird"
+          ]
+        },
+        "windows": {
+          "exe": [
+            "thunderbird.exe"
+          ]
+        },
+        "macos": {
+          "bundle": [
+            "org.mozilla.thunderbird"
+          ]
+        }
+      }
+    },
+    {
+      "id": "vlc",
+      "name": "VLC",
+      "file": "shortcuts/vlc.json",
+      "match": {
+        "linux": {
+          "class": [
+            "vlc",
+            "org.videolan.VLC"
+          ]
+        },
+        "windows": {
+          "exe": [
+            "vlc.exe"
+          ]
+        },
+        "macos": {
+          "bundle": [
+            "org.videolan.vlc"
+          ]
+        }
+      }
+    }
+  ]
 }

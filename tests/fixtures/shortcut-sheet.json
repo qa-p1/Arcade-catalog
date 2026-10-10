@@ -27,7 +27,7 @@
   "groups": [
     {
       "title": "General",
-      "context": "global",
+      "context": "app",
       "shortcuts": [
         {
           "id": "modifier-only",

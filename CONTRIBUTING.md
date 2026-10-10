@@ -43,7 +43,7 @@ application version checked. Match only the platforms and process identifiers
 the official source supports; identifiers are matched case-insensitively.
 
 Use a kebab-case sheet ID that matches the filename. Each shortcut ID must be
-unique in that sheet. Give each group a kebab-case context such as `global`,
+unique in that sheet. Give each group a kebab-case context such as `app`,
 `editor`, or `tabs`. A shortcut title is limited to 80 characters.
 
 Write keys using the shared canonical notation:

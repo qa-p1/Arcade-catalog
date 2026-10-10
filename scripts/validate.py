@@ -21,6 +21,7 @@ PLATFORM_STATUSES = {"verified", "ci", "build-only", "unsupported"}
 CATEGORIES = {"files", "capture", "clipboard", "launcher", "toolbox"}
 APP_ID = re.compile(r"^arcade\.[a-z][a-z0-9-]*$")
 BUNDLE_ID = re.compile(r"^[a-z0-9][a-z0-9-]*$")
+SYSTEM_SHEETS = {"windows-system", "macos-system"}
 SHEET_ID = re.compile(r"^[a-z0-9][a-z0-9-]*$")
 SHORTCUT_ID = re.compile(r"^[a-z0-9][a-z0-9.-]*$")
 SEMVER = re.compile(
@@ -598,6 +599,11 @@ def _validate_shortcut_sheet(file: str, sheet: Any, reporter: Reporter) -> None:
         context = _string_field(group, "context", file, group_path, reporter)
         if context is not None and not BUNDLE_ID.fullmatch(context):
             reporter.error(file, f"{group_path}/context", "context must be lowercase kebab-case")
+        # "global" means system-wide (Arcade apps' own files, OS sheets). An app-wide
+        # context in a third-party sheet is "app", so conflict checks stay scoped.
+        if context == "global" and sheet_id not in SYSTEM_SHEETS:
+            reporter.error(file, f"{group_path}/context",
+                           'context "global" is only for system sheets; use "app" for app-wide shortcuts')
         shortcuts = group.get("shortcuts")
         if not isinstance(shortcuts, list) or not shortcuts:
             reporter.error(file, f"{group_path}/shortcuts", "expected a non-empty array")

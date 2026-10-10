@@ -30,7 +30,7 @@
   "groups": [
     {
       "title": "General",
-      "context": "global",
+      "context": "app",
       "shortcuts": [
         {
           "id": "open-file",

@@ -28,7 +28,7 @@
   "groups": [
     {
       "title": "Application",
-      "context": "global",
+      "context": "app",
       "shortcuts": [
         {
           "id": "close-window",

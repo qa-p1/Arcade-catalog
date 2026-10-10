@@ -94,7 +94,7 @@ def sample_sheet() -> dict[str, Any]:
         "groups": [
             {
                 "title": "General",
-                "context": "global",
+                "context": "app",
                 "shortcuts": [
                     {"id": "open", "title": "Open", "keys": {"default": "Ctrl+K"}}
                 ],
@@ -508,6 +508,13 @@ class ValidatorTests(unittest.TestCase):
         sheet["groups"][0]["shortcuts"][0]["rebindable"] = True
         self.put_sheet(root, sheet)
         self.assert_error(root, "rebindable is not allowed in shortcut sheets")
+
+    def test_global_context_is_only_for_system_sheets(self) -> None:
+        root = self.new_root()
+        sheet = sample_sheet()
+        sheet["groups"][0]["context"] = "global"
+        self.put_sheet(root, sheet)
+        self.assert_error(root, 'context "global" is only for system sheets')
 
     def test_stale_index_is_rejected_and_unknown_fields_warn(self) -> None:
         root = self.new_root()

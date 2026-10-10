@@ -12,7 +12,7 @@
       "icon": "icons/arcade.box.svg",
       "screenshots": [],
       "platforms": {
-        "linux": "ci",
+        "linux": "verified",
         "windows": "ci",
         "macos": "ci"
       },

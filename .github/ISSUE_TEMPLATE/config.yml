@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Contributing to Arcade catalog
+    url: https://github.com/qa-p1/Arcade-catalog/blob/main/CONTRIBUTING.md
+    about: Read how to propose apps and shortcut sheets and run the checks.

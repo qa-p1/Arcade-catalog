@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/qa-p1/Arcade-catalog/main/schema/shortcuts-index.schema.json",
+  "title": "Arcade shortcut sheet index",
+  "type": "object",
+  "required": [
+    "schema",
+    "sheets"
+  ],
+  "properties": {
+    "schema": {
+      "const": 1
+    },
+    "sheets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "file",
+          "match"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]*$"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "file": {
+            "type": "string",
+            "pattern": "^shortcuts/[a-z0-9][a-z0-9-]*\\.json$"
+          },
+          "match": {
+            "$ref": "shortcut-sheet.schema.json#/$defs/match"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,228 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/qa-p1/Arcade-catalog/main/schema/catalog.schema.json",
+  "title": "Arcade catalog",
+  "type": "object",
+  "required": [
+    "schema",
+    "updated",
+    "apps",
+    "tools",
+    "bundles"
+  ],
+  "properties": {
+    "schema": {
+      "const": 1
+    },
+    "updated": {
+      "type": "string",
+      "format": "date",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+    },
+    "apps": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/app"
+      }
+    },
+    "tools": {
+      "$ref": "#/$defs/tools"
+    },
+    "bundles": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/bundle"
+      }
+    }
+  },
+  "$defs": {
+    "semver": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(-(0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*)(\\.(0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*))*)?(\\+[0-9A-Za-z-]+(\\.[0-9A-Za-z-]+)*)?$"
+    },
+    "repo": {
+      "type": "string",
+      "pattern": "^qa-p1/[^/?#]+$"
+    },
+    "icon": {
+      "type": "string",
+      "pattern": "^icons/[a-z0-9][a-z0-9.-]*\\.(svg|png)$"
+    },
+    "app": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "repo",
+        "pitch",
+        "description",
+        "category",
+        "icon",
+        "screenshots",
+        "platforms",
+        "linkProtocol",
+        "minTools",
+        "docs",
+        "resident",
+        "homepage"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^arcade\\.[a-z][a-z0-9-]*$"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "repo": {
+          "$ref": "#/$defs/repo"
+        },
+        "pitch": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 60
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "category": {
+          "enum": [
+            "files",
+            "capture",
+            "clipboard",
+            "launcher",
+            "toolbox"
+          ]
+        },
+        "icon": {
+          "$ref": "#/$defs/icon"
+        },
+        "screenshots": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uri",
+            "pattern": "^https://(raw\\.githubusercontent\\.com|github\\.com)(/|$)"
+          }
+        },
+        "platforms": {
+          "type": "object",
+          "required": [
+            "linux",
+            "windows",
+            "macos"
+          ],
+          "properties": {
+            "linux": {
+              "$ref": "#/$defs/platformStatus"
+            },
+            "windows": {
+              "$ref": "#/$defs/platformStatus"
+            },
+            "macos": {
+              "$ref": "#/$defs/platformStatus"
+            }
+          },
+          "additionalProperties": false
+        },
+        "linkProtocol": {
+          "const": [
+            1
+          ]
+        },
+        "minTools": {
+          "$ref": "#/$defs/semver"
+        },
+        "docs": {
+          "type": "string",
+          "minLength": 1
+        },
+        "resident": {
+          "type": "boolean"
+        },
+        "homepage": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://github\\.com(/|$)"
+        }
+      }
+    },
+    "platformStatus": {
+      "enum": [
+        "verified",
+        "ci",
+        "build-only",
+        "unsupported"
+      ]
+    },
+    "tools": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "repo",
+        "minTools",
+        "icon"
+      ],
+      "properties": {
+        "id": {
+          "const": "arcade.tools"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "repo": {
+          "$ref": "#/$defs/repo"
+        },
+        "minTools": {
+          "$ref": "#/$defs/semver"
+        },
+        "icon": {
+          "$ref": "#/$defs/icon"
+        }
+      }
+    },
+    "bundle": {
+      "type": "object",
+      "required": [
+        "id",
+        "title",
+        "description",
+        "apps"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9-]*$"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "apps": {
+          "oneOf": [
+            {
+              "const": "*"
+            },
+            {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "pattern": "^arcade\\.[a-z][a-z0-9-]*$"
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}

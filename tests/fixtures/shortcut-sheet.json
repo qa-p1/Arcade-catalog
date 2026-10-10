@@ -1,0 +1,91 @@
+{
+  "schema": 1,
+  "id": "sample",
+  "name": "Sample App",
+  "checkedVersion": "2.4",
+  "sources": [
+    "https://example.org/help/keyboard-shortcuts"
+  ],
+  "match": {
+    "linux": {
+      "class": [
+        "sample-app",
+        "org.example.sample"
+      ]
+    },
+    "windows": {
+      "exe": [
+        "sample.exe"
+      ]
+    },
+    "macos": {
+      "bundle": [
+        "org.example.sample"
+      ]
+    }
+  },
+  "groups": [
+    {
+      "title": "General",
+      "context": "app",
+      "shortcuts": [
+        {
+          "id": "modifier-only",
+          "title": "Modifier-only trigger",
+          "keys": {
+            "default": "Super"
+          }
+        },
+        {
+          "id": "settings-sequence",
+          "title": "Open settings",
+          "keys": {
+            "default": "Ctrl+K Ctrl+S",
+            "macos": "Super+K Super+S"
+          }
+        },
+        {
+          "id": "shifted-equal",
+          "title": "Type a shifted symbol",
+          "keys": {
+            "default": "Ctrl+Shift+Equal"
+          }
+        },
+        {
+          "id": "hardware-code",
+          "title": "Use a hardware code",
+          "keys": {
+            "linux": "Ctrl+Code123"
+          }
+        },
+        {
+          "id": "reload",
+          "title": "Reload",
+          "keys": {
+            "default": [
+              "F5",
+              "Ctrl+R"
+            ],
+            "macos": "Super+R"
+          }
+        }
+      ]
+    },
+    {
+      "title": "Tabs",
+      "context": "tabs",
+      "shortcuts": [
+        {
+          "id": "new-tab",
+          "title": "Open a new tab",
+          "keys": {
+            "default": "Ctrl+T",
+            "linux": null,
+            "macos": "Super+T"
+          },
+          "description": "This fixture keeps the operating-system override explicit."
+        }
+      ]
+    }
+  ]
+}

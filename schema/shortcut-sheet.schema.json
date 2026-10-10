@@ -1,0 +1,300 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/qa-p1/Arcade-catalog/main/schema/shortcut-sheet.schema.json",
+  "title": "Arcade shortcut sheet",
+  "type": "object",
+  "required": [
+    "schema",
+    "id",
+    "name",
+    "checkedVersion",
+    "sources",
+    "match",
+    "groups"
+  ],
+  "properties": {
+    "schema": {
+      "const": 1
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*$"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "checkedVersion": {
+      "type": "string",
+      "minLength": 1
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "format": "uri",
+        "pattern": "^https://"
+      }
+    },
+    "match": {
+      "$ref": "#/$defs/match"
+    },
+    "groups": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/group"
+      }
+    }
+  },
+  "not": {
+    "required": [
+      "rebindable"
+    ]
+  },
+  "$defs": {
+    "match": {
+      "type": "object",
+      "properties": {
+        "linux": {
+          "$ref": "#/$defs/matchOs"
+        },
+        "windows": {
+          "$ref": "#/$defs/matchOs"
+        },
+        "macos": {
+          "$ref": "#/$defs/matchOs"
+        }
+      },
+      "anyOf": [
+        {
+          "required": [
+            "linux"
+          ]
+        },
+        {
+          "required": [
+            "windows"
+          ]
+        },
+        {
+          "required": [
+            "macos"
+          ]
+        }
+      ]
+    },
+    "matchOs": {
+      "type": "object",
+      "properties": {
+        "class": {
+          "$ref": "#/$defs/nonEmptyStrings"
+        },
+        "exe": {
+          "$ref": "#/$defs/nonEmptyStrings"
+        },
+        "bundle": {
+          "$ref": "#/$defs/nonEmptyStrings"
+        }
+      },
+      "anyOf": [
+        {
+          "required": [
+            "class"
+          ]
+        },
+        {
+          "required": [
+            "exe"
+          ]
+        },
+        {
+          "required": [
+            "bundle"
+          ]
+        }
+      ]
+    },
+    "nonEmptyStrings": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "group": {
+      "type": "object",
+      "required": [
+        "title",
+        "context",
+        "shortcuts"
+      ],
+      "properties": {
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "context": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9-]*$"
+        },
+        "shortcuts": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/shortcut"
+          }
+        }
+      },
+      "not": {
+        "required": [
+          "rebindable"
+        ]
+      }
+    },
+    "shortcut": {
+      "type": "object",
+      "required": [
+        "id",
+        "title",
+        "keys"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9.-]*$"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "keys": {
+          "$ref": "#/$defs/keys"
+        },
+        "description": {
+          "type": "string"
+        }
+      },
+      "not": {
+        "required": [
+          "rebindable"
+        ]
+      }
+    },
+    "keys": {
+      "type": "object",
+      "properties": {
+        "default": {
+          "$ref": "#/$defs/binding"
+        },
+        "linux": {
+          "$ref": "#/$defs/binding"
+        },
+        "windows": {
+          "$ref": "#/$defs/binding"
+        },
+        "macos": {
+          "$ref": "#/$defs/binding"
+        }
+      },
+      "anyOf": [
+        {
+          "required": [
+            "default"
+          ]
+        },
+        {
+          "required": [
+            "linux"
+          ]
+        },
+        {
+          "required": [
+            "windows"
+          ]
+        },
+        {
+          "required": [
+            "macos"
+          ]
+        }
+      ],
+      "allOf": [
+        {
+          "anyOf": [
+            {
+              "required": [
+                "default"
+              ],
+              "properties": {
+                "default": {
+                  "not": {
+                    "type": "null"
+                  }
+                }
+              }
+            },
+            {
+              "required": [
+                "linux"
+              ],
+              "properties": {
+                "linux": {
+                  "not": {
+                    "type": "null"
+                  }
+                }
+              }
+            },
+            {
+              "required": [
+                "windows"
+              ],
+              "properties": {
+                "windows": {
+                  "not": {
+                    "type": "null"
+                  }
+                }
+              }
+            },
+            {
+              "required": [
+                "macos"
+              ],
+              "properties": {
+                "macos": {
+                  "not": {
+                    "type": "null"
+                  }
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "binding": {
+      "oneOf": [
+        {
+          "type": "string",
+          "pattern": "^(?:(?:(?:Ctrl\\+)?(?:Alt\\+)?(?:Shift\\+)?(?:Super\\+)?(?:[A-Z]|[0-9]|F(?:[1-9]|1[0-9]|2[0-4])|Space|Enter|Tab|Escape|Backspace|Delete|Insert|Home|End|PageUp|PageDown|Up|Down|Left|Right|Minus|Equal|BracketLeft|BracketRight|Backslash|Semicolon|Quote|Backquote|Comma|Period|Slash|Print|Pause|ScrollLock|CapsLock|NumLock|Menu|Numpad[0-9]|NumpadAdd|NumpadSubtract|NumpadMultiply|NumpadDivide|NumpadDecimal|NumpadEnter|VolumeUp|VolumeDown|VolumeMute|MediaPlayPause|MediaNext|MediaPrevious|MediaStop|BrightnessUp|BrightnessDown|MouseLeft|MouseRight|MouseMiddle|MouseBack|MouseForward|WheelUp|WheelDown|Code[0-9]+)|Ctrl|Alt|Shift|Super)(?: (?:(?:Ctrl\\+)?(?:Alt\\+)?(?:Shift\\+)?(?:Super\\+)?(?:[A-Z]|[0-9]|F(?:[1-9]|1[0-9]|2[0-4])|Space|Enter|Tab|Escape|Backspace|Delete|Insert|Home|End|PageUp|PageDown|Up|Down|Left|Right|Minus|Equal|BracketLeft|BracketRight|Backslash|Semicolon|Quote|Backquote|Comma|Period|Slash|Print|Pause|ScrollLock|CapsLock|NumLock|Menu|Numpad[0-9]|NumpadAdd|NumpadSubtract|NumpadMultiply|NumpadDivide|NumpadDecimal|NumpadEnter|VolumeUp|VolumeDown|VolumeMute|MediaPlayPause|MediaNext|MediaPrevious|MediaStop|BrightnessUp|BrightnessDown|MouseLeft|MouseRight|MouseMiddle|MouseBack|MouseForward|WheelUp|WheelDown|Code[0-9]+)|Ctrl|Alt|Shift|Super))*)$"
+        },
+        {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "pattern": "^(?:(?:(?:Ctrl\\+)?(?:Alt\\+)?(?:Shift\\+)?(?:Super\\+)?(?:[A-Z]|[0-9]|F(?:[1-9]|1[0-9]|2[0-4])|Space|Enter|Tab|Escape|Backspace|Delete|Insert|Home|End|PageUp|PageDown|Up|Down|Left|Right|Minus|Equal|BracketLeft|BracketRight|Backslash|Semicolon|Quote|Backquote|Comma|Period|Slash|Print|Pause|ScrollLock|CapsLock|NumLock|Menu|Numpad[0-9]|NumpadAdd|NumpadSubtract|NumpadMultiply|NumpadDivide|NumpadDecimal|NumpadEnter|VolumeUp|VolumeDown|VolumeMute|MediaPlayPause|MediaNext|MediaPrevious|MediaStop|BrightnessUp|BrightnessDown|MouseLeft|MouseRight|MouseMiddle|MouseBack|MouseForward|WheelUp|WheelDown|Code[0-9]+)|Ctrl|Alt|Shift|Super)(?: (?:(?:Ctrl\\+)?(?:Alt\\+)?(?:Shift\\+)?(?:Super\\+)?(?:[A-Z]|[0-9]|F(?:[1-9]|1[0-9]|2[0-4])|Space|Enter|Tab|Escape|Backspace|Delete|Insert|Home|End|PageUp|PageDown|Up|Down|Left|Right|Minus|Equal|BracketLeft|BracketRight|Backslash|Semicolon|Quote|Backquote|Comma|Period|Slash|Print|Pause|ScrollLock|CapsLock|NumLock|Menu|Numpad[0-9]|NumpadAdd|NumpadSubtract|NumpadMultiply|NumpadDivide|NumpadDecimal|NumpadEnter|VolumeUp|VolumeDown|VolumeMute|MediaPlayPause|MediaNext|MediaPrevious|MediaStop|BrightnessUp|BrightnessDown|MouseLeft|MouseRight|MouseMiddle|MouseBack|MouseForward|WheelUp|WheelDown|Code[0-9]+)|Ctrl|Alt|Shift|Super))*)$"
+          }
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  }
+}

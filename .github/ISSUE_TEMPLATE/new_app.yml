@@ -1,0 +1,39 @@
+name: Propose a new Arcade app
+description: Suggest an app for the Arcade catalog.
+title: "[New app]: "
+body:
+  - type: input
+    id: app-name
+    attributes:
+      label: App name
+      description: Use the app's public display name.
+      placeholder: Arcade Example
+    validations:
+      required: true
+  - type: input
+    id: repo
+    attributes:
+      label: GitHub repository
+      description: Use the exact qa-p1/<repository> name, for example qa-p1/Arcade-example.
+      placeholder: qa-p1/Arcade-example
+    validations:
+      required: true
+  - type: textarea
+    id: pitch
+    attributes:
+      label: Short pitch
+      description: One sentence, 60 characters or fewer, describing what the app does.
+      placeholder: A short user-facing summary.
+    validations:
+      required: true
+  - type: textarea
+    id: platforms
+    attributes:
+      label: Platform support
+      description: List Linux, Windows, and macOS status as verified, ci, build-only, or unsupported.
+      placeholder: |-
+        Linux: …
+        Windows: …
+        macOS: …
+    validations:
+      required: true

@@ -1,0 +1,33 @@
+name: Submit a shortcut sheet
+description: Propose a shortcut sheet sourced from the application's official documentation.
+title: "[Shortcut sheet]: "
+body:
+  - type: input
+    id: app
+    attributes:
+      label: Application
+      description: Name and version of the desktop application.
+      placeholder: Application name and version
+    validations:
+      required: true
+  - type: input
+    id: official-source
+    attributes:
+      label: Official source URL
+      description: Link to the vendor's official help page, manual, or shipped default keymap (HTTPS).
+      placeholder: https://…
+    validations:
+      required: true
+  - type: input
+    id: version-checked
+    attributes:
+      label: Version checked
+      description: Exact application version whose default bindings you checked.
+      placeholder: e.g. 1.2.3
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes
+      description: Mention the proposed sheet ID and any useful context.

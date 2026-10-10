@@ -274,7 +274,7 @@
         }
       ],
       "install": {
-        "arch": "sudo pacman -S pandoc",
+        "arch": "sudo pacman -S haskell-pandoc",
         "debian": "sudo apt install pandoc",
         "fedora": "sudo dnf install pandoc",
         "macos": "brew install pandoc"

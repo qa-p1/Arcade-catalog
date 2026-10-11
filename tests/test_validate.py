@@ -409,6 +409,9 @@ class ValidatorTests(unittest.TestCase):
             "Numpad9",
             "MouseLeft",
             "WheelDown",
+            "MicMute",
+            "WheelLeft",
+            "WheelRight",
             "Code123",
         ]
         for value in valid:
@@ -429,7 +432,10 @@ class ValidatorTests(unittest.TestCase):
             if branch.get("type") == "string"
         )
         notation = re.compile(pattern)
-        for value in ("Ctrl+Shift+P", "Super+Slash", "Ctrl+K Ctrl+S", "Super", "Code42", "F24"):
+        for value in (
+            "Ctrl+Shift+P", "Super+Slash", "Ctrl+K Ctrl+S", "Super", "Code42", "F24",
+            "MicMute", "WheelLeft", "WheelRight",
+        ):
             with self.subTest(valid=value):
                 self.assertIsNotNone(parse_key_sequence(value))
                 self.assertIsNotNone(notation.fullmatch(value))
@@ -453,6 +459,15 @@ class ValidatorTests(unittest.TestCase):
         self.put_sheet(root, sheet)
         self.assert_error(root, "at least one binding must be non-null")
 
+    def test_new_canonical_key_names_validate_in_a_sheet(self) -> None:
+        root = self.new_root()
+        sheet = sample_sheet()
+        sheet["groups"][0]["shortcuts"][0]["keys"]["default"] = [
+            "MicMute", "WheelLeft", "WheelRight"
+        ]
+        self.put_sheet(root, sheet)
+        self.assertEqual(self.errors_for(root), [])
+
     def test_equal_alternative_and_prefix_conflicts_are_reported_by_context_and_os(self) -> None:
         for second in ("Ctrl+K", "Ctrl+K Ctrl+S"):
             with self.subTest(second=second):
@@ -472,6 +487,18 @@ class ValidatorTests(unittest.TestCase):
         )
         self.put_sheet(root, sheet)
         self.assert_error(root, "binding conflicts with shortcut 'open'")
+
+    def test_equal_and_prefix_alternatives_within_one_shortcut_are_rejected(self) -> None:
+        for alternatives in (
+            ["Ctrl+K", "Ctrl+K"],
+            ["Ctrl+K", "Ctrl+K Ctrl+S"],
+        ):
+            with self.subTest(alternatives=alternatives):
+                root = self.new_root()
+                sheet = sample_sheet()
+                sheet["groups"][0]["shortcuts"][0]["keys"]["default"] = alternatives
+                self.put_sheet(root, sheet)
+                self.assert_error(root, "alternative bindings conflict with each other")
 
     def test_os_overrides_and_contexts_are_applied_before_conflict_checks(self) -> None:
         root = self.new_root()

@@ -41,6 +41,13 @@ written `Ctrl`, `Alt`, `Shift`, and `Super` in that order; macOS uses `Super` fo
 Command. See [CONTRIBUTING.md](CONTRIBUTING.md) for the notation, sheet rules,
 and review checklist.
 
+## Docs
+
+Start with [What Arcade is](docs/index.md). The [FAQ](docs/faq.md) and
+[glossary](docs/glossary.md) answer common questions; the other
+[ecosystem guides](docs/index.md#learn) cover setup, connections, shortcuts,
+privacy, the tray, and uninstalling.
+
 ## Licensing
 
 The Python scripts, JSON Schemas, tests, and their fixtures are MIT licensed in

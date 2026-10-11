@@ -1,0 +1,30 @@
+name: Report incorrect catalog data
+description: Report a wrong shortcut or other incorrect catalog entry.
+title: "[Catalog data]: "
+labels:
+  - bug
+body:
+  - type: input
+    id: file
+    attributes:
+      label: Catalog file
+      description: Path to the file containing the incorrect data.
+      placeholder: shortcuts/example.json
+    validations:
+      required: true
+  - type: textarea
+    id: what-is-wrong
+    attributes:
+      label: What is wrong?
+      description: Identify the incorrect value and what needs correcting.
+      placeholder: Describe the wrong shortcut or catalog data.
+    validations:
+      required: true
+  - type: input
+    id: official-source
+    attributes:
+      label: Official source URL
+      description: Paste the HTTPS URL to the official documentation or default keymap that confirms the correction.
+      placeholder: https://…
+    validations:
+      required: true

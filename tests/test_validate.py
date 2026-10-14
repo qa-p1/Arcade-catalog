@@ -104,6 +104,18 @@ def sample_sheet() -> dict[str, Any]:
 
 
 class ValidatorTests(unittest.TestCase):
+    def test_published_repository_names_match_github(self) -> None:
+        catalog = json.loads((REPO / "catalog.json").read_text(encoding="utf-8"))
+        expected = {
+            "arcade.find": "Arcade-Find", "arcade.look": "Arcade-look",
+            "arcade.lens": "Arcade-lens", "arcade.box": "Arcade-box",
+            "arcade.clipboard": "Arcade-clipboard", "arcade.shelf": "Arcade-Shelf",
+            "arcade.wheel": "Arcade-wheel", "arcade.tools": "Arcade-tools",
+        }
+        for app in catalog["apps"] + [catalog["tools"]]:
+            with self.subTest(app=app["id"]):
+                self.assertEqual(app["repo"], "qa-p1/" + expected[app["id"]])
+
     def new_root(self) -> Path:
         temporary = tempfile.TemporaryDirectory()
         self.addCleanup(temporary.cleanup)

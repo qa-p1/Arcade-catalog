@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated": "2026-10-11",
+  "updated": "2026-10-14",
   "apps": [
     {
       "id": "arcade.box",
@@ -93,13 +93,13 @@
     {
       "id": "arcade.look",
       "name": "Arcade Look",
-      "repo": "qa-p1/arcade-look",
+      "repo": "qa-p1/Arcade-look",
       "pitch": "Preview files without opening another app",
       "description": "Arcade Look shows a quick preview of documents, media, images, folders, archives, and other files. Press Space on a selected file to see it, then open or act on it if needed.",
       "category": "files",
       "icon": "icons/arcade.look.svg",
       "screenshots": [
-        "https://raw.githubusercontent.com/qa-p1/arcade-look/main/docs/hero.webp"
+        "https://raw.githubusercontent.com/qa-p1/Arcade-look/main/docs/hero.webp"
       ],
       "platforms": {
         "linux": "verified",
@@ -112,7 +112,7 @@
       "minTools": "0.2.0",
       "docs": "README.md",
       "resident": true,
-      "homepage": "https://github.com/qa-p1/arcade-look"
+      "homepage": "https://github.com/qa-p1/Arcade-look"
     },
     {
       "id": "arcade.shelf",

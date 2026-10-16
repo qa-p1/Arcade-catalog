@@ -7,6 +7,26 @@ machine any more: all Arcade apps were uninstalled and cleaned up there.
 Read this file fully before you touch anything. Then read `dev/ARCADE_TOOLS_PLAN.md` (§19 checklist,
 §20 bugs and lessons, §21 completion report) in this repository (`qa-p1/Arcade-catalog`).
 
+## 0. If you run in a claude.ai/code cloud session (read first)
+
+- **Attach all 10 repositories to the session**, or use a Claude project. The GitHub proxy only serves
+  repositories attached to the session; anything else returns 403 `GitHub access to … is not enabled for this
+  session`. The Claude GitHub App must be installed on each repo (or connect with `/web-setup`).
+- **GraphQL is blocked.** `gh pr …` and `gh issue …` fail with `GitHub GraphQL is not available from Claude
+  Code sessions`. Use the REST API through `gh api` instead:
+  - PR info: `gh api repos/qa-p1/<repo>/pulls/<n>`
+  - Create a PR: `gh api repos/qa-p1/<repo>/pulls -f title='…' -f head=<branch> -f base=main -f body='…'`
+  - Checks for a commit: `gh api repos/qa-p1/<repo>/commits/<sha>/check-runs --jq '.check_runs[]|"\(.name): \(.status) \(.conclusion)"'`
+  - Merge: `gh api -X PUT repos/qa-p1/<repo>/pulls/<n>/merge -f merge_method=merge`
+  - Re-run failed jobs: `gh api -X POST repos/qa-p1/<repo>/actions/runs/<run>/rerun-failed-jobs`
+  - Dispatch a workflow: `gh api -X POST repos/qa-p1/<repo>/actions/workflows/<file>.yml/dispatches -f ref=<ref> -f 'inputs[tag]=v0.2.1' -f 'inputs[sha]=<sha>'`
+  - `gh run list/view/rerun/cancel`, `gh workflow run` and `gh api` work through REST.
+- **Tags can't be pushed** through the proxy (branch pushes only). That's fine: Tools and Link tag through
+  their `tag.yml` workflows.
+- **Network:** "Trusted" access covers GitHub and the package registries. Switch to Full only if a needed
+  download is blocked.
+- **No desktop:** the cloud VM has no real desktop, so section 3 G (real-desktop checks) can't be done there.
+
 ## 1. The goal
 
 Arcade is a suite of 7 independent desktop apps plus a hub app (Arcade Tools). The goals, from the owner:

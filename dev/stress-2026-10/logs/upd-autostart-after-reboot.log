@@ -1,0 +1,5 @@
+autostart: "/home/upd/Applications/Arcade/Arcade-Find.AppImage" "--background"
+autostart: "/home/upd/Downloads/ArcadeLens-0.1.1-linux-x86_64.AppImage" --background
+autostart: "/home/upd/Applications/Arcade/Arcade-Look.AppImage" "--service"
+
+(arcade-look:18224): dbind-WARNING **: 17:17:35.458: AT-SPI: Error retrieving accessibility bus address: org.freedesktop.DBus.Error.ServiceUnknown: The name org.a11y.Bus was not provided by any .service files

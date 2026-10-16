@@ -1,0 +1,17 @@
+{"time":1792169361,"app":"arcade.tools","from":"0.2.0","to":"0.2.1","result":"success","reason":null}
+{"time":1792169571,"app":"arcade.shelf","from":null,"to":null,"result":"failed","reason":"unmanaged: Let Arcade Tools manage this installation first."}
+{"time":1792170043,"app":"arcade.find","from":"0.3.0","to":"0.3.1","result":"success","reason":null}
+{"time":1792170086,"app":"arcade.find","from":"0.3.1","to":"0.3.0","result":"rolled_back","reason":"User requested rollback."}
+{"time":1792170198,"app":"arcade.box","from":"0.2.0","to":"0.2.1","result":"failed","reason":"busy: Arcade Box is busy. Try again when its current job finishes."}
+{"time":1792170248,"app":"arcade.box","from":"0.2.0","to":"0.2.1","result":"success","reason":null}
+{"time":1792170284,"app":"arcade.look","from":"0.2.0","to":"0.2.1","result":"success","reason":null}
+{"time":1792170311,"app":"arcade.wheel","from":"0.3.0","to":"0.3.1+build.56","result":"success","reason":null}
+{"time":1792170428,"app":"arcade.wheel","from":"0.3.1+build.56","to":"0.3.0","result":"rolled_back","reason":"User requested rollback."}
+{"time":1792170602,"app":"arcade.box","from":"0.2.1","to":"0.2.0","result":"rolled_back","reason":"User requested rollback."}
+{"time":1792170626,"app":"arcade.look","from":"0.2.1","to":"0.2.0","result":"rolled_back","reason":"User requested rollback."}
+{"time":1792170742,"app":"arcade.tools","from":"0.2.1","to":"0.2.0","result":"rolled_back","reason":"User requested rollback."}
+{"time":1792170781,"app":"arcade.box","from":"0.2.0","to":"0.2.1","result":"success","reason":null}
+{"time":1792170792,"app":"arcade.find","from":"0.3.0","to":"0.3.1","result":"success","reason":null}
+{"time":1792170794,"app":"arcade.look","from":"0.2.0","to":"0.2.1","result":"success","reason":null}
+{"time":1792170807,"app":"arcade.wheel","from":"0.3.0","to":"0.3.1+build.56","result":"success","reason":null}
+{"time":1792170823,"app":"arcade.tools","from":"0.2.0","to":"0.2.1","result":"success","reason":null}

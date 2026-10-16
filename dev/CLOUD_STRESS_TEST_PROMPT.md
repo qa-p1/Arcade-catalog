@@ -73,7 +73,7 @@ offers other apps) and `STATUS.md`. Also read Arcade-Link's `NEW_APP_SPEC.md` an
 
   | App | Release |
   |---|---|
-  | Find | `v0.3.0` |
+  | Find | `v0.3.1` |
   | Lens | `v0.2.0` |
   | Look | `v0.2.1` |
   | Box | `v0.2.1` |
@@ -84,9 +84,9 @@ offers other apps) and `STATUS.md`. Also read Arcade-Link's `NEW_APP_SPEC.md` an
 
   For "update" and "rollback" journeys, the previous releases (Find v0.2.1, Lens v0.1.1, Look v0.1.2, Box v0.1.2,
   Shelf v0.1.1, Wheel v0.2.0+build.33, Tools v0.2.0 and v0.1.0) are the "older version". They predate the self-installer, so
-  an update from them is a real-world migration path; test it and report how it behaves. Look v0.2.0, Box v0.2.0
-  and Wheel v0.3.0+build.48 already have the self-installer: use them for an update and rollback through Tools
-  between two self-installing releases. If a release listed
+  an update from them is a real-world migration path; test it and report how it behaves. Find v0.3.0, Look v0.2.0,
+  Box v0.2.0 and Wheel v0.3.0+build.48 already have the self-installer: use them for an update and rollback through
+  Tools between two self-installing releases. If a release listed
   above is missing, say so as a blocker and test that app from its newest successful `main` CI artifact instead.
   Record the exact release or run ID you used for every app.
 - **Known recent fixes to re-verify:**
@@ -107,6 +107,9 @@ offers other apps) and `STATUS.md`. Also read Arcade-Link's `NEW_APP_SPEC.md` an
   - Wheel 0.3.1 bundles the Qt SVG icon engine (`usr/plugins/iconengines/libqsvgicon.so`) and picks up the desktop
     icon theme (qtengine, qt6ct/qt5ct, gsettings, kdeglobals, GTK `settings.ini`). 0.3.0 showed a grey "A" for most
     app icons. Settings is responsive down to 800×560, and the footer shows the real version.
+  - Find 0.3.1 on X11: restoring a Tools backup (or saving Settings) with the shortcut Find already holds keeps it.
+    0.3.0 failed with "Ctrl+Alt+F is already used by another application" and turned the shortcut off. Check the
+    shortcut still opens Find after a restore, and that rebinding to a different chord from Tools still works.
 - **Known open questions:** confirm or refute each one with numbers.
   - Tools idle memory with its window closed (budget 40 MiB). Release 0.2.0 started with `--background` (the
     autostart state) measured one process at RSS 14 MiB / PSS 8 MiB under Xvfb. The earlier 188.6 MiB debug

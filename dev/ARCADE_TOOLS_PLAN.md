@@ -1172,7 +1172,11 @@ Finished the handoff in a cloud session. Each PR below merged after three-OS CI 
 | Arcade-look | #8 (0.2.1) | cec1c7a | [38863633670](https://github.com/qa-p1/Arcade-look/actions/runs/38863633670) | 5c573e5 |
 | Arcade-Find | #5 (ci-speed) | 46ee212 | [38869025513](https://github.com/qa-p1/Arcade-Find/actions/runs/38869025513) | 8024712 |
 | Arcade-Shelf | #6 (ci-speed) | 68fafa3 | [38869027279](https://github.com/qa-p1/Arcade-Shelf/actions/runs/38869027279) | 5cdca7d |
-<!-- SESSION-ROWS -->
+| Arcade-Find | #6 (0.3.1, X11 shortcut) | dbea931 | [38874000031](https://github.com/qa-p1/Arcade-Find/actions/runs/38874000031) | b3d78c3 |
+| Arcade-Link | #5 (e2e harness) | fd0a8bd | CI [38868970011](https://github.com/qa-p1/Arcade-Link/actions/runs/38868970011), Ecosystem e2e [38868969998](https://github.com/qa-p1/Arcade-Link/actions/runs/38868969998) (attempt 2, after Find #6) | e51dc17 |
+| Arcade-lens | #6 (ci-speed) | 36cfa7c | [38871839395](https://github.com/qa-p1/Arcade-lens/actions/runs/38871839395) | 1474574 |
+| Arcade-box | #7 (ci-speed) | e66ea71 | [38871841001](https://github.com/qa-p1/Arcade-box/actions/runs/38871841001) | 629f68d |
+| Arcade-clipboard | #6 (ci-speed) | 94f728a | [38878313451](https://github.com/qa-p1/Arcade-clipboard/actions/runs/38878313451) | 7af1ebf |
 
 **Releases.** For each one, the manifest and `SHA256SUMS.txt` were checked against the GitHub asset digests.
 - [Tools v0.2.1](https://github.com/qa-p1/Arcade-tools/releases/tag/v0.2.1): tag run
@@ -1184,8 +1188,14 @@ Finished the handoff in a cloud session. Each PR below merged after three-OS CI 
   `usr/plugins/iconengines/libqsvgicon.so`.
 - [Look v0.2.1](https://github.com/qa-p1/Arcade-look/releases/tag/v0.2.1), from release run
   [38868935686](https://github.com/qa-p1/Arcade-look/actions/runs/38868935686).
+- [Find v0.3.1](https://github.com/qa-p1/Arcade-Find/releases/tag/v0.3.1): tagged by `tag.yml` on b3d78c3, then CI run
+  [38877544541](https://github.com/qa-p1/Arcade-Find/actions/runs/38877544541) on the tag built, tested and published it.
 - [Box v0.2.1](https://github.com/qa-p1/Arcade-box/releases/tag/v0.2.1) was already published on 2026-10-15.
-<!-- SESSION-RELEASES -->
+- The ci-speed merges (Find, Shelf, Lens, Box, Clipboard) change workflows only. In Lens, Box and Clipboard a merge refreshes
+  the nightly; in Find and Shelf it publishes nothing.
+
+**Link real-fleet e2e on Link #5's head** (attempt 2, with Find b3d78c3): install, shortcuts and trayhost groups green;
+tools-hub 41 passed, 0 failed, 2 skipped (the Tools AppImage checks, below).
 
 **Found and fixed**
 - Wheel's `SettingsLayout` test failed only on Windows CI. The offscreen platform finds no fonts there, and its fallback glyphs

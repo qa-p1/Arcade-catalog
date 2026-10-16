@@ -1,0 +1,6 @@
+3:== group install 12:28:35
+11:FAIL install: arcade_tools_appimage_install_update_repair_uninstall_reexec: arcade.tools exited (0); log:
+20:RESULT install: 7 passed, 1 failed, 0 expected failures (known product bugs), 8 skipped (16 checks)
+21:== group trayhost 12:29:21
+49:RESULT trayhost: 20 passed, 0 failed, 0 expected failures (known product bugs), 7 skipped (27 checks)
+50:== group tools-hub 12:30:31

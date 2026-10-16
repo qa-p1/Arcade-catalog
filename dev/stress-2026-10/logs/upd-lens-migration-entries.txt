@@ -1,0 +1,4 @@
+/home/upd/.config/autostart/arcade-lens.desktop:5:Exec="/home/upd/Downloads/ArcadeLens-0.1.1-linux-x86_64.AppImage" --background
+/home/upd/.local/share/applications/arcade-lens.desktop:6:Exec="/home/upd/Downloads/ArcadeLens-0.1.1-linux-x86_64.AppImage"
+/home/upd/.local/share/applications/arcade-lens.desktop:17:Exec="/home/upd/Downloads/ArcadeLens-0.1.1-linux-x86_64.AppImage" --capture
+/home/upd/.local/share/applications/arcade-lens.desktop:21:Exec="/home/upd/Downloads/ArcadeLens-0.1.1-linux-x86_64.AppImage" --quit

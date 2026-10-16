@@ -1,0 +1,57 @@
+== .local/share/applications
+   app.arcadetools.desktop
+   com.arcadewheel.ArcadeWheel.desktop
+   dev.arcade.clipboard.desktop
+   dev.arcadebox.app.desktop
+== .local/bin
+   arcade-clipboard
+   arcade-desktop
+   arcade-tools
+   arcade-wheel
+== .config/autostart
+   arcade-tools.desktop
+   arcade-tools.desktop.arcade-tools.bak
+== .local/share/arcade/installs
+   arcade.box.json
+   arcade.clipboard.json
+   arcade.tools.json
+   arcade.wheel.json
+== .local/share/arcade/apps
+   arcade.box.json
+   arcade.clipboard.json
+   arcade.tools.json
+   arcade.wheel.json
+== .local/share/arcade-tools
+   arcade.box.json
+   arcade.clipboard.json
+   arcade.find.json
+   arcade.shelf.json
+   arcade.wheel.json
+   updates.json
+== Applications/Arcade
+   .previous
+   Arcade-Box.AppImage
+   Arcade-Clipboard.AppImage
+   Arcade-Tools.AppImage
+   Arcade-Wheel.AppImage
+== Applications/Arcade/.previous
+== icons
+         1 app.arcadetools.png
+         7 com.arcadewheel.ArcadeWheel.png
+         1 com.arcadewheel.ArcadeWheel.svg
+         8 dev.arcade.clipboard.png
+         1 dev.arcade.clipboard.svg
+         1 dev.arcadebox.app.png
+         1 dev.arcadebox.app.svg
+         1 icon-theme.cache
+== data/config dirs
+   .config/Arcade Wheel/
+   .config/arcade-find/
+   .local/share/app.arcadelook/
+   .local/share/app.arcadetools/
+   .local/share/arcade-find/
+   .local/share/arcade-tools/
+   .local/share/arcade/
+   .local/share/dev.arcade.clipboard/
+   .local/share/dev.arcadebox.app/
+   .local/share/qa-p1/

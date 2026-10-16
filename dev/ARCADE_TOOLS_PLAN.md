@@ -1160,3 +1160,65 @@ All local work was pushed:
 - `arcade/ci-speed` branches in Find, Lens, Shelf, Box and Clipboard.
 
 Open work and how to finish it: `dev/HANDOFF.md` in `qa-p1/Arcade-catalog`.
+
+### 2026-10-16 cloud session
+
+Finished the handoff in a cloud session. Each PR below merged after three-OS CI was green on its head.
+
+| Repository | PR | Head | Green run | Merge |
+|---|---|---|---|---|
+| Arcade-tools | #5 (0.2.1) | 11a741b | [38786317711](https://github.com/qa-p1/Arcade-tools/actions/runs/38786317711) | 8b9672f |
+| Arcade-wheel | #9 (0.3.1) | 86f1ed5 | [38864309386](https://github.com/qa-p1/Arcade-wheel/actions/runs/38864309386) | 2918ef1 |
+| Arcade-look | #8 (0.2.1) | cec1c7a | [38863633670](https://github.com/qa-p1/Arcade-look/actions/runs/38863633670) | 5c573e5 |
+| Arcade-Find | #5 (ci-speed) | 46ee212 | [38869025513](https://github.com/qa-p1/Arcade-Find/actions/runs/38869025513) | 8024712 |
+| Arcade-Shelf | #6 (ci-speed) | 68fafa3 | [38869027279](https://github.com/qa-p1/Arcade-Shelf/actions/runs/38869027279) | 5cdca7d |
+| Arcade-Find | #6 (0.3.1, X11 shortcut) | dbea931 | [38874000031](https://github.com/qa-p1/Arcade-Find/actions/runs/38874000031) | b3d78c3 |
+| Arcade-Link | #5 (e2e harness) | fd0a8bd | CI [38868970011](https://github.com/qa-p1/Arcade-Link/actions/runs/38868970011), Ecosystem e2e [38868969998](https://github.com/qa-p1/Arcade-Link/actions/runs/38868969998) (attempt 2, after Find #6) | e51dc17 |
+| Arcade-lens | #6 (ci-speed) | 36cfa7c | [38871839395](https://github.com/qa-p1/Arcade-lens/actions/runs/38871839395) | 1474574 |
+| Arcade-box | #7 (ci-speed) | e66ea71 | [38871841001](https://github.com/qa-p1/Arcade-box/actions/runs/38871841001) | 629f68d |
+| Arcade-clipboard | #6 (ci-speed) | 94f728a | [38878313451](https://github.com/qa-p1/Arcade-clipboard/actions/runs/38878313451) | 7af1ebf |
+
+**Releases.** For each one, the manifest and `SHA256SUMS.txt` were checked against the GitHub asset digests.
+- [Tools v0.2.1](https://github.com/qa-p1/Arcade-tools/releases/tag/v0.2.1): tag run
+  [38866610133](https://github.com/qa-p1/Arcade-tools/actions/runs/38866610133), release run
+  [38866658640](https://github.com/qa-p1/Arcade-tools/actions/runs/38866658640) (channel stable). The extracted AppImage has no
+  `libwayland-client.so.0`.
+- [Wheel v0.3.1+build.56](https://github.com/qa-p1/Arcade-wheel/releases/tag/v0.3.1%2Bbuild.56), from main run
+  [38865436391](https://github.com/qa-p1/Arcade-wheel/actions/runs/38865436391). The AppImage bundles
+  `usr/plugins/iconengines/libqsvgicon.so`.
+- [Look v0.2.1](https://github.com/qa-p1/Arcade-look/releases/tag/v0.2.1), from release run
+  [38868935686](https://github.com/qa-p1/Arcade-look/actions/runs/38868935686).
+- [Find v0.3.1](https://github.com/qa-p1/Arcade-Find/releases/tag/v0.3.1): tagged by `tag.yml` on b3d78c3, then CI run
+  [38877544541](https://github.com/qa-p1/Arcade-Find/actions/runs/38877544541) on the tag built, tested and published it.
+- [Box v0.2.1](https://github.com/qa-p1/Arcade-box/releases/tag/v0.2.1) was already published on 2026-10-15.
+- The ci-speed merges (Find, Shelf, Lens, Box, Clipboard) change workflows only. In Lens, Box and Clipboard a merge refreshes
+  the nightly; in Find and Shelf it publishes nothing.
+
+**Link real-fleet e2e on Link #5's head** (attempt 2, with Find b3d78c3): install, shortcuts and trayhost groups green;
+tools-hub 41 passed, 0 failed, 2 skipped (the Tools AppImage checks, below).
+
+**Found and fixed**
+- Wheel's `SettingsLayout` test failed only on Windows CI. The offscreen platform finds no fonts there, and its fallback glyphs
+  are one em wide, so every label overflowed. The test now sets `QT_QPA_FONTDIR` to the Windows font folder. The app was not
+  affected.
+- Look's WIP branch made `keep_alive()` hold the process whenever Link was enabled, so Look never exited when idle. That was
+  removed: a peer that finds Look stopped launches it (Link SPEC §7).
+- Find on X11: restoring a Tools backup, or saving Settings, with the shortcut Find already holds failed with "Ctrl+Alt+F
+  is already used by another application" and turned the shortcut off. global-hotkey drops an X11 grab only when the old
+  manager's connection closes, which is after the new manager's grab attempt. Find now keeps the registration it already holds.
+  Reproduced in Xvfb against main and the fix. Found by Link's real-fleet backup check.
+- Link e2e harness: `Session.kill()` and `stop_apps()` now wait for the whole process group. The AppImage runtime (the group
+  leader) exits before the app it runs, so the next profile could start while the old app still held its shortcut grab
+  and bus name.
+
+**Known gap.** Link's real-fleet e2e always skips its Tools AppImage checks (manual adoption, self-update). Tools uploads
+`tools-installer` artifacts only from `release.yml` on a tag, never from main CI. Closing the gap needs one of two changes:
+main CI uploads the installer artifact, or the fleet takes Tools from the latest release.
+
+**Still open: the §17.3 real-desktop checks on the owner's machine**
+- The Tools tray host: one icon with a submenu per app, and the apps' own icons come back after Tools quits and after `kill -9`.
+- The Super+/ shortcut overlay.
+- Rebinding Find's shortcut from Tools.
+- One update and one rollback through Tools between two self-installing releases.
+- Tools window first paint, and its memory after the window closes.
+- Wheel 0.3.1 icons and Settings layout on the real icon theme; Look 0.2.1 and Box 0.2.1 idle memory after their windows close.

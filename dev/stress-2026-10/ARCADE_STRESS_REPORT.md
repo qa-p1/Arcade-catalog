@@ -344,6 +344,32 @@ Commands ran as the persona inside its own desktop session.
 - **Test gap:** Link's `shortcuts` group passes `real_overlay_paints_its_first_frame_under_xvfb` without timing it.
 - **Evidence:** `logs/overlay-latency.txt`.
 
+### F15 · major · Wheel spends about 1 s of CPU on every clipboard copy, and reads every copied item
+- **Steps:** with Wheel running in the background and its wheel never opened, copy any text with `xclip`.
+- **Expected:** a resident launcher costs nothing while idle.
+- **Actual:**
+  - **CPU:** 99–121 CPU ticks (about 1 s) per copy, whatever the size: a 20-byte string costs as much as 2.7 MB.
+    It's 0 when nothing is copied. Measured on maya during the soak (81.8 s of Wheel CPU in 60 min) and on a freshly
+    started Wheel for Leo.
+  - **Who pays:** anyone who copies often pays it on every copy; on a laptop that's battery drain.
+- **Cause:** `Arcade-wheel src/providers/ArcadeLinkProvider.cpp:391` subscribes to `QClipboard::dataChanged`. In
+  `:414-428` it then:
+  - reads the text, HTML, URLs and any image of every new clipboard item on the GUI thread;
+  - emits `changed()` twice per copy (once to clear, once when the worker has converted it), which rebuilds the
+    action model.
+- **Privacy:** every copied item, passwords from a password manager included, is pulled into Wheel's memory and
+  converted the moment it's copied, even if the wheel is never opened.
+- **Fix:** read the clipboard lazily when the wheel opens.
+
+### F16 · major (budget) · Wheel's tray hand-back takes over half a second in about half the runs
+- **Steps:** `kill -9` Tools 20 times while all seven apps run (maya).
+- **Expected:** each app's own icon is back within 200 ms (limit 1 s).
+- **Actual:**
+  - Six apps came back in a median of 22–31 ms (p95 ≤ 45 ms).
+  - Wheel was bimodal: 10 runs at 30–58 ms and 9 at 580–1107 ms, over 1 s once.
+  - The ~3 s for Wheel's own icon to go away when Tools takes over is the same symptom in the other direction.
+- **Evidence:** `logs/handback-maya.jsonl`.
+
 ### Minor
 
 **Tools: update checks and leftovers**
@@ -615,12 +641,12 @@ See section 7 (soak).
 | Measure | Budget | Measured | Pass? | Method, sample |
 |---|---|---|---|---|
 | Startup added by the tray-host watcher + `detect()` | ≤ 5 ms | Median delta with a host: Find −4.2, Lens +0.2, Look −4.9, Shelf −1.6, Wheel −2.8, Clipboard −2.9, Box +6.3 ms | ✅ (Box +6.3 ms is within its run-to-run spread: p95 154 vs 162 ms) | bench.py startup (spawn → readiness), with vs without `arcade-link tray host`; n=20 each |
-| Tray hand-back after `kill -9` Tools | ≤ 1 s (target 200 ms) | 43–102 ms per app (1 run each); 50/50 restart cycles all handed back | ✅ so far; 20-run figures *pending* | Watcher polled every 10 ms (`handback.py`) |
+| Tray hand-back after `kill -9` Tools | ≤ 1 s (target 200 ms) | Box, Find, Lens, Look, Shelf, Clipboard: median 22–31 ms, p95 ≤ 45 ms. **Wheel: bimodal, 10 runs at 30–58 ms and 9 at 580–1107 ms (p95 1107 ms)** | ✅ six apps; ❌ Wheel (over the 1 s limit once, over the 200 ms target in about half the runs) | Watcher polled every 10 ms, 20 runs on maya (19 valid; one lost to a D-Bus timeout in the harness). `logs/handback-maya.jsonl` |
 | Tools idle, window closed, hosting on | ≤ 40 MiB, 0 polling, 0 CPU ticks / 30 s | **202 MiB** tree (155 + 48 MiB WebKit network process); 0 ticks / 30 s; ~1 wakeup/s (`PressureMonitor`) | ❌ (F13) | `/proc` RSS + PSS, utime+stime over 30 s, `strace -c -f` over 30 s |
 | Tools window open → first paint (warm) | ≤ 400 ms | Median **354 ms**, p95 448 ms, max 448 ms (n=11 warm) | ⚠️ median passes, 2 of 11 over | Tray `Activate` over D-Bus → window mapped and ≥ 20 colours, sampled every ~5 ms |
 | Overlay key → first frame | p95 ≤ 80 ms | Median **154 ms**, p95 **179 ms**, max 212 ms (n=24) | ❌ (F14) | `xdotool key super+slash` → "Arcade Tools Shortcuts" mapped and painted |
 | Shortcut index rebuild | ≤ 150 ms, off the UI thread | not measurable | not measured | `elapsed_ms` is only exposed to Tools' webview; no Rebuild button in the UI (section 6) |
-| Link round trip (`arcade-link status <app>` ×100) | — | *pending* | | |
+| Link round trip (`arcade-link status <app>` ×100) | (no number in the plan) | Median 3.3–4.1 ms, p95 ≤ 5.0 ms, max ≤ 7.8 ms for all 8 (including Tools) | ✅ | Includes starting the CLI process; maya with all apps running. `logs/link-rtt.txt` |
 
 ### Per-app figures vs Link's baseline (flag > 5 %)
 
@@ -643,8 +669,24 @@ See section 7 (soak).
   - Shelf's RSS is 76 % over its own STATUS.md figure.
   - Box's idle RSS fell from 427 to 126 MiB, which is good.
 
-### Journey 8 soak (60 min, maya, all 7 apps + Tools, Tools quit and restarted twice)
-*Pending*: per-minute RSS and CPU per process (`logs/soak-maya.csv`), growth analysis.
+### Journey 8 soak (60 min, maya, all 7 apps + Tools)
+
+**What it did:** `logs/soak.sh` ran once a minute: a clipboard copy, Find search, Shelf add, Look preview and close,
+and a list of Link apps. Every 5 min it added a Box action and a Lens capture; every 10 min it opened and closed the
+Wheel and Clipboard settings. Tools was quit at minutes 20 and 40 and restarted at 22 and 42. RSS and CPU of every
+Arcade process were sampled each minute (`logs/soak-maya.csv`, `logs/soak-summary.txt`). No action failed.
+
+| Process | RSS start → end (MiB) | CPU over 60 min | Reading |
+|---|---|---|---|
+| Wheel | 124 → 213 (max 218) | **81.8 s** (1.36 s/min) | ❌ about 1 s of CPU per clipboard copy (F15); +80 MiB after the first Settings open, then about +4 MiB per open/close |
+| Look | 59 → 191 | 21.7 s | +131 MiB after the first preview, then +17 MiB over 59 previews (about 0.3 MiB per preview, never returned): ⚠️ slow growth |
+| Lens | 108 → 159 | 12.7 s | +51 MiB kept after the first capture, then flat; about 6 ticks/min idle |
+| Box | 68 → 90 | 4.0 s | +22 MiB after the first action, flat after |
+| Shelf | 137 → 175 | 3.2 s | Grows with the 60 items added (expected) |
+| Clipboard | 256 → 282 | 1.9 s | Grows with the 60 clips stored (expected) |
+| Find | 21.8 → 21.8 | 3.5 s | Flat ✅ |
+| Tools (3 instances across the restarts) | 55–60 + 19 (AppImage runtime) | 1.5–1.6 s each | Flat. With its window never opened, Tools is about 75 MiB, still over the 40 MiB budget (F13) |
+| Look's WebKitNetworkProcess | 52 → 52 | 0.3 s | Stays for the whole hour (F8) |
 
 ### Journey 9: developer suites
 
@@ -680,6 +722,6 @@ the Wheel one, which only reads ELF headers. Each exits 1 while its bug is prese
 | `clipboard_answer_fd.py` | m1 | **FAIL** (verified) |
 | `clipboard_tray_late_watcher.py` | F4 | **FAIL**; `--control` PASS (verified) |
 | `wheel_appimage_needs_libopengl.py` | F5 | **FAIL** (verified: `libOpenGL.so.0` needed by `usr/lib/libLayerShellQtInterface.so.6`) |
-| `tools_webview_alive.py` | F1 | written; verification *pending* |
-| `tools_start_all_child_env.py` | F2 | written; verification *pending* |
-| `find_live_rebind.py` | F7 | written; verification *pending* |
+| `tools_webview_alive.py` | F1 | **FAIL** ("WebKitWebProcess died within 8 s; window is blank (1 colours)"); `--control` (`WEBKIT_DISABLE_COMPOSITING_MODE=1`) PASS (verified) |
+| `tools_start_all_child_env.py` | F2 | **FAIL** ("Clipboard is not running 20 s after 'Start all Arcade apps'", clicked through Tools' DBusMenu); `--control` PASS (verified) |
+| `find_live_rebind.py` | F7 | **FAIL** (`app.shortcuts.set` → `applied: true, via: native`, but Ctrl+Alt+G doesn't open Find); its control, the same chord after a restart, PASS (verified) |

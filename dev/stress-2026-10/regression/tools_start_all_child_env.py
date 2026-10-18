@@ -36,12 +36,17 @@ tools = install_silently(tools_appimage, "arcade.tools")
 clipboard = install_silently(clip_appimage, "arcade.clipboard")
 
 
+ROOT = os.environ["ARCADE_E2E_ROOT"]
+
+
 def clipboard_pids() -> list[int]:
+    """Clipboard processes of this isolated session only (HOME under the runner's root)."""
     out = []
     for entry in Path("/proc").iterdir():
         if entry.name.isdigit():
             try:
-                if (entry / "comm").read_text().strip() == "clipboard":
+                if (entry / "comm").read_text().strip() == "clipboard" and \
+                        environ(int(entry.name)).get("HOME", "").startswith(ROOT):
                     out.append(int(entry.name))
             except OSError:
                 pass

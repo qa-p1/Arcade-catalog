@@ -1,0 +1,36 @@
+{"before": ["?", "arcade-tools"], "returned": [[23.6, "arcade-find"], [38.0, "arcade-desktop"], [38.0, "arcade-lens"], [38.0, "arcade-look"], [38.0, "arcade-shelf"], [38.0, "clipboard"], [50.9, "AppRun.wrapped"]], "count": 7}
+{"before": ["?", "arcade-tools"], "returned": [[21.0, "arcade-desktop"], [21.0, "arcade-find"], [21.0, "arcade-shelf"], [21.0, "clipboard"], [38.7, "arcade-look"], [38.9, "arcade-lens"], [674.3, "AppRun.wrapped"]], "count": 7}
+{"before": ["arcade-tools", "?"], "returned": [[21.9, "arcade-desktop"], [21.9, "arcade-look"], [21.9, "arcade-shelf"], [21.9, "clipboard"], [41.0, "arcade-find"], [41.0, "arcade-lens"], [629.5, "AppRun.wrapped"]], "count": 7}
+{"before": ["?", "arcade-tools"], "returned": [[21.1, "arcade-desktop"], [21.1, "arcade-find"], [21.1, "arcade-lens"], [21.1, "arcade-look"], [21.1, "arcade-shelf"], [21.1, "clipboard"], [54.4, "AppRun.wrapped"]], "count": 7}
+{"before": ["arcade-tools", "?"], "returned": [[22.9, "arcade-desktop"], [22.9, "arcade-find"], [22.9, "arcade-lens"], [22.9, "arcade-look"], [22.9, "arcade-shelf"], [43.2, "AppRun.wrapped"], [43.2, "clipboard"]], "count": 7}
+Traceback (most recent call last):
+  File "/home/qa/bin/handback.py", line 23, in <module>
+    now = items()
+          ^^^^^^^
+  File "/home/qa/bin/handback.py", line 9, in items
+    lst = w.Get('org.kde.StatusNotifierWatcher', 'RegisteredStatusNotifierItems', dbus_interface='org.freedesktop.DBus.Properties')
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3/dist-packages/dbus/proxies.py", line 72, in __call__
+    return self._proxy_method(*args, **keywords)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3/dist-packages/dbus/proxies.py", line 141, in __call__
+    return self._connection.call_blocking(self._named_service,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3/dist-packages/dbus/connection.py", line 634, in call_blocking
+    reply_message = self.send_message_with_reply_and_block(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+dbus.exceptions.DBusException: org.freedesktop.DBus.Error.NoReply: Message recipient disconnected from message bus without replying
+{"before": ["arcade-tools"], "returned": [[21.9, "arcade-desktop"], [21.9, "arcade-find"], [21.9, "arcade-lens"], [21.9, "arcade-look"], [21.9, "arcade-shelf"], [21.9, "clipboard"], [587.3, "AppRun.wrapped"]], "count": 7}
+{"before": ["arcade-tools"], "returned": [[26.7, "arcade-find"], [26.7, "arcade-lens"], [26.7, "arcade-look"], [26.7, "clipboard"], [45.2, "arcade-desktop"], [45.2, "arcade-shelf"], [635.8, "AppRun.wrapped"]], "count": 7}
+{"before": ["arcade-tools"], "returned": [[30.2, "AppRun.wrapped"], [30.2, "arcade-desktop"], [30.2, "arcade-find"], [30.2, "arcade-lens"], [30.2, "arcade-look"], [30.2, "arcade-shelf"], [30.2, "clipboard"]], "count": 7}
+{"before": ["arcade-tools"], "returned": [[16.4, "arcade-lens"], [16.5, "arcade-desktop"], [36.4, "AppRun.wrapped"], [36.4, "arcade-find"], [36.4, "arcade-look"], [36.4, "arcade-shelf"], [36.4, "clipboard"]], "count": 7}
+{"before": ["arcade-tools"], "returned": [[21.3, "arcade-find"], [21.4, "arcade-desktop"], [21.4, "arcade-lens"], [21.4, "arcade-look"], [21.4, "arcade-shelf"], [37.0, "clipboard"], [687.3, "AppRun.wrapped"]], "count": 7}
+{"before": ["arcade-tools"], "returned": [[18.4, "arcade-desktop"], [18.4, "arcade-find"], [18.4, "arcade-lens"], [18.4, "clipboard"], [39.5, "arcade-look"], [39.5, "arcade-shelf"], [580.4, "AppRun.wrapped"]], "count": 7}
+{"before": ["arcade-tools"], "returned": [[22.2, "arcade-desktop"], [22.2, "arcade-find"], [22.2, "arcade-shelf"], [22.2, "clipboard"], [38.5, "AppRun.wrapped"], [38.5, "arcade-lens"], [38.5, "arcade-look"]], "count": 7}
+{"before": ["arcade-tools"], "returned": [[18.7, "arcade-lens"], [18.8, "arcade-desktop"], [18.8, "arcade-find"], [18.8, "arcade-shelf"], [44.9, "AppRun.wrapped"], [44.9, "arcade-look"], [44.9, "clipboard"]], "count": 7}
+{"before": ["arcade-tools"], "returned": [[17.0, "arcade-desktop"], [34.1, "AppRun.wrapped"], [34.1, "arcade-find"], [34.1, "arcade-lens"], [34.1, "arcade-look"], [34.1, "arcade-shelf"], [34.1, "clipboard"]], "count": 7}
+{"before": ["arcade-tools"], "returned": [[30.6, "arcade-desktop"], [30.6, "arcade-find"], [30.6, "arcade-lens"], [30.6, "arcade-look"], [30.6, "arcade-shelf"], [30.6, "clipboard"], [905.6, "AppRun.wrapped"]], "count": 7}
+{"before": ["arcade-tools"], "returned": [[18.1, "arcade-desktop"], [18.1, "arcade-find"], [18.1, "arcade-look"], [38.9, "arcade-lens"], [38.9, "arcade-shelf"], [38.9, "clipboard"], [54.8, "AppRun.wrapped"]], "count": 7}
+{"before": ["arcade-tools"], "returned": [[23.8, "arcade-desktop"], [23.8, "arcade-find"], [23.8, "arcade-look"], [23.8, "arcade-shelf"], [44.0, "arcade-lens"], [44.0, "clipboard"], [1107.5, "AppRun.wrapped"]], "count": 7}
+{"before": ["arcade-tools"], "returned": [[20.3, "arcade-desktop"], [40.8, "arcade-find"], [40.8, "arcade-lens"], [40.8, "arcade-look"], [40.8, "arcade-shelf"], [40.8, "clipboard"], [665.6, "AppRun.wrapped"]], "count": 7}
+{"before": ["arcade-tools"], "returned": [[23.7, "arcade-desktop"], [23.7, "arcade-find"], [23.7, "arcade-lens"], [23.7, "arcade-look"], [23.7, "arcade-shelf"], [23.7, "clipboard"], [57.7, "AppRun.wrapped"]], "count": 7}

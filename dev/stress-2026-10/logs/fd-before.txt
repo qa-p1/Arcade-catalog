@@ -1,0 +1,7 @@
+21782 AppRun.wrapped fds=39 thr=20
+21168 arcade-desktop fds=84 thr=31
+27901 arcade-find fds=35 thr=19
+21172 arcade-lens fds=52 thr=21
+21175 arcade-look fds=63 thr=28
+21178 arcade-shelf fds=47 thr=16
+24979 clipboard fds=52 thr=44

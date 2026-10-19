@@ -1,4 +1,4 @@
-# Arcade suite: handoff for the next agent (2026-10-16)
+# Arcade suite: handoff for the next agent (2026-10-16, updated 2026-10-19)
 
 You are taking over the Arcade Tools overhaul for the owner (GitHub: `qa-p1`). The previous agent ran on the
 owner's desktop; you're working remotely. Everything is on GitHub. Nothing important lives on the owner's
@@ -45,21 +45,49 @@ Arcade is a suite of 7 independent desktop apps plus a hub app (Arcade Tools). T
 
 | App | Repo | Tech | Latest stable release | Release mechanism (verify in `.github/workflows`) |
 |---|---|---|---|---|
-| Find | `Arcade-Find` | Rust | v0.3.0 | CI publishes a release on a `v*` tag push |
-| Lens | `Arcade-lens` | Rust | v0.2.0 | CI auto-tags and releases when main has a new version |
-| Look | `Arcade-look` | Rust + Tauri | v0.2.0 | release workflow (read it; may follow CI on main) |
-| Box | `Arcade-box` | Rust + Tauri | **v0.2.1** (2026-10-15) | `release.yml` runs on every successful main CI (`workflow_run`) |
-| Shelf | `Arcade-Shelf` | C++/Qt | v0.2.0 | read `build.yml` |
-| Wheel | `Arcade-wheel` | C++/Qt QML | v0.3.0+build.48 | CI "Publish stable release" job, tags `v<version>+build.<run>` |
-| Clipboard | `Arcade-clipboard` | Flutter + Rust | v0.1.0 | read its workflows |
-| Tools (hub) | `Arcade-tools` | Rust + Tauri + Svelte | v0.2.0 | `tag.yml` (workflow_dispatch: tag + sha on main), then `release.yml` dispatched on the tag with `channel=stable` |
-| Link (IPC library) | `Arcade-Link` | Rust | v0.3.0 (pinned, read-only for apps) | `tag.yml` |
+| Find | `Arcade-Find` | Rust | v0.4.3 | `tag.yml` (tag + sha on main), then `ci.yml` dispatched on the tag |
+| Lens | `Arcade-lens` | Rust | v0.3.3 | CI auto-tags and releases when main has a new version |
+| Look | `Arcade-look` | Rust + Tauri | v0.3.5 | `release.yml` runs after a successful main CI (`workflow_run`) |
+| Box | `Arcade-box` | Rust + Tauri | v0.3.5 | `release.yml` runs after a successful main CI (`workflow_run`) |
+| Shelf | `Arcade-Shelf` | C++/Qt | v0.3.3 | `tag.yml`, then `build.yml` dispatched on the tag |
+| Wheel | `Arcade-wheel` | C++/Qt QML | v0.4.3+build.67 | CI "Publish stable release" job, tags `v<version>+build.<run>` |
+| Clipboard | `Arcade-clipboard` | Flutter + Rust | v0.2.5 | `tag.yml`, then `release.yml` dispatched on the tag with `channel=stable` |
+| Tools (hub) | `Arcade-tools` | Rust + Tauri + Svelte | v0.3.6 | `tag.yml` (workflow_dispatch: tag + sha on main), then `release.yml` dispatched on the tag with `channel=stable` |
+| Link (IPC library) | `Arcade-Link` | Rust | v0.3.0 tag; apps pin main commit `3bbbc5d` (see its CHANGELOG, Unreleased) | `tag.yml` |
 | Catalog | `Arcade-catalog` | JSON + docs | n/a | Tools reads `catalog.json` and `docs/` from main |
 
 Tools matches release asset URLs to the catalog repo name **case-insensitively** and requires a stable tag
 equal to `v{version}`.
 
 ## 3. Current state
+
+### 2026-10-19: where things stand (read this first; A–G below are history)
+
+- Every item in "Open work" A–G below has landed; the versions in §2 are the current stable releases, all
+  published with their assets and checksums, all PRs merged, CI green on main in every repo, and Link's
+  scheduled real-fleet e2e (`e2e.yml`, `real_apps`) green.
+- Fixed and released on 2026-10-18/19 (details in each app's CHANGELOG):
+  - AppImage hygiene (Link `childenv`, every app): installing or updating from Downloads no longer leaves the
+    downloaded image mounted with its runtime running; restarts and launches of other programs drop the
+    image's descriptors; own helpers keep them.
+  - Tools, Box and Look no longer crash on their first window from an AppImage (regression of the above,
+    `childenv::enter_image_dir`); each app's AppImage CI check now opens a webview with `$OWD` set.
+  - Tools: `--settings`; updating while Tools runs switches to the new version (`--install` and a
+    double-clicked download).
+  - Box: CLI version string; the Island takes keyboard focus on X11 window managers with focus-stealing
+    prevention.
+  - Look: per-user extraction folder; relative CLI paths; a long day of previews no longer grows the resident
+    Look toward the open-file limit (restarts itself after every tenth webview release).
+  - Clipboard: `--help`; no stray "Get · Ctrl+Alt+" action on clips; `--arcade-manifest` includes `install`,
+    so Tools adopts a manually installed Clipboard in place.
+  - Shelf: real start-at-login state; message on desktops without a shortcut portal.
+- Soak test (2026-10-19, ~2.5 h, an Xvfb/openbox desktop, all 8 apps resident, ~1,500 user actions over
+  5 compressed days with sleep/resume, relogin, hard kills, two machine restarts and mid-session updates
+  from Downloads): no app failures; no leftover runtimes or mounts; Box, Find, Shelf, Wheel, Tools steady in
+  memory and descriptors. The Look growth above was found there and fixed. Not run to the planned 24 h.
+- Known limitations, not bugs: the Clipboard picker does nothing until a mesh exists (Create mesh, even with
+  one device); the Wheel's own shortcut needs a desktop shortcut portal on X11 (bind `arcade-wheel --show`);
+  Lens keeps one finished child process until its next capture.
 
 ### Done and verified
 

@@ -68,19 +68,19 @@ offers other apps) and `STATUS.md`. Also read Arcade-Link's `NEW_APP_SPEC.md` an
   - Your deliverables: `ARCADE_STRESS_REPORT.md`, plus optional *failing* regression tests on a branch
     `qa/stress-2026-10` in a fork, if you have push rights to one.
 - **Where the installers come from.** Like a user, use each repo's **latest GitHub Release** (`gh release view -R
-  qa-p1/<repo>`, `gh release download`). These are the releases under test (published 2026-10-14 to 2026-10-16;
+  qa-p1/<repo>`, `gh release download`). These are the releases under test (published 2026-10-19;
   each has a Linux AppImage, a Windows installer, a macOS dmg, `arcade-release.json` and `SHA256SUMS.txt`):
 
   | App | Release |
   |---|---|
-  | Find | `v0.3.1` |
-  | Lens | `v0.2.0` |
-  | Look | `v0.2.1` |
-  | Box | `v0.2.1` |
-  | Shelf | `v0.2.0` |
-  | Wheel | `v0.3.1+build.56` (or newer) |
-  | Clipboard | `v0.1.0` (first stable) |
-  | Tools | `v0.2.1` |
+  | Find | `v0.4.3` |
+  | Lens | `v0.3.3` |
+  | Look | `v0.3.5` |
+  | Box | `v0.3.5` |
+  | Shelf | `v0.3.3` |
+  | Wheel | `v0.4.3+build.67` (or newer) |
+  | Clipboard | `v0.2.5` |
+  | Tools | `v0.3.6` |
 
   For "update" and "rollback" journeys, the previous releases (Find v0.2.1, Lens v0.1.1, Look v0.1.2, Box v0.1.2,
   Shelf v0.1.1, Wheel v0.2.0+build.33, Tools v0.2.0 and v0.1.0) are the "older version". They predate the self-installer, so

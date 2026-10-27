@@ -1,0 +1,178 @@
+[
+  {
+    "tool": "arcade.convert.calculator",
+    "input": "log10(100)",
+    "independent_expected": 2,
+    "code": 1,
+    "seconds": 0.0774,
+    "stdout": "",
+    "stderr": "Arcade Box: Unknown constant `log`\n",
+    "command": [
+      "/home/harneet/.cache/arcade-audit/releases/Arcade-box/parent/squashfs-root/usr/bin/arcade-box",
+      "run",
+      "arcade.convert.calculator",
+      "log10(100)",
+      "--json"
+    ]
+  },
+  {
+    "tool": "arcade.convert.calculator",
+    "input": "log2(8)",
+    "independent_expected": 3,
+    "code": 1,
+    "seconds": 0.0274,
+    "stdout": "",
+    "stderr": "Arcade Box: Unknown constant `log`\n",
+    "command": [
+      "/home/harneet/.cache/arcade-audit/releases/Arcade-box/parent/squashfs-root/usr/bin/arcade-box",
+      "run",
+      "arcade.convert.calculator",
+      "log2(8)",
+      "--json"
+    ]
+  },
+  {
+    "tool": "arcade.convert.calculator",
+    "input": "2 + 3 * 4",
+    "independent_expected": 14,
+    "code": 0,
+    "seconds": 0.0267,
+    "stdout": "{\n  \"toolId\": \"arcade.convert.calculator\",\n  \"status\": \"success\",\n  \"outputs\": [\n    {\n      \"kind\": \"text\",\n      \"value\": \"{\\\"expression\\\":\\\"2 + 3 * 4\\\",\\\"value\\\":14.0,\\\"formatted\\\":\\\"14\\\"}\",\n      \"mime\": \"structured/calculation\"\n    }\n  ]\n}\n",
+    "stderr": "",
+    "command": [
+      "/home/harneet/.cache/arcade-audit/releases/Arcade-box/parent/squashfs-root/usr/bin/arcade-box",
+      "run",
+      "arcade.convert.calculator",
+      "2 + 3 * 4",
+      "--json"
+    ]
+  },
+  {
+    "tool": "arcade.convert.calculator",
+    "input": "-2^2",
+    "independent_expected": -4,
+    "code": 2,
+    "seconds": 0.0032,
+    "stdout": "",
+    "stderr": "error: unexpected argument '-2' found\n\n  tip: to pass '-2' as a value, use '-- -2'\n\nUsage: arcade-box run [OPTIONS] [TOOL_ID] [INPUT]\n\nFor more information, try '--help'.\n",
+    "command": [
+      "/home/harneet/.cache/arcade-audit/releases/Arcade-box/parent/squashfs-root/usr/bin/arcade-box",
+      "run",
+      "arcade.convert.calculator",
+      "-2^2",
+      "--json"
+    ]
+  },
+  {
+    "tool": "arcade.convert.calculator",
+    "input": "2^3^2",
+    "independent_expected": 512,
+    "code": 0,
+    "seconds": 0.0271,
+    "stdout": "{\n  \"toolId\": \"arcade.convert.calculator\",\n  \"status\": \"success\",\n  \"outputs\": [\n    {\n      \"kind\": \"text\",\n      \"value\": \"{\\\"expression\\\":\\\"2^3^2\\\",\\\"value\\\":512.0,\\\"formatted\\\":\\\"512\\\"}\",\n      \"mime\": \"structured/calculation\"\n    }\n  ]\n}\n",
+    "stderr": "",
+    "command": [
+      "/home/harneet/.cache/arcade-audit/releases/Arcade-box/parent/squashfs-root/usr/bin/arcade-box",
+      "run",
+      "arcade.convert.calculator",
+      "2^3^2",
+      "--json"
+    ]
+  },
+  {
+    "tool": "arcade.convert.units",
+    "input": "1 in to cm",
+    "independent_expected": 2.54,
+    "code": 1,
+    "seconds": 0.0269,
+    "stdout": "",
+    "stderr": "Arcade Box: Provide source and destination units, for example `14 GB to MB`\n",
+    "command": [
+      "/home/harneet/.cache/arcade-audit/releases/Arcade-box/parent/squashfs-root/usr/bin/arcade-box",
+      "run",
+      "arcade.convert.units",
+      "1 in to cm",
+      "--json"
+    ]
+  },
+  {
+    "tool": "arcade.convert.units",
+    "input": "1 inch to cm",
+    "independent_expected": 2.54,
+    "code": 0,
+    "seconds": 0.0267,
+    "stdout": "{\n  \"toolId\": \"arcade.convert.units\",\n  \"status\": \"success\",\n  \"outputs\": [\n    {\n      \"kind\": \"text\",\n      \"value\": \"{\\\"input\\\":1.0,\\\"from\\\":\\\"inch\\\",\\\"value\\\":2.54,\\\"to\\\":\\\"cm\\\",\\\"dimension\\\":\\\"length\\\",\\\"formatted\\\":\\\"2.54\\\",\\\"headline\\\":\\\"1 inch = 2.54 cm\\\"}\",\n      \"mime\": \"structured/quantity\"\n    }\n  ]\n}\n",
+    "stderr": "",
+    "command": [
+      "/home/harneet/.cache/arcade-audit/releases/Arcade-box/parent/squashfs-root/usr/bin/arcade-box",
+      "run",
+      "arcade.convert.units",
+      "1 inch to cm",
+      "--json"
+    ]
+  },
+  {
+    "tool": "arcade.convert.units",
+    "input": "5 ft 11 in to cm",
+    "independent_expected": 180.34,
+    "code": 1,
+    "seconds": 0.0266,
+    "stdout": "",
+    "stderr": "Arcade Box: Unknown unit `11`\n",
+    "command": [
+      "/home/harneet/.cache/arcade-audit/releases/Arcade-box/parent/squashfs-root/usr/bin/arcade-box",
+      "run",
+      "arcade.convert.units",
+      "5 ft 11 in to cm",
+      "--json"
+    ]
+  },
+  {
+    "tool": "arcade.convert.units",
+    "input": "1 MJ to kJ",
+    "independent_expected": 1000,
+    "code": 1,
+    "seconds": 0.0261,
+    "stdout": "",
+    "stderr": "Arcade Box: Unknown unit `MJ`\n",
+    "command": [
+      "/home/harneet/.cache/arcade-audit/releases/Arcade-box/parent/squashfs-root/usr/bin/arcade-box",
+      "run",
+      "arcade.convert.units",
+      "1 MJ to kJ",
+      "--json"
+    ]
+  },
+  {
+    "tool": "arcade.convert.units",
+    "input": "32 F to C",
+    "independent_expected": 0,
+    "code": 0,
+    "seconds": 0.0273,
+    "stdout": "{\n  \"toolId\": \"arcade.convert.units\",\n  \"status\": \"success\",\n  \"outputs\": [\n    {\n      \"kind\": \"text\",\n      \"value\": \"{\\\"input\\\":32.0,\\\"from\\\":\\\"F\\\",\\\"value\\\":0.0,\\\"to\\\":\\\"C\\\",\\\"dimension\\\":\\\"temperature\\\",\\\"formatted\\\":\\\"0\\\",\\\"headline\\\":\\\"32 F = 0 C\\\"}\",\n      \"mime\": \"structured/quantity\"\n    }\n  ]\n}\n",
+    "stderr": "",
+    "command": [
+      "/home/harneet/.cache/arcade-audit/releases/Arcade-box/parent/squashfs-root/usr/bin/arcade-box",
+      "run",
+      "arcade.convert.units",
+      "32 F to C",
+      "--json"
+    ]
+  },
+  {
+    "tool": "arcade.convert.units",
+    "input": "1e3 m to km",
+    "independent_expected": 1,
+    "code": 0,
+    "seconds": 0.027,
+    "stdout": "{\n  \"toolId\": \"arcade.convert.units\",\n  \"status\": \"success\",\n  \"outputs\": [\n    {\n      \"kind\": \"text\",\n      \"value\": \"{\\\"input\\\":1000.0,\\\"from\\\":\\\"m\\\",\\\"value\\\":1.0,\\\"to\\\":\\\"km\\\",\\\"dimension\\\":\\\"length\\\",\\\"formatted\\\":\\\"1\\\",\\\"headline\\\":\\\"1000 m = 1 km\\\"}\",\n      \"mime\": \"structured/quantity\"\n    }\n  ]\n}\n",
+    "stderr": "",
+    "command": [
+      "/home/harneet/.cache/arcade-audit/releases/Arcade-box/parent/squashfs-root/usr/bin/arcade-box",
+      "run",
+      "arcade.convert.units",
+      "1e3 m to km",
+      "--json"
+    ]
+  }
+]

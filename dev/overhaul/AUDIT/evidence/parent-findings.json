@@ -1,0 +1,149 @@
+[
+  {
+    "key": "box-shortcut-persistence",
+    "app": "Box",
+    "severity": "High",
+    "category": "broken",
+    "title": "Saving a canonical shortcut disables the Wayland shortcut on restart",
+    "status": "VERIFIED",
+    "user": "Save Ctrl+Alt+Space in Settings or through Tools; restart Box on Wayland/Hyprland.",
+    "expected": "The saved shortcut remains registered and opens the Island.",
+    "actual": "Startup sends canonical Ctrl+Alt+Space straight to the XDG validator, which rejects mixed-case modifier names. Owner log and isolated real nested Sway both show state=invalid_trigger.",
+    "source": [
+      "apps/desktop/src-tauri/src/lib.rs:169",
+      "apps/desktop/src-tauri/src/lib.rs:1999",
+      "apps/desktop/src-tauri/src/wayland_shortcut.rs:173"
+    ],
+    "evidence": [
+      "reports/evidence/parent-box-shortcut/result.json",
+      "reports/evidence/box-live-shortcut-settings.json",
+      "reports/evidence/box-live-log-filter.txt",
+      "screens/box/1200-parent-shortcut-wayland-light.png"
+    ],
+    "repro": "python3 bin/isolate.py vp -- python3 bin/verify_box_shortcut.py",
+    "release": "v0.3.5; same code on origin/main 76ece8d"
+  },
+  {
+    "key": "box-si-case",
+    "app": "Box",
+    "severity": "High",
+    "category": "wrong output",
+    "title": "Unit symbols lose case, producing billion-fold power errors and eight-fold data errors",
+    "status": "VERIFIED",
+    "user": "Unit Converter: enter 1 mW to W or 1 MB to Mb, then Convert units.",
+    "expected": "0.001 W; 8 Mb. SI milli and mega, and byte and bit, are distinct.",
+    "actual": "Successful results: 1 mW = 1000000 W; 1 MB = 1 Mb. Reproduced using packaged release CLI and actual GUI.",
+    "source": [
+      "crates/arcade-core/src/converter_tools/units.rs:71",
+      "crates/arcade-core/src/converter_tools/units.rs:125",
+      "crates/arcade-core/src/converter_tools/units.rs:127"
+    ],
+    "evidence": [
+      "reports/evidence/parent-box-unit-edge-cases.json",
+      "screens/box/1205-parent-milliwatt-result-light.png",
+      "screens/box/1206-parent-megabit-wrong-light.png"
+    ],
+    "repro": "python3 bin/isolate.py vu -- /home/harneet/.cache/arcade-audit/releases/Arcade-box/parent/squashfs-root/usr/bin/arcade-box run arcade.convert.units \"1 mW to W\" --json",
+    "release": "v0.3.5 and origin/main"
+  },
+  {
+    "key": "box-inch",
+    "app": "Box",
+    "severity": "Medium",
+    "category": "broken",
+    "title": "The inch abbreviation is removed as an English connector",
+    "status": "VERIFIED",
+    "user": "Convert 1 in to cm.",
+    "expected": "2.54 cm.",
+    "actual": "Errors asking for source and destination units; spelling inch works. Source explicitly defines in as inch but first strips every in token.",
+    "source": [
+      "crates/arcade-core/src/converter_tools/units.rs:13",
+      "crates/arcade-core/src/converter_tools/units.rs:84"
+    ],
+    "evidence": [
+      "reports/evidence/parent-box-numbers.json"
+    ],
+    "release": "v0.3.5 and origin/main"
+  },
+  {
+    "key": "box-compound-units",
+    "app": "Box",
+    "severity": "Medium",
+    "category": "unfinished",
+    "title": "Compound quantities and common energy prefixes are missing",
+    "status": "VERIFIED",
+    "user": "Convert 5 ft 11 in to cm, 5 ft 11 inch to cm, or 1 MJ to kJ.",
+    "expected": "180.34 cm; 180.34 cm; 1000 kJ.",
+    "actual": "Unknown unit 11 for the compound forms; Unknown unit MJ for energy. The parser reads only one amount and two unit tokens; the fixed unit table omits MJ.",
+    "source": [
+      "crates/arcade-core/src/converter_tools/units.rs:16",
+      "crates/arcade-core/src/converter_tools/units.rs:117"
+    ],
+    "evidence": [
+      "reports/evidence/parent-box-numbers.json",
+      "reports/evidence/parent-box-unit-edge-cases.json"
+    ],
+    "release": "v0.3.5 and origin/main"
+  },
+  {
+    "key": "box-log10",
+    "app": "Box",
+    "severity": "Medium",
+    "category": "broken",
+    "title": "The calculator cannot call its implemented log10 function",
+    "status": "VERIFIED",
+    "user": "Calculator: evaluate log10(100).",
+    "expected": "2.",
+    "actual": "Unknown constant log. The lexer stops identifiers before digits, so the implemented log10 branch is unreachable from normal input.",
+    "source": [
+      "crates/arcade-core/src/converter_tools/calculator.rs:150",
+      "crates/arcade-core/src/converter_tools/calculator.rs:213"
+    ],
+    "evidence": [
+      "reports/evidence/parent-box-numbers.json"
+    ],
+    "release": "v0.3.5 and origin/main"
+  },
+  {
+    "key": "box-format-rounding",
+    "app": "Box",
+    "severity": "Medium",
+    "category": "wrong output",
+    "title": "Formatted converter results change the number or show a nonzero result as zero",
+    "status": "VERIFIED",
+    "user": "Convert 1000000.5 m to m or 0.000000001 m to km.",
+    "expected": "Preserve 1000000.5; display 0.000000000001 or 1e-12.",
+    "actual": "Headlines say 1000000.5 m = 1000001 m and 0.000000001 m = 0 km, despite raw JSON values being correct. No approximate marker is present.",
+    "source": [
+      "crates/arcade-core/src/converter_tools/units.rs:50",
+      "crates/arcade-core/src/converter_tools/units.rs:56",
+      "crates/arcade-core/src/converter_tools.rs:65"
+    ],
+    "evidence": [
+      "reports/evidence/parent-box-unit-edge-cases.json"
+    ],
+    "release": "v0.3.5 and origin/main"
+  },
+  {
+    "key": "tools-no-fleet-artifact",
+    "app": "Tools",
+    "severity": "Medium",
+    "category": "unfinished",
+    "title": "Tools CI no longer publishes the artifact consumed by nightly fleet checks",
+    "status": "VERIFIED",
+    "user": "Maintainer relies on the green scheduled ecosystem matrix to validate released Tools install/adoption/self-update.",
+    "expected": "The matrix can fetch the current main Tools AppImage and exercise every Tools lifecycle check.",
+    "actual": "Latest green Link run 40469636881 says no unexpired tools-installer-ubuntu-* artifact in the latest five successful Tools main runs. Two Tools hub checks are SKIP, and eight development install checks are SKIP. Tools ci.yml builds and smoke-tests installers but does not upload an installer artifact (only overlay evidence).",
+    "source": [
+      ".github/workflows/ci.yml:94",
+      "../Arcade-Link/tools/e2e.py:122",
+      "../Arcade-Link/tools/e2e_artifacts.py:69",
+      "../Arcade-Link/.github/workflows/e2e.yml:127"
+    ],
+    "evidence": [
+      "reports/evidence/Arcade-Link-latest-e2e-summary.json",
+      "state/Arcade-tools-ci-jobs.json"
+    ],
+    "release": "Tools v0.3.8/main; Link current main 8a19346; this is a coverage defect, not proof a released installer fails"
+  }
+]

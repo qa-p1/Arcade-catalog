@@ -1,0 +1,15 @@
+/home/harneet/.local/share/dev.arcadebox.app/logs/arcade-box.log:2:Arcade Box shortcut status: state=checking message=Checking the desktop's global shortcut portal
+/home/harneet/.local/share/dev.arcadebox.app/logs/arcade-box.log:3:Arcade Box shortcut status: state=registered message=Arcade Box global shortcut is registered
+/home/harneet/.local/share/dev.arcadebox.app/logs/arcade-box.log:4:Arcade Box shortcut status: state=updating message=Applying the preferred global shortcut
+/home/harneet/.local/share/dev.arcadebox.app/logs/arcade-box.log:5:Arcade Box shortcut status: state=checking message=Checking the desktop's global shortcut portal
+/home/harneet/.local/share/dev.arcadebox.app/logs/arcade-box.log:6:Arcade Box shortcut status: state=registered message=Arcade Box global shortcut is registered
+/home/harneet/.local/share/dev.arcadebox.app/logs/arcade-box.log:8:Arcade Box shortcut status: state=invalid_trigger message=Use XDG shortcut syntax such as CTRL+ALT+space
+/home/harneet/.local/share/dev.arcadebox.app/logs/arcade-box.log:10:Arcade Box shortcut status: state=invalid_trigger message=Use XDG shortcut syntax such as CTRL+ALT+space
+/home/harneet/.local/share/dev.arcadebox.app/logs/arcade-box.log:11:Gdk-Message: 22:41:22.646: Error reading events from display: Broken pipe
+/home/harneet/.local/share/dev.arcadebox.app/logs/arcade-box.log:13:Arcade Box shortcut status: state=invalid_trigger message=Use XDG shortcut syntax such as CTRL+ALT+space
+/home/harneet/.local/share/dev.arcadebox.app/logs/arcade-box.log:14:Arcade Box shortcut status: state=invalid_trigger message=Use XDG shortcut syntax such as CTRL+ALT+space
+/home/harneet/.local/share/dev.arcadebox.app/logs/arcade-box.log:16:Arcade Box shortcut status: state=invalid_trigger message=Use XDG shortcut syntax such as CTRL+ALT+space
+/home/harneet/.local/share/dev.arcadebox.app/logs/arcade-box.log:17:Arcade Box shortcut status: state=invalid_trigger message=Use XDG shortcut syntax such as CTRL+ALT+space
+/home/harneet/.local/share/dev.arcadebox.app/logs/arcade-box.log:18:Arcade Box shortcut status: state=invalid_trigger message=Use XDG shortcut syntax such as CTRL+ALT+space
+/home/harneet/.local/share/dev.arcadebox.app/logs/arcade-box.log:19:Arcade Box shortcut status: state=invalid_trigger message=Use XDG shortcut syntax such as CTRL+ALT+space
+/home/harneet/.local/share/dev.arcadebox.app/logs/arcade-box.log:20:Arcade Box shortcut status: state=invalid_trigger message=Use XDG shortcut syntax such as CTRL+ALT+space

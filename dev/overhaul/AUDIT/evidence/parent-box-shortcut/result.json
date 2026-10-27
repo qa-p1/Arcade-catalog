@@ -1,0 +1,36 @@
+{
+  "profile": "/home/harneet/.cache/arcade-audit/profiles/vp/p-jdntcuwi",
+  "released": "v0.3.5",
+  "cases": [
+    {
+      "action": "set shortcut through real app.shortcuts.set on private X11",
+      "id": "island",
+      "result": {
+        "code": 0,
+        "stdout": "{\n  \"applied\": true,\n  \"via\": \"native\"\n}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "action": "quit private Box",
+      "result": {
+        "code": 0,
+        "stdout": "{\n  \"quitting\": true\n}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "action": "restart same saved profile in real private nested Sway/Wayland",
+      "display": "wayland-1",
+      "pid": 47882,
+      "alive": true,
+      "invalid_trigger": true,
+      "log_excerpt": "Arcade Box shortcut status: state=invalid_trigger message=Use XDG shortcut syntax such as CTRL+ALT+space\n"
+    }
+  ],
+  "screenshot": {
+    "code": 0,
+    "path": "/home/harneet/.cache/arcade-audit/screens/box/1200-parent-shortcut-wayland-light.png",
+    "stderr": ""
+  }
+}

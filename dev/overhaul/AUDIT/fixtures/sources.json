@@ -1,0 +1,30 @@
+[
+  {
+    "file": "w3c-dummy.pdf",
+    "url": "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+    "code": 0,
+    "bytes": 13264,
+    "error": ""
+  },
+  {
+    "file": "irs-w9.pdf",
+    "url": "https://www.irs.gov/pub/irs-pdf/fw9.pdf",
+    "code": 0,
+    "bytes": 140815,
+    "error": ""
+  },
+  {
+    "file": "canon40d-exif.jpg",
+    "url": "https://raw.githubusercontent.com/ianare/exif-samples/master/jpg/Canon_40D.jpg",
+    "code": 0,
+    "bytes": 7958,
+    "error": ""
+  },
+  {
+    "file": "sample-5s.mp4",
+    "url": "https://download.samplelib.com/mp4/sample-5s.mp4",
+    "code": 0,
+    "bytes": 2848208,
+    "error": ""
+  }
+]

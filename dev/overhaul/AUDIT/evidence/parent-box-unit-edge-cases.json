@@ -1,0 +1,100 @@
+[
+  {
+    "input": "1 mW to W",
+    "expected": 0.001,
+    "code": 0,
+    "stdout": "{\n  \"toolId\": \"arcade.convert.units\",\n  \"status\": \"success\",\n  \"outputs\": [\n    {\n      \"kind\": \"text\",\n      \"value\": \"{\\\"input\\\":1.0,\\\"from\\\":\\\"mW\\\",\\\"value\\\":1000000.0,\\\"to\\\":\\\"W\\\",\\\"dimension\\\":\\\"power\\\",\\\"formatted\\\":\\\"1000000\\\",\\\"headline\\\":\\\"1 mW = 1000000 W\\\"}\",\n      \"mime\": \"structured/quantity\"\n    }\n  ]\n}\n",
+    "stderr": "",
+    "command": [
+      "/home/harneet/.cache/arcade-audit/releases/Arcade-box/parent/squashfs-root/usr/bin/arcade-box",
+      "run",
+      "arcade.convert.units",
+      "1 mW to W",
+      "--json"
+    ]
+  },
+  {
+    "input": "1 MW to W",
+    "expected": 1000000,
+    "code": 0,
+    "stdout": "{\n  \"toolId\": \"arcade.convert.units\",\n  \"status\": \"success\",\n  \"outputs\": [\n    {\n      \"kind\": \"text\",\n      \"value\": \"{\\\"input\\\":1.0,\\\"from\\\":\\\"MW\\\",\\\"value\\\":1000000.0,\\\"to\\\":\\\"W\\\",\\\"dimension\\\":\\\"power\\\",\\\"formatted\\\":\\\"1000000\\\",\\\"headline\\\":\\\"1 MW = 1000000 W\\\"}\",\n      \"mime\": \"structured/quantity\"\n    }\n  ]\n}\n",
+    "stderr": "",
+    "command": [
+      "/home/harneet/.cache/arcade-audit/releases/Arcade-box/parent/squashfs-root/usr/bin/arcade-box",
+      "run",
+      "arcade.convert.units",
+      "1 MW to W",
+      "--json"
+    ]
+  },
+  {
+    "input": "1 MB to Mb",
+    "expected": 8,
+    "code": 0,
+    "stdout": "{\n  \"toolId\": \"arcade.convert.units\",\n  \"status\": \"success\",\n  \"outputs\": [\n    {\n      \"kind\": \"text\",\n      \"value\": \"{\\\"input\\\":1.0,\\\"from\\\":\\\"MB\\\",\\\"value\\\":1.0,\\\"to\\\":\\\"Mb\\\",\\\"dimension\\\":\\\"data\\\",\\\"formatted\\\":\\\"1\\\",\\\"headline\\\":\\\"1 MB = 1 Mb\\\"}\",\n      \"mime\": \"structured/quantity\"\n    }\n  ]\n}\n",
+    "stderr": "",
+    "command": [
+      "/home/harneet/.cache/arcade-audit/releases/Arcade-box/parent/squashfs-root/usr/bin/arcade-box",
+      "run",
+      "arcade.convert.units",
+      "1 MB to Mb",
+      "--json"
+    ]
+  },
+  {
+    "input": "1000000.5 m to m",
+    "expected": 1000000.5,
+    "code": 0,
+    "stdout": "{\n  \"toolId\": \"arcade.convert.units\",\n  \"status\": \"success\",\n  \"outputs\": [\n    {\n      \"kind\": \"text\",\n      \"value\": \"{\\\"input\\\":1000000.5,\\\"from\\\":\\\"m\\\",\\\"value\\\":1000000.5,\\\"to\\\":\\\"m\\\",\\\"dimension\\\":\\\"length\\\",\\\"formatted\\\":\\\"1000001\\\",\\\"headline\\\":\\\"1000000.5 m = 1000001 m\\\"}\",\n      \"mime\": \"structured/quantity\"\n    }\n  ]\n}\n",
+    "stderr": "",
+    "command": [
+      "/home/harneet/.cache/arcade-audit/releases/Arcade-box/parent/squashfs-root/usr/bin/arcade-box",
+      "run",
+      "arcade.convert.units",
+      "1000000.5 m to m",
+      "--json"
+    ]
+  },
+  {
+    "input": "0.000000001 m to km",
+    "expected": 1e-12,
+    "code": 0,
+    "stdout": "{\n  \"toolId\": \"arcade.convert.units\",\n  \"status\": \"success\",\n  \"outputs\": [\n    {\n      \"kind\": \"text\",\n      \"value\": \"{\\\"input\\\":1e-9,\\\"from\\\":\\\"m\\\",\\\"value\\\":1e-12,\\\"to\\\":\\\"km\\\",\\\"dimension\\\":\\\"length\\\",\\\"formatted\\\":\\\"0\\\",\\\"headline\\\":\\\"0.000000001 m = 0 km\\\"}\",\n      \"mime\": \"structured/quantity\"\n    }\n  ]\n}\n",
+    "stderr": "",
+    "command": [
+      "/home/harneet/.cache/arcade-audit/releases/Arcade-box/parent/squashfs-root/usr/bin/arcade-box",
+      "run",
+      "arcade.convert.units",
+      "0.000000001 m to km",
+      "--json"
+    ]
+  },
+  {
+    "input": "5 ft 11 inch to cm",
+    "expected": 180.34,
+    "code": 1,
+    "stdout": "",
+    "stderr": "Arcade Box: Unknown unit `11`\n",
+    "command": [
+      "/home/harneet/.cache/arcade-audit/releases/Arcade-box/parent/squashfs-root/usr/bin/arcade-box",
+      "run",
+      "arcade.convert.units",
+      "5 ft 11 inch to cm",
+      "--json"
+    ]
+  },
+  {
+    "input": "1 m to cm garbage",
+    "expected": null,
+    "code": 0,
+    "stdout": "{\n  \"toolId\": \"arcade.convert.units\",\n  \"status\": \"success\",\n  \"outputs\": [\n    {\n      \"kind\": \"text\",\n      \"value\": \"{\\\"input\\\":1.0,\\\"from\\\":\\\"m\\\",\\\"value\\\":100.0,\\\"to\\\":\\\"cm\\\",\\\"dimension\\\":\\\"length\\\",\\\"formatted\\\":\\\"100\\\",\\\"headline\\\":\\\"1 m = 100 cm\\\"}\",\n      \"mime\": \"structured/quantity\"\n    }\n  ]\n}\n",
+    "stderr": "",
+    "command": [
+      "/home/harneet/.cache/arcade-audit/releases/Arcade-box/parent/squashfs-root/usr/bin/arcade-box",
+      "run",
+      "arcade.convert.units",
+      "1 m to cm garbage",
+      "--json"
+    ]
+  }
+]

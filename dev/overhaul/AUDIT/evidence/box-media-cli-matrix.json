@@ -1,0 +1,1263 @@
+{
+  "release": "Arcade Box v0.3.5",
+  "sourceHead": "76ece8d8447e5e142b3ecbe8964017ad077d6bc4",
+  "tester": "bm",
+  "runner": "packaged CLI from extracted AppImage inside isolate.py",
+  "fixturePaths": {
+    "video": "/home/harneet/.cache/arcade-audit/profiles/bm/p-958qbk03/home/inputs/sample-5s.mp4",
+    "audio": "/home/harneet/.cache/arcade-audit/profiles/bm/p-958qbk03/home/inputs/multitone.wav",
+    "speech": "/home/harneet/.cache/arcade-audit/profiles/bm/p-958qbk03/home/inputs/synthetic-speech.wav",
+    "subtitles": "/home/harneet/.cache/arcade-audit/profiles/bm/p-958qbk03/home/inputs/captions.srt",
+    "w3cPdf": "/home/harneet/.cache/arcade-audit/profiles/bm/p-958qbk03/home/inputs/w3c-dummy.pdf"
+  },
+  "counts": {
+    "PASS": 49,
+    "FAIL": 8,
+    "SLOW": 0,
+    "UNTESTED": 1
+  },
+  "results": [
+    {
+      "key": "video-convert",
+      "id": "arcade.video.convert",
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 4555.91,
+      "command": "/home/harneet/.cache/arcade-audit/releases/Arcade-box/extract-bm/squashfs-root/usr/bin/arcade-box run arcade.video.convert --file /home/harneet/.cache/arcade-audit/profiles/bm/p-958qbk03/home/inputs/sample-5s.mp4 --options-json {\"format\":\"webm\",\"quality\":\"small\",\"maxHeight\":\"720\"} --json",
+      "stderrExcerpt": "",
+      "outputs": [
+        {
+          "kind": "file",
+          "mime": "file/video",
+          "path": "/home/harneet/.cache/arcade-audit/profiles/bm/p-958qbk03/home/inputs/sample-5s-converted.webm",
+          "bytes": 1806403
+        }
+      ],
+      "resultStatus": "success",
+      "message": "Saved sample-5s-converted.webm (WebM VP9)",
+      "independentCheck": {
+        "status": "PASS",
+        "detail": "container=matroska,webm; video=vp9 1280x720; audio=['opus']; duration=5.766000"
+      }
+    },
+    {
+      "key": "video-compress-sharing-preset",
+      "id": "arcade.video.compress",
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 3904.18,
+      "command": "/home/harneet/.cache/arcade-audit/releases/Arcade-box/extract-bm/squashfs-root/usr/bin/arcade-box run arcade.video.compress --file /home/harneet/.cache/arcade-audit/profiles/bm/p-958qbk03/home/inputs/sample-5s.mp4 --preset share-25mb --json",
+      "stderrExcerpt": "",
+      "outputs": [
+        {
+          "kind": "file",
+          "mime": "file/video",
+          "path": "/home/harneet/.cache/arcade-audit/profiles/bm/p-958qbk03/home/inputs/sample-5s-compressed.mp4",
+          "bytes": 23039898
+        }
+      ],
+      "resultStatus": "success",
+      "message": "Saved sample-5s-compressed.mp4",
+      "independentCheck": {
+        "status": "PASS",
+        "detail": "output 23039898 bytes; duration 5.758549"
+      }
+    },
+    {
+      "key": "video-compress-720p-preset",
+      "id": "arcade.video.compress",
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 1418.16,
+      "command": "/home/harneet/.cache/arcade-audit/releases/Arcade-box/extract-bm/squashfs-root/usr/bin/arcade-box run arcade.video.compress --file /home/harneet/.cache/arcade-audit/profiles/bm/p-958qbk03/home/inputs/sample-5s.mp4 --preset half-size --json",
+      "stderrExcerpt": "",
+      "outputs": [
+        {
+          "kind": "file",
+          "mime": "file/video",
+          "path": "/home/harneet/.cache/arcade-audit/profiles/bm/p-958qbk03/home/inputs/sample-5s-compressed-2.mp4",
+          "bytes": 1290789
+        }
+      ],
+      "resultStatus": "success",
+      "message": "Saved sample-5s-compressed-2.mp4 — 55% smaller (2.7 MB → 1.2 MB)",
+      "independentCheck": {
+        "status": "PASS",
+        "detail": "h264 1280x720, duration=5.758549"
+      }
+    },
+    {
+      "key": "video-trim-precise",
+      "id": "arcade.video.trim",
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 1690.7,
+      "command": "/home/harneet/.cache/arcade-audit/releases/Arcade-box/extract-bm/squashfs-root/usr/bin/arcade-box run arcade.video.trim --file /home/harneet/.cache/arcade-audit/profiles/bm/p-958qbk03/home/inputs/sample-5s.mp4 --options-json {\"startSeconds\":1.0,\"endSeconds\":3.5,\"format\":\"mp4\",\"mode\":\"precise\"} --json",
+      "stderrExcerpt": "",
+      "outputs": [
+        {
+          "kind": "file",
+          "mime": "file/video",
+          "path": "/home/harneet/.cache/arcade-audit/profiles/bm/p-958qbk03/home/inputs/sample-5s-trimmed.mp4",
+          "bytes": 3926016
+        }
+      ],
+      "resultStatus": "success",
+      "message": "Saved sample-5s-trimmed.mp4",
+      "independentCheck": {
+        "status": "PASS",
+        "detail": "duration=2.5; streams=['h264', 'aac']"
+      }
+    },
+    {
+      "key": "video-crop-square-rotate",
+      "id": "arcade.video.crop",
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 860.82,
+      "command": "/home/harneet/.cache/arcade-audit/releases/Arcade-box/extract-bm/squashfs-root/usr/bin/arcade-box run arcade.video.crop --file /home/harneet/.cache/arcade-audit/profiles/bm/p-958qbk03/home/inputs/sample-5s.mp4 --options-json {\"aspect\":\"1:1\",\"rotation\":\"90\",\"flip\":\"horizontal\",\"width\":360,\"height\":360} --json",
+      "stderrExcerpt": "",
+      "outputs": [
+        {
+          "kind": "file",
+          "mime": "file/video",
+          "path": "/home/harneet/.cache/arcade-audit/profiles/bm/p-958qbk03/home/inputs/sample-5s-edited.mp4",
+          "bytes": 1366817
+        }
+      ],
+      "resultStatus": "success",
+      "message": "Saved sample-5s-edited.mp4",
+      "independentCheck": {
+        "status": "PASS",
+        "detail": "h264 360x360; duration=5.758549"
+      }
+    },
+    {
+      "key": "video-join-auto",
+      "id": "arcade.video.join",
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 533.57,
+      "command": "/home/harneet/.cache/arcade-audit/releases/Arcade-box/extract-bm/squashfs-root/usr/bin/arcade-box run arcade.video.join --file /home/harneet/.cache/arcade-audit/profiles/bm/p-958qbk03/home/inputs/sample-5s.mp4 --file /home/harneet/.cache/arcade-audit/profiles/bm/p-958qbk03/home/inputs/sample-5s-copy.mp4 --options-json {\"mode\":\"auto\"} --json",
+      "stderrExcerpt": "",
+      "outputs": [
+        {
+          "kind": "file",
+          "mime": "file/video",
+          "path": "/home/harneet/.cache/arcade-audit/profiles/bm/p-958qbk03/home/inputs/sample-5s-joined.mp4",
+          "bytes": 5695084
+        }
+      ],
+      "resultStatus": "success",
+      "message": "Joined 2 clips into sample-5s-joined.mp4 without re-encoding",
+      "independentCheck": {
+        "status": "PASS",
+        "detail": "duration=11.517098; video frames=342"
+      }
+    },
+    {
+      "key": "video-extract-audio-preset",
+      "id": "arcade.video.extract-audio",
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 459.11,
+      "command": "/home/harneet/.cache/arcade-audit/releases/Arcade-box/extract-bm/squashfs-root/usr/bin/arcade-box run arcade.video.extract-audio --file /home/harneet/.cache/arcade-audit/profiles/bm/p-958qbk03/home/inputs/sample-5s.mp4 --preset mp3 --json",
+      "stderrExcerpt": "",
+      "outputs": [
+        {
+          "kind": "file",
+          "mime": "file/audio",
+          "path": "/home/harneet/.cache/arcade-audit/profiles/bm/p-958qbk03/home/inputs/sample-5s-audio.mp3",
+          "bytes": 139953
+        }
+      ],
+      "resultStatus": "success",
+      "message": "Saved sample-5s-audio.mp3",
+      "independentCheck": {
+        "status": "PASS",
+        "detail": "container=mp3; codec=['mp3']"
+      }
+    },
+    {
+      "key": "video-gif-webp",
+      "id": "arcade.video.gif",
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 661.59,
+      "command": "/home/harneet/.cache/arcade-audit/releases/Arcade-box/extract-bm/squashfs-root/usr/bin/arcade-box run arcade.video.gif --file /home/harneet/.cache/arcade-audit/profiles/bm/p-958qbk03/home/inputs/sample-5s.mp4 --options-json {\"format\":\"webp\",\"startSeconds\":1,\"durationSeconds\":2,\"fps\":10,\"width\":320,\"quality\":\"small\",\"loop\":\"once\"} --json",
+      "stderrExcerpt": "",
+      "outputs": [
+        {
+          "kind": "file",
+          "mime": "file/image",
+          "path": "/home/harneet/.cache/arcade-audit/profiles/bm/p-958qbk03/home/inputs/sample-5s-animation.webp",
+          "bytes": 366404
+        }
+      ],
+      "resultStatus": "success",
+      "message": "Saved sample-5s-animation.webp",
+      "independentCheck": {
+        "status": "PASS",
+        "detail": "webp_anim 320x180; frames=20; duration=None"
+      }
+    },
+    {
+      "key": "video-frames-every-2s",
+      "id": "arcade.video.frames",
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 737.79,
+      "command": "/home/harneet/.cache/arcade-audit/releases/Arcade-box/extract-bm/squashfs-root/usr/bin/arcade-box run arcade.video.frames --file /home/harneet/.cache/arcade-audit/profiles/bm/p-958qbk03/home/inputs/sample-5s.mp4 --options-json {\"mode\":\"interval\",\"intervalSeconds\":2,\"startSeconds\":0,\"endSeconds\":5,\"imageFormat\":\"png\",\"maxFrames\":10,\"prefix\":\"frame\"} --json",
+      "stderrExcerpt": "",
+      "outputs": [
+        {
+          "kind": "file",
+          "mime": "file/image",
+          "path": "/home/harneet/.cache/arcade-audit/profiles/bm/p-958qbk03/home/inputs/frame-0001.png",
+          "bytes": 3034232
+        },
+        {
+          "kind": "file",
+          "mime": "file/image",
+          "path": "/home/harneet/.cache/arcade-audit/profiles/bm/p-958qbk03/home/inputs/frame-0002.png",
+          "bytes": 3160705
+        },
+        {
+          "kind": "file",
+          "mime": "file/image",
+          "path": "/home/harneet/.cache/arcade-audit/profiles/bm/p-958qbk03/home/inputs/frame-0003.png",
+          "bytes": 3182064
+        }
+      ],
+      "resultStatus": "success",
+      "message": "Saved 3 frames",
+      "independentCheck": {
+        "status": "PASS",
+        "detail": "3 frame files; bytes=[3034232, 3160705, 3182064]"
+      }
+    },
+    {
+      "key": "video-subtitle-add-soft-track",
+      "id": "arcade.video.subtitles",
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 435.1,
+      "command": "/home/harneet/.cache/arcade-audit/releases/Arcade-box/extract-bm/squashfs-root/usr/bin/arcade-box run arcade.video.subtitles --file /home/harneet/.cache/arcade-audit/profiles/bm/p-958qbk03/home/inputs/sample-5s.mp4 --file /home/harneet/.cache/arcade-audit/profiles/bm/p-958qbk03/home/inputs/captions.srt --options-json {\"operation\":\"add\",\"videoFormat\":\"mkv\",\"language\":\"eng\"} --json",
+      "stderrExcerpt": "",
+      "outputs": [
+        {
+          "kind": "file",
+          "mime": "file/video",
+          "path": "/home/harneet/.cache/arcade-audit/profiles/bm/p-958qbk03/home/inputs/sample-5s-with-subtitles.mkv",
+          "bytes": 2844744
+        }
+      ],
+      "resultStatus": "success",
+      "message": "Saved sample-5s-with-subtitles.mkv",
+      "independentCheck": {
+        "status": "PASS",
+        "detail": "subtitle streams=[('subrip', {'language': 'eng', 'DURATION': '00:00:04.000000000'})]"
+      }
+    },
+    {
+      "key": "video-subtitle-burn",
+      "id": "arcade.video.subtitles",
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 2497.43,
+      "command": "/home/harneet/.cache/arcade-audit/releases/Arcade-box/extract-bm/squashfs-root/usr/bin/arcade-box run arcade.video.subtitles --file /home/harneet/.cache/arcade-audit/profiles/bm/p-958qbk03/home/inputs/sample-5s.mp4 --file /home/harneet/.cache/arcade-audit/profiles/bm/p-958qbk03/home/inputs/captions.srt --options-json {\"operation\":\"burn\",\"videoFormat\":\"mp4\",\"quality\":\"high\"} --json",
+      "stderrExcerpt": "",
+      "outputs": [
+        {
+          "kind": "file",
+          "mime": "file/video",
+          "path": "/home/harneet/.cache/arcade-audit/profiles/bm/p-958qbk03/home/inputs/sample-5s-subtitled.mp4",
+          "bytes": 4445358
+        }
+      ],
+      "resultStatus": "success",
+      "message": "Saved sample-5s-subtitled.mp4",
+      "independentCheck": {
+        "status": "PASS",
+        "detail": "no subtitle stream (burned); streams=[('video', 'h264'), ('audio', 'aac')]"
+      }
+    },
+    {
+      "key": "video-inspect-real-fixture",
+      "id": "arcade.video.inspect",
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 361.35,
+      "command": "/home/harneet/.cache/arcade-audit/releases/Arcade-box/extract-bm/squashfs-root/usr/bin/arcade-box run arcade.video.inspect --file /home/harneet/.cache/arcade-audit/profiles/bm/p-958qbk03/home/inputs/sample-5s.mp4 --json",
+      "stderrExcerpt": "",
+      "outputs": [
+        {
+          "kind": "text",
+          "mime": "structured/media-info",
+          "value": "{\n  \"streams\": [\n    {\n      \"index\": 0,\n      \"codec_name\": \"h264\",\n      \"codec_long_name\": \"H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10\",\n      \"profile\": \"High\",\n      \"codec_type\": \"video\",\n      \"codec_tag_string\": \"avc1\",\n      \"codec_tag\": \"0x31637661\",\n      \"mime_codec_string\": \"avc1.640028\",\n      \"width\": 1920,\n      \"height\": 1080,\n      \"coded_width\": 1920,\n      \"coded_height\": 1080,\n      \"has_b_frames\": 2,\n      \"sample_aspect_ratio\": \"1:1\",\n      \"display_aspect_ratio\": \"16:9\",\n      \"pix_fmt\": \"yuv420p\",\n      \"level\": 40,\n      \"chroma_location\": \"left\",\n      \"field_order\": \"progressive\",\n      \"is_avc\": \"true\",\n      \"nal_length_size\": \"4\",\n      \"id\": \"0x1\",\n      \"r_frame_rate\": \"30/1\",\n      \"avg_frame_rate\": \"30/1\",\n      \"time_base\": \"1/15360\",\n      \"start_pts\": 0,\n      \"start_time\": \"0.000000\",\n      \"duration_ts\": 87552,\n      \"duration\": \"5.700000\",\n      \"bit_rate\": \"3857402\",\n      \"bits_per_raw_sample\": \"8\",\n      \"nb_frames\": \"171\",\n      \"extradata_size\": 48,\n      \"disposition\": {\n        \"default\": 1,\n        \"dub\": 0,\n        \"original\": 0,\n        \"comment\": 0,\n        \"lyrics\": 0,\n        \"karaoke\": 0,\n        \"forced\": 0,\n        \"hearing_impaired\": 0,\n        \"visual_impaired\": 0,\n        \"clean_effects\": 0,\n        \"attached_pic\": 0,\n        \"timed_thumbnails\": 0,\n        \"non_diegetic\": 0,\n        \"captions\": 0,\n        \"descriptions\": 0,\n        \"metadata\": 0,\n        \"dependent\": 0,\n        \"still_image\": 0,\n        \"multilayer\": "
+        }
+      ],
+      "resultStatus": "success",
+      "message": "Media details ready",
+      "independentCheck": {
+        "status": "PASS",
+        "detail": "stream types=['video', 'audio']"
+      }
+    },
+    {
+      "key": "video-auto-subtitles-no-key",
+      "id": "arcade.video.auto-subtitles",
+      "status": "PASS",
+      "exitCode": 1,
+      "elapsedMs": 280.17,
+      "command": "/home/harneet/.cache/arcade-audit/releases/Arcade-box/extract-bm/squashfs-root/usr/bin/arcade-box run arcade.video.auto-subtitles --file /home/harneet/.cache/arcade-audit/profiles/bm/p-958qbk03/home/inputs/sample-5s.mp4 --options-json {\"task\":\"transcribe\",\"language\":\"en\",\"mode\":\"file\",\"textSize\":\"medium\"} --json",
+      "stderrExcerpt": "Arcade Box: Speech-to-text uses Groq. Add your key as GROQ_API_KEY in /home/harneet/.cache/arcade-audit/profiles/bm/p-958qbk03/data/dev.arcadebox.app/.env, or the GROQ_API_KEY environment variable",
+      "outputs": [],
+      "why": "Expected unavailable path because GROQ_API_KEY is absent from isolated profile; no cloud request was sent."
+    },
+    {
+      "key": "audio-convert-flac-48k",
+      "id": "arcade.audio.convert",
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 432.18,
+      "command": "/home/harneet/.cache/arcade-audit/releases/Arcade-box/extract-bm/squashfs-root/usr/bin/arcade-box run arcade.audio.convert --file /home/harneet/.cache/arcade-audit/profiles/bm/p-958qbk03/home/inputs/multitone.wav --options-json {\"format\":\"flac\",\"sampleRate\":\"48000\",\"channels\":\"stereo\"} --json",
+      "stderrExcerpt": "",
+      "outputs": [
+        {
+          "kind": "file",
+          "mime": "file/audio",
+          "path": "/home/harneet/.cache/arcade-audit/profiles/bm/p-958qbk03/home/inputs/multitone-converted.flac",
+          "bytes": 202344
+        }
+      ],
+      "resultStatus": "success",
+      "message": "Saved multitone-converted.flac (FLAC · 48 kHz · stereo)",
+      "independentCheck": {
+        "status": "PASS",
+        "detail": "flac 48000Hz 2ch; duration=8.000000"
+      }
+    },
+    {
+      "key": "audio-trim-sample-accurate",
+      "id": "arcade.audio.trim",
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 433.34,
+      "command": "/home/harneet/.cache/arcade-audit/releases/Arcade-box/extract-bm/squashfs-root/usr/bin/arcade-box run arcade.audio.trim --file /home/harneet/.cache/arcade-audit/profiles/bm/p-958qbk03/home/inputs/multitone.wav --options-json {\"startSeconds\":1,\"endSeconds\":3,\"mode\":\"keep\",\"format\":\"wav\",\"precise\":true,\"fadeInSeconds\":0.1,\"fadeOutSeconds\":0.1} --json",
+      "stderrExcerpt": "",
+      "outputs": [
+        {
+          "kind": "file",
+          "mime": "file/audio",
+          "path": "/home/harneet/.cache/arcade-audit/profiles/bm/p-958qbk03/home/inputs/multitone-trimmed.wav",
+          "bytes": 384126
+        }
+      ],
+      "resultStatus": "success",
+      "message": "Saved multitone-trimmed.wav (0:01.0–0:03.0, 2 s, WAV)",
+      "independentCheck": {
+        "status": "PASS",
+        "detail": "duration=2.0; sample_rate=48000"
+      }
+    },
+    {
+      "key": "audio-join-two-clips",
+      "id": "arcade.audio.join",
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 508.33,
+      "command": "/home/harneet/.cache/arcade-audit/releases/Arcade-box/extract-bm/squashfs-root/usr/bin/arcade-box run arcade.audio.join --file /home/harneet/.cache/arcade-audit/profiles/bm/p-958qbk03/home/inputs/multitone.wav --file /home/harneet/.cache/arcade-audit/profiles/bm/p-958qbk03/home/inputs/multitone.wav --options-json {\"format\":\"wav\",\"crossfadeSeconds\":0.5,\"gapSeconds\":0} --json",
+      "stderrExcerpt": "",
+      "outputs": [
+        {
+          "kind": "file",
+          "mime": "file/audio",
+          "path": "/home/harneet/.cache/arcade-audit/profiles/bm/p-958qbk03/home/inputs/multitone-joined.wav",
+          "bytes": 2976126
+        }
+      ],
+      "resultStatus": "success",
+      "message": "Joined 2 clips with 0.5 s crossfades into multitone-joined.wav (WAV)",
+      "independentCheck": {
+        "status": "PASS",
+        "detail": "duration=15.5; codec=pcm_s16le"
+      }
+    },
+    {
+      "key": "audio-normalize-streaming-preset",
+      "id": "arcade.audio.normalize",
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 683.66,
+      "command": "/home/harneet/.cache/arcade-audit/releases/Arcade-box/extract-bm/squashfs-root/usr/bin/arcade-box run arcade.audio.normalize --file /home/harneet/.cache/arcade-audit/profiles/bm/p-958qbk03/home/inputs/multitone.wav --options-json {\"mode\":\"loudness\",\"preset\":\"streaming\",\"format\":\"wav\"} --json",
+      "stderrExcerpt": "",
+      "outputs": [
+        {
+          "kind": "file",
+          "mime": "file/audio",
+          "path": "/home/harneet/.cache/arcade-audit/profiles/bm/p-958qbk03/home/inputs/multitone-normalized.wav",
+          "bytes": 1536126
+        },
+        {
+          "kind": "text",
+          "mime": "structured/audio-loudness",
+          "value": "{\n  \"mode\": \"loudness\",\n  \"target\": {\n    \"integrated\": -14.0,\n    \"truePeak\": -1.0,\n    \"range\": 11.0\n  },\n  \"before\": {\n    \"integrated\": -14.09,\n    \"truePeak\": -10.33,\n    \"range\": 1.9\n  },\n  \"after\": {\n    \"integrated\": -13.88,\n    \"truePeak\": -10.24,\n    \"range\": 1.8\n  },\n  \"method\": \"linear\"\n}"
+        }
+      ],
+      "resultStatus": "success",
+      "message": "Loudness -14.1 → -13.9 LUFS · saved multitone-normalized.wav",
+      "independentCheck": {
+        "status": "PASS",
+        "detail": "output=1536126 bytes; metadata keys=['loudness', 'outputBytes', 'outputName', 'providerPath', 'providerVersion']"
+      }
+    },
+    {
+      "key": "audio-denoise-speech-medium",
+      "id": "arcade.audio.denoise",
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 432.8,
+      "command": "/home/harneet/.cache/arcade-audit/releases/Arcade-box/extract-bm/squashfs-root/usr/bin/arcade-box run arcade.audio.denoise --file /home/harneet/.cache/arcade-audit/profiles/bm/p-958qbk03/home/inputs/synthetic-speech.wav --options-json {\"method\":\"speech\",\"strength\":\"medium\",\"rumble\":true,\"format\":\"wav\"} --json",
+      "stderrExcerpt": "",
+      "outputs": [
+        {
+          "kind": "file",
+          "mime": "file/audio",
+          "path": "/home/harneet/.cache/arcade-audit/profiles/bm/p-958qbk03/home/inputs/synthetic-speech-clean.wav",
+          "bytes": 324502
+        }
+      ],
+      "resultStatus": "success",
+      "message": "Saved synthetic-speech-clean.wav (cleaned with the FFT noise filter, medium)",
+      "independentCheck": {
+        "status": "PASS",
+        "detail": "output=/home/harneet/.cache/arcade-audit/profiles/bm/p-958qbk03/home/inputs/synthetic-speech-clean.wav"
+      }
+    },
+    {
+      "key": "audio-vocals-basic",
+      "id": "arcade.audio.vocals",
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 509.06,
+      "command": "/home/harneet/.cache/arcade-audit/releases/Arcade-box/extract-bm/squashfs-root/usr/bin/arcade-box run arcade.audio.vocals --file /home/harneet/.cache/arcade-audit/profiles/bm/p-958qbk03/home/inputs/multitone.wav --options-json {\"keep\":\"both\",\"format\":\"wav\",\"engine\":\"basic\"} --json",
+      "stderrExcerpt": "",
+      "outputs": [
+        {
+          "kind": "file",
+          "mime": "file/audio",
+          "path": "/home/harneet/.cache/arcade-audit/profiles/bm/p-958qbk03/home/inputs/multitone-instrumental.wav",
+          "bytes": 1536126
+        },
+        {
+          "kind": "file",
+          "mime": "file/audio",
+          "path": "/home/harneet/.cache/arcade-audit/profiles/bm/p-958qbk03/home/inputs/multitone-vocals.wav",
+          "bytes": 1536126
+        }
+      ],
+      "resultStatus": "success",
+      "message": "Saved instrumental and vocals using the basic centre-channel method",
+      "independentCheck": {
+        "status": "PASS",
+        "detail": "2 separation outputs; bytes=[1536126, 1536126]"
+      }
+    },
+    {
+      "key": "audio-speed-pitch",
+      "id": "arcade.audio.speed-pitch",
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 633.17,
+      "command": "/home/harneet/.cache/arcade-audit/releases/Arcade-box/extract-bm/squashfs-root/usr/bin/arcade-box run arcade.audio.speed-pitch --file /home/harneet/.cache/arcade-audit/profiles/bm/p-958qbk03/home/inputs/multitone.wav --options-json {\"speed\":1.25,\"preservePitch\":true,\"pitchSemitones\":3,\"format\":\"wav\"} --json",
+      "stderrExcerpt": "",
+      "outputs": [
+        {
+          "kind": "file",
+          "mime": "file/audio",
+          "path": "/home/harneet/.cache/arcade-audit/profiles/bm/p-958qbk03/home/inputs/multitone-speed.wav",
+          "bytes": 1228926
+        }
+      ],
+      "resultStatus": "success",
+      "message": "Saved multitone-speed.wav (1.25× speed, pitch +3 semitones, new length 0:06.4)",
+      "independentCheck": {
+        "status": "PASS",
+        "detail": "duration=6.4; sample rate=48000; metadata={'engine': 'rubberband', 'outputBytes': 1228926, 'outputName': 'multitone-speed.wav', 'providerPath': '/usr/bin/ffmpeg', 'providerVersion': 'n9.0.2'}"
+      }
+    },
+    {
+      "key": "audio-silence-split",
+      "id": "arcade.audio.silence",
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 584.03,
+      "command": "/home/harneet/.cache/arcade-audit/releases/Arcade-box/extract-bm/squashfs-root/usr/bin/arcade-box run arcade.audio.silence --file /home/harneet/.cache/arcade-audit/profiles/bm/p-958qbk03/home/inputs/multitone.wav --options-json {\"operation\":\"split\",\"thresholdDb\":-40,\"minimumSeconds\":0.5,\"paddingSeconds\":0.1,\"format\":\"wav\"} --json",
+      "stderrExcerpt": "",
+      "outputs": [
+        {
+          "kind": "file",
+          "mime": "file/audio",
+          "path": "/home/harneet/.cache/arcade-audit/profiles/bm/p-958qbk03/home/inputs/multitone-01.wav",
+          "bytes": 595326
+        },
+        {
+          "kind": "file",
+          "mime": "file/audio",
+          "path": "/home/harneet/.cache/arcade-audit/profiles/bm/p-958qbk03/home/inputs/multitone-02.wav",
+          "bytes": 614522
+        },
+        {
+          "kind": "text",
+          "mime": "structured/audio-segments",
+          "value": "[{\"startSeconds\":0.0,\"endSeconds\":3.1},{\"startSeconds\":3.900021,\"endSeconds\":7.1}]"
+        }
+      ],
+      "resultStatus": "success",
+      "message": "Split into 2 parts (WAV)",
+      "independentCheck": {
+        "status": "PASS",
+        "detail": "2 parts with durations=[3.1, 3.199979]; summary=Split into 2 parts (WAV)"
+      }
+    },
+    {
+      "key": "audio-metadata-edit-tags",
+      "id": "arcade.audio.metadata",
+      "status": "FAIL",
+      "exitCode": 1,
+      "elapsedMs": 382.71,
+      "command": "/home/harneet/.cache/arcade-audit/releases/Arcade-box/extract-bm/squashfs-root/usr/bin/arcade-box run arcade.audio.metadata --file /home/harneet/.cache/arcade-audit/profiles/bm/p-958qbk03/home/inputs/synthetic-speech.wav --options-json {\"operation\":\"edit\",\"title\":\"Arcade QA Edited\",\"artist\":\"Test Artist\",\"album\":\"Audit Multitone\",\"track\":\"2/7\",\"year\":\"2026\",\"genre\":\"Test\",\"comment\":\"metadata fixture\",\"outputName\":\"qa-metadata.mp3\"} --json",
+      "stderrExcerpt": "Arcade Box: Output name must use the .wav extension",
+      "outputs": []
+    },
+    {
+      "key": "audio-transcribe-no-key",
+      "id": "arcade.audio.transcribe",
+      "status": "PASS",
+      "exitCode": 1,
+      "elapsedMs": 280.66,
+      "command": "/home/harneet/.cache/arcade-audit/releases/Arcade-box/extract-bm/squashfs-root/usr/bin/arcade-box run arcade.audio.transcribe --file /home/harneet/.cache/arcade-audit/profiles/bm/p-958qbk03/home/inputs/synthetic-speech.wav --options-json {\"task\":\"transcribe\",\"language\":\"en\",\"timestamps\":true,\"subtitles\":\"srt\"} --json",
+      "stderrExcerpt": "Arcade Box: Speech-to-text uses Groq. Add your key as GROQ_API_KEY in /home/harneet/.cache/arcade-audit/profiles/bm/p-958qbk03/data/dev.arcadebox.app/.env, or the GROQ_API_KEY environment variable",
+      "outputs": [],
+      "why": "Expected unavailable path because GROQ_API_KEY is absent from isolated profile; no cloud request was sent."
+    },
+    {
+      "key": "audio-text-to-speech-espeak",
+      "id": "arcade.audio.text-to-speech",
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 57.83,
+      "command": "/home/harneet/.cache/arcade-audit/releases/Arcade-box/extract-bm/squashfs-root/usr/bin/arcade-box run arcade.audio.text-to-speech Arcade QA synthetic speech, one two three. --options-json {\"voice\":\"default\",\"speed\":1.1,\"format\":\"wav\",\"outputName\":\"arcade-qa-tts.wav\"} --json",
+      "stderrExcerpt": "",
+      "outputs": [
+        {
+          "kind": "file",
+          "mime": "file/audio",
+          "path": "/home/harneet/.cache/arcade-audit/profiles/bm/p-958qbk03/data/arcadebox/job-artifacts/arcade-qa-tts.wav",
+          "bytes": 117666
+        }
+      ],
+      "resultStatus": "success",
+      "message": "Saved 3 seconds of speech",
+      "independentCheck": {
+        "status": "PASS",
+        "detail": "pcm_s16le 22050Hz duration=2.667166"
+      }
+    },
+    {
+      "key": "web-media-downloader-public-url",
+      "id": "arcade.web.downloader",
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 6945.88,
+      "command": "/home/harneet/.cache/arcade-audit/releases/Arcade-box/extract-bm/squashfs-root/usr/bin/arcade-box run arcade.web.downloader https://download.samplelib.com/mp4/sample-5s.mp4 --options-json {\"media\":\"video\",\"quality\":\"best\",\"videoFormat\":\"original\"} --json",
+      "stderrExcerpt": "",
+      "outputs": [
+        {
+          "kind": "file",
+          "mime": "file/video",
+          "path": "/home/harneet/.cache/arcade-audit/profiles/bm/p-958qbk03/data/arcadebox/job-artifacts/sample-5s.mp4",
+          "bytes": 2848375
+        }
+      ],
+      "resultStatus": "success",
+      "message": "Media download finished"
+    },
+    {
+      "key": "web-transcript-public-url",
+      "id": "arcade.web.transcript",
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 3428.47,
+      "command": "/home/harneet/.cache/arcade-audit/releases/Arcade-box/extract-bm/squashfs-root/usr/bin/arcade-box run arcade.web.transcript https://www.youtube.com/watch?v=jNQXAC9IVRw --options-json {\"language\":\"en\",\"timestamps\":true,\"subtitles\":true,\"whisper\":false} --json",
+      "stderrExcerpt": "",
+      "outputs": [
+        {
+          "kind": "text",
+          "mime": "text/plain",
+          "value": "[00:01] All right, so here we are, in front of the elephants\n[00:05] the cool thing about these guys is that they have really...\n[00:07] really really long trunks\n[00:12] and that's cool\n[00:14] (baaaaaaaaaaahhh!!)\n[00:16] and that's pretty much all there is to say"
+        },
+        {
+          "kind": "file",
+          "mime": "file/subtitle",
+          "path": "/home/harneet/.cache/arcade-audit/profiles/bm/p-958qbk03/data/arcadebox/job-artifacts/Me_at_the_zoo.srt",
+          "bytes": 415
+        }
+      ],
+      "resultStatus": "success",
+      "message": "Transcript from captions: 39 words"
+    },
+    {
+      "key": "web-thumbnail-public-url",
+      "id": "arcade.web.thumbnail",
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 17641.9,
+      "command": "/home/harneet/.cache/arcade-audit/releases/Arcade-box/extract-bm/squashfs-root/usr/bin/arcade-box run arcade.web.thumbnail https://www.youtube.com/watch?v=jNQXAC9IVRw --options-json {\"format\":\"jpg\"} --json",
+      "stderrExcerpt": "",
+      "outputs": [
+        {
+          "kind": "file",
+          "mime": "file/image",
+          "path": "/home/harneet/.cache/arcade-audit/profiles/bm/p-958qbk03/data/arcadebox/job-artifacts/Me_at_the_zoo.jpg",
+          "bytes": 23682
+        }
+      ],
+      "resultStatus": "success",
+      "message": "Saved the thumbnail as Me_at_the_zoo.jpg"
+    },
+    {
+      "key": "web-images-static-example",
+      "id": "arcade.web.images",
+      "status": "FAIL",
+      "exitCode": 1,
+      "elapsedMs": 155.88,
+      "command": "/home/harneet/.cache/arcade-audit/releases/Arcade-box/extract-bm/squashfs-root/usr/bin/arcade-box run arcade.web.images https://example.com/ --options-json {\"limit\":10,\"skipSmall\":true} --json",
+      "stderrExcerpt": "Arcade Box: No images were found in this page's HTML. Images loaded later by JavaScript can't be seen.",
+      "outputs": []
+    },
+    {
+      "key": "web-file-download-w3c-sha256",
+      "id": "arcade.web.file-downloader",
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 664.38,
+      "command": "/home/harneet/.cache/arcade-audit/releases/Arcade-box/extract-bm/squashfs-root/usr/bin/arcade-box run arcade.web.file-downloader https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf --options-json {\"expectedSha256\":\"3df79d34abbca99308e79cb94461c1893582604d68329a41fd4bec1885e6adb4\",\"outputName\":\"w3c-dummy-downloaded.pdf\"} --json",
+      "stderrExcerpt": "",
+      "outputs": [
+        {
+          "kind": "file",
+          "mime": "file/pdf",
+          "path": "/home/harneet/.cache/arcade-audit/profiles/bm/p-958qbk03/data/arcadebox/job-artifacts/w3c-dummy-downloaded.pdf",
+          "bytes": 13264
+        }
+      ],
+      "resultStatus": "success",
+      "message": "Download finished",
+      "independentCheck": {
+        "status": "PASS",
+        "detail": "sha256=3df79d34abbca99308e79cb94461c1893582604d68329a41fd4bec1885e6adb4; pdfinfo=['Author:          Evangelos Vlachogiannis', 'Creator:         Writer', 'Producer:        OpenOffice.org 2.1', 'CreationDate:    Fri Feb 23 21:26:37 2007 IST', 'Custom Metadata: no', 'Metadata Stream: no']"
+      }
+    },
+    {
+      "key": "web-file-download-wrong-sha256",
+      "id": "arcade.web.file-downloader",
+      "status": "PASS",
+      "exitCode": 1,
+      "elapsedMs": 380.43,
+      "command": "/home/harneet/.cache/arcade-audit/releases/Arcade-box/extract-bm/squashfs-root/usr/bin/arcade-box run arcade.web.file-downloader https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf --options-json {\"expectedSha256\":\"0000000000000000000000000000000000000000000000000000000000000000\",\"outputName\":\"must-not-publish.pdf\"} --json",
+      "stderrExcerpt": "Arcade Box: SHA-256 did not match the expected value; the staged download was discarded (actual 3df79d34abbca99308e79cb94461c1893582604d68329a41fd4bec1885e6adb4)",
+      "outputs": [],
+      "independentCheck": {
+        "status": "PASS",
+        "detail": "Checksum mismatch rejected."
+      }
+    },
+    {
+      "key": "network-site-check-example",
+      "id": "arcade.network.site-check",
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 157.05,
+      "command": "/home/harneet/.cache/arcade-audit/releases/Arcade-box/extract-bm/squashfs-root/usr/bin/arcade-box run arcade.network.site-check https://example.com/ --options-json {\"ping\":false,\"redirects\":true,\"certificate\":true,\"headers\":true,\"record\":\"basic\"} --json",
+      "stderrExcerpt": "",
+      "outputs": [
+        {
+          "kind": "text",
+          "mime": "structured/site-check",
+          "value": "{\"target\":\"https://example.com/\",\"host\":\"example.com\",\"verdict\":\"up\",\"summary\":\"Up — 200 OK in 0.06 s\",\"http\":{\"requestedUrl\":\"https://example.com/\",\"status\":200,\"effectiveUrl\":\"https://example.com/\",\"elapsedSeconds\":0.059781,\"remoteAddress\":\"2606:4700:10::ac42:93f3\",\"redirects\":[{\"url\":\"https://example.com/\",\"status\":200,\"location\":null,\"elapsedSeconds\":0.059781}],\"headers\":[{\"name\":\"date\",\"value\":\"Tue, 27 Oct 2026 18:30:41 GMT\"},{\"name\":\"content-type\",\"value\":\"text/html; charset=utf-8\"},{\"name\":\"server\",\"value\":\"cloudflare\"},{\"name\":\"last-modified\",\"value\":\"Sat, 24 Oct 2026 11:34:40 GMT\"},{\"name\":\"allow\",\"value\":\"GET, HEAD\"},{\"name\":\"accept-ranges\",\"value\":\"bytes\"},{\"name\":\"age\",\"value\":\"128\"},{\"name\":\"cf-cache-status\",\"value\":\"HIT\"},{\"name\":\"cf-ray\",\"value\":\"a513c5fe18f834ca-BOM\"},{\"name\":\"alt-svc\",\"value\":\"h3=\\\":443\\\"; ma=86400\"}],\"provider\":{\"name\":\"curl\",\"version\":\"curl 8.23.0 (x86_64-pc-linux-gnu) libcurl/8.23.0 OpenSSL/3.6.5 zlib/1.3.1.zlib-ng brotli/1.2.1 zstd/1.5.7 libidn2/2.3.8 libpsl/0.21.5 libssh2/1.11.1 nghttp2/1.70.0 ngtcp2/1.25.0 nghttp3/1.18.0 mit-krb5/1.22.2\"},\"method\":\"HEAD\",\"headOnly\":true,\"bodyBytesInspected\":290,\"bodyLimitBytes\":1048576,\"fallbackFromHead\":false},\"dns\":{\"query\":\"example.com\",\"resolver\":\"127.0.0.53\",\"records\":[{\"name\":\"example.com\",\"type\":\"A\",\"class\":1,\"ttl\":205,\"value\":\"172.66.147.243\"},{\"name\":\"example.com\",\"type\":\"A\",\"class\":1,\"ttl\":205,\"value\":\"104.20.23.154\"},{\"name\":\"example.com\",\"type\":\"AAAA\",\"class\":1,\"ttl\":259,\"value\":\"2606:4700:1"
+        }
+      ],
+      "resultStatus": "success",
+      "message": "Up — 200 OK in 0.06 s",
+      "independentCheck": {
+        "status": "PASS",
+        "detail": "keys=['target', 'host', 'verdict', 'summary', 'http', 'dns', 'ping', 'certificate', 'note']"
+      }
+    },
+    {
+      "key": "web-snapshot-example-pdf",
+      "id": "arcade.web.snapshot",
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 1462.35,
+      "command": "/home/harneet/.cache/arcade-audit/releases/Arcade-box/extract-bm/squashfs-root/usr/bin/arcade-box run arcade.web.snapshot https://example.com/ --options-json {\"output\":\"pdf\",\"paper\":\"a4\",\"orientation\":\"portrait\",\"background\":true,\"width\":1366,\"dark\":false} --json",
+      "stderrExcerpt": "",
+      "outputs": [
+        {
+          "kind": "file",
+          "mime": "file/pdf",
+          "path": "/home/harneet/.cache/arcade-audit/profiles/bm/p-958qbk03/data/arcadebox/job-artifacts/Example Domain.pdf",
+          "bytes": 95535
+        }
+      ],
+      "resultStatus": "success",
+      "message": "Captured Example Domain",
+      "independentCheck": {
+        "status": "PASS",
+        "detail": "pdfinfo=['Title:           Example Domain', 'Creator:         Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36', 'Producer:        Skia/PDF m156', 'CreationDate:    Wed Oct 28 00:00:43 2026 IST', 'ModDate:         Wed Oct 28 00:00:43 2026 IST', 'Custom Metadata: no', 'Metadata Stream: no']"
+      }
+    },
+    {
+      "key": "web-markdown-example",
+      "id": "arcade.web.markdown",
+      "status": "FAIL",
+      "exitCode": 0,
+      "elapsedMs": 132.44,
+      "command": "/home/harneet/.cache/arcade-audit/releases/Arcade-box/extract-bm/squashfs-root/usr/bin/arcade-box run arcade.web.markdown https://example.com/ --json",
+      "stderrExcerpt": "",
+      "outputs": [
+        {
+          "kind": "text",
+          "mime": "text/markdown",
+          "value": "Example Domain\n\nThis domain is for use in documentation examples without needing permission. This is not a service; avoid relying on it for testing and monitoring purposes."
+        }
+      ],
+      "resultStatus": "success",
+      "message": "Readable text extracted",
+      "independentCheck": {
+        "status": "FAIL",
+        "detail": "markdown chars=172; start='Example Domain\\n\\nThis domain is for use in documentation examples without needing permission. This is not a service; avoid relying on it for testing and monitoring purposes.'"
+      }
+    },
+    {
+      "key": "network-rdap-example-domain",
+      "id": "arcade.network.rdap",
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 1317.41,
+      "command": "/home/harneet/.cache/arcade-audit/releases/Arcade-box/extract-bm/squashfs-root/usr/bin/arcade-box run arcade.network.rdap example.com --json",
+      "stderrExcerpt": "",
+      "outputs": [
+        {
+          "kind": "text",
+          "mime": "structured/registration",
+          "value": "{\"query\":\"example.com\",\"provider\":\"rdap.org\",\"endpoint\":\"https://rdap.org/domain/example.com\",\"record\":{\"objectClassName\":\"domain\",\"handle\":\"2336799_DOMAIN_COM-VRSN\",\"ldhName\":\"EXAMPLE.COM\",\"links\":[{\"value\":\"https://rdap.verisign.com/com/v1/domain/example.com\",\"rel\":\"self\",\"href\":\"https://rdap.verisign.com/com/v1/domain/example.com\",\"type\":\"application/rdap+json\"}],\"status\":[\"client delete prohibited\",\"client transfer prohibited\",\"client update prohibited\"],\"entities\":[{\"objectClassName\":\"entity\",\"handle\":\"376\",\"roles\":[\"registrar\"],\"publicIds\":[{\"type\":\"IANA Registrar ID\",\"identifier\":\"376\"}],\"vcardArray\":[\"vcard\",[[\"version\",{},\"text\",\"4.0\"],[\"fn\",{},\"text\",\"RESERVED-Internet Assigned Numbers Authority\"]]],\"entities\":[{\"objectClassName\":\"entity\",\"roles\":[\"abuse\"],\"vcardArray\":[\"vcard\",[[\"version\",{},\"text\",\"4.0\"],[\"fn\",{},\"text\",\"\"],[\"tel\",{\"type\":\"voice\"},\"uri\",\"\"],[\"email\",{},\"text\",\"\"]]]}]}],\"events\":[{\"eventAction\":\"registration\",\"eventDate\":\"1995-08-14T04:00:00Z\"},{\"eventAction\":\"expiration\",\"eventDate\":\"2027-08-13T04:00:00Z\"},{\"eventAction\":\"last changed\",\"eventDate\":\"2026-08-14T08:01:43Z\"},{\"eventAction\":\"last update of RDAP database\",\"eventDate\":\"2026-10-27T18:30:28Z\"}],\"secureDNS\":{\"delegationSigned\":true,\"dsData\":[{\"keyTag\":2371,\"algorithm\":13,\"digestType\":2,\"digest\":\"C988EC423E3880EB8DD8A46FE06CA230EE23F35B578D64E78B29C3E1C83D245A\"}]},\"nameservers\":[{\"objectClassName\":\"nameserver\",\"ldhName\":\"ELLIOTT.NS.CLOUDFLARE.COM\"},{\"objectClassName\":\"nameserver\",\"ldhName\":\""
+        }
+      ],
+      "resultStatus": "success",
+      "message": null,
+      "independentCheck": {
+        "status": "PASS",
+        "detail": "keys=['query', 'provider', 'endpoint', 'record']"
+      }
+    },
+    {
+      "key": "network-public-ip",
+      "id": "arcade.network.ip",
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 332.13,
+      "command": "/home/harneet/.cache/arcade-audit/releases/Arcade-box/extract-bm/squashfs-root/usr/bin/arcade-box run arcade.network.ip --options-json {\"includePublic\":true} --json",
+      "stderrExcerpt": "",
+      "outputs": [
+        {
+          "kind": "text",
+          "mime": "structured/ip-info",
+          "value": "[public IP redacted]"
+        }
+      ],
+      "resultStatus": "success",
+      "message": null,
+      "independentCheck": {
+        "status": "PASS",
+        "detail": "7 syntactically valid public address value(s); value redacted"
+      }
+    },
+    {
+      "key": "developer-regex-capture-replace",
+      "id": "arcade.developer.regex",
+      "status": "FAIL",
+      "exitCode": 0,
+      "elapsedMs": 26.65,
+      "command": "/home/harneet/.cache/arcade-audit/releases/Arcade-box/extract-bm/squashfs-root/usr/bin/arcade-box run arcade.developer.regex Arcade Box and Arcade Tools --options-json {\"pattern\":\"(Arcade)\\\\s+(Box|Tools)\",\"flags\":\"g\",\"replacement\":\"$1 <$2>\"} --json",
+      "stderrExcerpt": "",
+      "outputs": [
+        {
+          "kind": "text",
+          "mime": "structured/regex-result",
+          "value": "{\"engine\":\"Rust regex (Unicode-aware, linear-time matching)\",\"limitations\":\"Look-around and backreferences are not supported by this regex engine.\",\"pattern\":\"(Arcade)\\\\s+(Box|Tools)\",\"flags\":\"g\",\"matched\":true,\"matchCount\":2,\"matches\":[{\"value\":\"Arcade Box\",\"startByte\":0,\"endByte\":10,\"groups\":[{\"index\":1,\"name\":null,\"value\":\"Arcade\",\"startByte\":0,\"endByte\":6},{\"index\":2,\"name\":null,\"value\":\"Box\",\"startByte\":7,\"endByte\":10}]},{\"value\":\"Arcade Tools\",\"startByte\":15,\"endByte\":27,\"groups\":[{\"index\":1,\"name\":null,\"value\":\"Arcade\",\"startByte\":15,\"endByte\":21},{\"index\":2,\"name\":null,\"value\":\"Tools\",\"startByte\":22,\"endByte\":27}]}],\"replacement\":\"Arcade <Box> and Arcade <Tools>\",\"truncated\":false}"
+        }
+      ],
+      "resultStatus": "success",
+      "message": null,
+      "independentCheck": {
+        "status": "FAIL",
+        "detail": "output='{\"engine\":\"Rust regex (Unicode-aware, linear-time matching)\",\"limitations\":\"Look-around and backreferences are not supported by this regex engine.\",\"pattern\":\"(Arcade)\\\\\\\\s+(Box|Tools)\",\"flags\":\"g\",\"matched\":true,\"matchCount\":2,\"matches\":[{\"value\":\"Arcade Box\",\"startByte\":0,\"endByte\":10,\"groups\":[{\"index\":1,\"name\":null,\"value\":\"Arcade\",\"startByte\":0,\"endByte\":6},{\"index\":2,\"name\":null,\"value\":\"Box\",\"startByte\":7,\"endByte\":10}]},{\"value\":\"Arcade Tools\",\"startByte\":15,\"endByte\":27,\"groups\":[{\"index\":1,\"name\":null,\"value\":\"Arcade\",\"startByte\":15,\"endByte\":21},{\"index\":2,\"name\":null,\"value\":\"Tools\",\"startByte\":22,\"endByte\":27}]}],\"replacement\":\"Arcade <Box> and Arcade <Tools>\",\"truncated\":false}'"
+      }
+    },
+    {
+      "key": "developer-encoding-base64",
+      "id": "arcade.developer.encoding",
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 25.43,
+      "command": "/home/harneet/.cache/arcade-audit/releases/Arcade-box/extract-bm/squashfs-root/usr/bin/arcade-box run arcade.developer.encoding Arcade Box, QA ✓ --options-json {\"action\":\"encode\",\"encoding\":\"base64\"} --json",
+      "stderrExcerpt": "",
+      "outputs": [
+        {
+          "kind": "text",
+          "mime": "text/plain",
+          "value": "QXJjYWRlIEJveCwgUUEg4pyT"
+        }
+      ],
+      "resultStatus": "success",
+      "message": null,
+      "independentCheck": {
+        "status": "PASS",
+        "detail": "encoded length=24; roundtrip='Arcade Box, QA ✓'"
+      }
+    },
+    {
+      "key": "developer-encoding-hex",
+      "id": "arcade.developer.encoding",
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 26.26,
+      "command": "/home/harneet/.cache/arcade-audit/releases/Arcade-box/extract-bm/squashfs-root/usr/bin/arcade-box run arcade.developer.encoding Arcade Box, QA ✓ --options-json {\"action\":\"encode\",\"encoding\":\"hex\"} --json",
+      "stderrExcerpt": "",
+      "outputs": [
+        {
+          "kind": "text",
+          "mime": "text/plain",
+          "value": "41726361646520426f782c20514120e29c93"
+        }
+      ],
+      "resultStatus": "success",
+      "message": null,
+      "independentCheck": {
+        "status": "PASS",
+        "detail": "encoded length=36; roundtrip='Arcade Box, QA ✓'"
+      }
+    },
+    {
+      "key": "developer-url-inspect",
+      "id": "arcade.developer.url",
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 24.72,
+      "command": "/home/harneet/.cache/arcade-audit/releases/Arcade-box/extract-bm/squashfs-root/usr/bin/arcade-box run arcade.developer.url https://example.com/search?q=Arcade%20Box&lang=en --options-json {\"action\":\"inspect\"} --json",
+      "stderrExcerpt": "",
+      "outputs": [
+        {
+          "kind": "text",
+          "mime": "structured/url-query",
+          "value": "{\"scheme\":\"https\",\"host\":\"example.com\",\"port\":443,\"path\":\"/search\",\"query\":[{\"key\":\"q\",\"value\":\"Arcade Box\"},{\"key\":\"lang\",\"value\":\"en\"}],\"fragment\":null,\"credentialsPresent\":false,\"safeDisplay\":\"https://example.com/search?q=Arcade%20Box&lang=en\"}"
+        }
+      ],
+      "resultStatus": "success",
+      "message": null,
+      "independentCheck": {
+        "status": "PASS",
+        "detail": "query parse keys=['scheme', 'host', 'port', 'path', 'query', 'fragment', 'credentialsPresent', 'safeDisplay']"
+      }
+    },
+    {
+      "key": "developer-url-encode",
+      "id": "arcade.developer.url",
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 26.57,
+      "command": "/home/harneet/.cache/arcade-audit/releases/Arcade-box/extract-bm/squashfs-root/usr/bin/arcade-box run arcade.developer.url Arcade Box + QA --options-json {\"action\":\"encode\"} --json",
+      "stderrExcerpt": "",
+      "outputs": [
+        {
+          "kind": "text",
+          "mime": "text/url",
+          "value": "Arcade%20Box%20%2B%20QA"
+        }
+      ],
+      "resultStatus": "success",
+      "message": null,
+      "independentCheck": {
+        "status": "PASS",
+        "detail": "encoded='Arcade%20Box%20%2B%20QA'"
+      }
+    },
+    {
+      "key": "developer-hash-sha256-verify",
+      "id": "arcade.developer.hash",
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 25.42,
+      "command": "/home/harneet/.cache/arcade-audit/releases/Arcade-box/extract-bm/squashfs-root/usr/bin/arcade-box run arcade.developer.hash Arcade QA fixture --options-json {\"algorithm\":\"sha256\",\"expected\":\"d37a15b06cff8d1cad26a1d958df21eb7fa4656fd702557b6d5ecd2e3e4c55d9\"} --json",
+      "stderrExcerpt": "",
+      "outputs": [
+        {
+          "kind": "text",
+          "mime": "text/plain",
+          "value": "d37a15b06cff8d1cad26a1d958df21eb7fa4656fd702557b6d5ecd2e3e4c55d9"
+        }
+      ],
+      "resultStatus": "success",
+      "message": "Checksum matches",
+      "independentCheck": {
+        "status": "PASS",
+        "detail": "expected digest recomputed independently; match=True"
+      }
+    },
+    {
+      "key": "developer-hash-wrong-expected",
+      "id": "arcade.developer.hash",
+      "status": "FAIL",
+      "exitCode": 0,
+      "elapsedMs": 25.57,
+      "command": "/home/harneet/.cache/arcade-audit/releases/Arcade-box/extract-bm/squashfs-root/usr/bin/arcade-box run arcade.developer.hash Arcade QA fixture --options-json {\"algorithm\":\"sha256\",\"expected\":\"0000000000000000000000000000000000000000000000000000000000000000\"} --json",
+      "stderrExcerpt": "",
+      "outputs": [
+        {
+          "kind": "text",
+          "mime": "text/plain",
+          "value": "d37a15b06cff8d1cad26a1d958df21eb7fa4656fd702557b6d5ecd2e3e4c55d9"
+        }
+      ],
+      "resultStatus": "success",
+      "message": "Checksum does NOT match the expected value"
+    },
+    {
+      "key": "developer-identifier-uuid-v4-count8",
+      "id": "arcade.developer.identifier",
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 25.55,
+      "command": "/home/harneet/.cache/arcade-audit/releases/Arcade-box/extract-bm/squashfs-root/usr/bin/arcade-box run arcade.developer.identifier --options-json {\"format\":\"uuid-v4\",\"count\":8} --json",
+      "stderrExcerpt": "",
+      "outputs": [
+        {
+          "kind": "text",
+          "mime": "text/plain",
+          "value": "36676566-8257-4e50-942b-149dd252b27c\n26cf2b22-550a-4b69-b3e5-b8f96f210e27\na618ec45-1b08-4ecf-97a1-e892bae26ec8\n42ffd3e9-8db1-4e7d-94e9-41480fe7cb4b\n2a6dfc39-d76e-4417-a859-3fc4a6de7ba3\n48c562bd-cad9-4eae-9837-5585a46a1722\n5f287442-eb3d-4780-bde5-0a4396fadaf0\na639b4d0-5ef0-472d-891e-57b719931295"
+        }
+      ],
+      "resultStatus": "success",
+      "message": null,
+      "independentCheck": {
+        "status": "PASS",
+        "detail": "8 UUIDs, unique=True, v4=True"
+      }
+    },
+    {
+      "key": "developer-identifier-ulid-count5",
+      "id": "arcade.developer.identifier",
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 25.05,
+      "command": "/home/harneet/.cache/arcade-audit/releases/Arcade-box/extract-bm/squashfs-root/usr/bin/arcade-box run arcade.developer.identifier --options-json {\"format\":\"ulid\",\"count\":5} --json",
+      "stderrExcerpt": "",
+      "outputs": [
+        {
+          "kind": "text",
+          "mime": "text/plain",
+          "value": "01M5ZA22581FS67VYTMQR2GSB1\n01M5ZA2258PWF2X2WK0CTBFT8C\n01M5ZA2258XWVG45RSX4J4CSJN\n01M5ZA22580R36JYNHN9SFKDET\n01M5ZA2258YPT5N1EDQ8X92MM7"
+        }
+      ],
+      "resultStatus": "success",
+      "message": null,
+      "independentCheck": {
+        "status": "PASS",
+        "detail": "5 ULIDs, unique=True"
+      }
+    },
+    {
+      "key": "developer-jwt-inspect-unverified",
+      "id": "arcade.developer.jwt",
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 25.2,
+      "command": "/home/harneet/.cache/arcade-audit/releases/Arcade-box/extract-bm/squashfs-root/usr/bin/arcade-box run arcade.developer.jwt eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzeW50aGV0aWMtdXNlciIsImV4cCI6MTc5MzEyOTQ0NSwiaWF0IjoxNzkzMTI1ODQ1LCJpc3MiOiJxYS5sb2NhbCJ9.c3ludGhldGljLXNpZ25hdHVyZQ --json",
+      "stderrExcerpt": "",
+      "outputs": [
+        {
+          "kind": "text",
+          "mime": "structured/jwt",
+          "value": "{\"header\":{\"alg\":\"HS256\",\"typ\":\"JWT\"},\"payload\":{\"sub\":\"synthetic-user\",\"exp\":1793129445,\"iat\":1793125845,\"iss\":\"qa.local\"},\"signatureBytes\":19,\"registeredTimes\":{\"exp\":{\"unixSeconds\":1793129445,\"isoUtc\":\"2026-10-27T19:30:45+00:00\"},\"iat\":{\"unixSeconds\":1793125845,\"isoUtc\":\"2026-10-27T18:30:45+00:00\"}},\"signatureVerified\":false,\"note\":\"The token was decoded locally. Its signature, issuer, audience, and claims are not verified.\"}"
+        }
+      ],
+      "resultStatus": "success",
+      "message": null,
+      "independentCheck": {
+        "status": "PASS",
+        "detail": "claims and algorithm parsed; has signature-status field=True"
+      }
+    },
+    {
+      "key": "developer-cron-monday-9am",
+      "id": "arcade.developer.cron",
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 27.98,
+      "command": "/home/harneet/.cache/arcade-audit/releases/Arcade-box/extract-bm/squashfs-root/usr/bin/arcade-box run arcade.developer.cron 0 9 * * 1 --options-json {\"timeZone\":\"Asia/Kolkata\"} --json",
+      "stderrExcerpt": "",
+      "outputs": [
+        {
+          "kind": "text",
+          "mime": "structured/cron",
+          "value": "{\"expression\":\"0 9 * * 1\",\"dialect\":\"Unix five-field cron\",\"timeZone\":\"Asia/Kolkata\",\"description\":\"Five-field cron schedule in Asia/Kolkata: minute 0, hour 9, day-of-month *, month *, day-of-week 1.\",\"nextOccurrences\":[\"2026-11-02T09:00:00+05:30\",\"2026-11-09T09:00:00+05:30\",\"2026-11-16T09:00:00+05:30\",\"2026-11-23T09:00:00+05:30\",\"2026-11-30T09:00:00+05:30\"]}"
+        }
+      ],
+      "resultStatus": "success",
+      "message": null,
+      "independentCheck": {
+        "status": "PASS",
+        "detail": "cron summary={'expression': '0 9 * * 1', 'dialect': 'Unix five-field cron', 'timeZone': 'Asia/Kolkata', 'description': 'Five-field cron schedule in Asia/Kolkata: minute 0, hour 9, day-of-month *, month *, day-of-week 1.', 'nextOccurrences': ['2026-11-02T09:00:00+05:30', '2026-11-09T09:00:00+05:30', '2026-11-16T09:00:00+05:30', '2026-11-23T09:00:00+05:30', '2026-11-30T09:00:00+05:30']}"
+      }
+    },
+    {
+      "key": "developer-cron-invalid",
+      "id": "arcade.developer.cron",
+      "status": "PASS",
+      "exitCode": 1,
+      "elapsedMs": 31.93,
+      "command": "/home/harneet/.cache/arcade-audit/releases/Arcade-box/extract-bm/squashfs-root/usr/bin/arcade-box run arcade.developer.cron 61 25 * * 8 --options-json {\"timeZone\":\"UTC\"} --json",
+      "stderrExcerpt": "Arcade Box: Cron field value must be between 0 and 59",
+      "outputs": [],
+      "independentCheck": {
+        "status": "PASS",
+        "detail": "Out-of-range cron fields rejected."
+      }
+    },
+    {
+      "key": "utility-emoji-search-rocket",
+      "id": "arcade.utility.emoji",
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 26.95,
+      "command": "/home/harneet/.cache/arcade-audit/releases/Arcade-box/extract-bm/squashfs-root/usr/bin/arcade-box run arcade.utility.emoji rocket --options-json {\"group\":\"all\"} --json",
+      "stderrExcerpt": "",
+      "outputs": [
+        {
+          "kind": "text",
+          "mime": "structured/emoji-list",
+          "value": "{\"query\":\"rocket\",\"count\":1,\"shown\":1,\"emojis\":[{\"emoji\":\"🚀\",\"name\":\"rocket\",\"shortcode\":\":rocket:\",\"group\":\"Travel & places\"}]}"
+        }
+      ],
+      "resultStatus": "success",
+      "message": null,
+      "independentCheck": {
+        "status": "PASS",
+        "detail": "emoji result contains rocket=True; output chars=218"
+      }
+    },
+    {
+      "key": "utility-timer-cli",
+      "id": "arcade.utility.timer",
+      "status": "UNTESTED",
+      "exitCode": 1,
+      "elapsedMs": 27.08,
+      "command": "/home/harneet/.cache/arcade-audit/releases/Arcade-box/extract-bm/squashfs-root/usr/bin/arcade-box run arcade.utility.timer --json",
+      "stderrExcerpt": "Arcade Box: The timer runs in the Arcade Box window",
+      "outputs": [],
+      "why": "Timer is an interactive desktop control; command line has no wall-clock UI to start/pause/stop. GUI timer behavior is checked separately.",
+      "independentCheck": {
+        "status": "UNTESTED",
+        "detail": "Timer is an interactive desktop control; command line has no wall-clock UI to start/pause/stop. GUI timer behavior is checked separately."
+      }
+    },
+    {
+      "key": "utility-random-pick-no-repeat",
+      "id": "arcade.utility.random",
+      "status": "FAIL",
+      "exitCode": 0,
+      "elapsedMs": 27.21,
+      "command": "/home/harneet/.cache/arcade-audit/releases/Arcade-box/extract-bm/squashfs-root/usr/bin/arcade-box run arcade.utility.random north\nsouth\neast\nwest --options-json {\"mode\":\"pick\",\"count\":3,\"repeat\":false} --json",
+      "stderrExcerpt": "",
+      "outputs": [
+        {
+          "kind": "text",
+          "mime": "structured/random",
+          "value": "{\"headline\":\"south, west, east\",\"results\":[\"south\",\"west\",\"east\"]}"
+        }
+      ],
+      "resultStatus": "success",
+      "message": null,
+      "independentCheck": {
+        "status": "FAIL",
+        "detail": "choices=['south', 'west', 'east', 'south', 'west', 'east']"
+      }
+    },
+    {
+      "key": "utility-random-number-bounds",
+      "id": "arcade.utility.random",
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 27.34,
+      "command": "/home/harneet/.cache/arcade-audit/releases/Arcade-box/extract-bm/squashfs-root/usr/bin/arcade-box run arcade.utility.random --options-json {\"mode\":\"number\",\"count\":100,\"min\":4,\"max\":11,\"repeat\":true} --json",
+      "stderrExcerpt": "",
+      "outputs": [
+        {
+          "kind": "text",
+          "mime": "structured/random",
+          "value": "{\"headline\":\"11, 6, 7, 10, 10, 5, 11, 10, 10, 10, 6, 10, 8, 11, 5, 4, 9, 5, 8, 9, 10, 8, 6, 6, 7, 5, 6, 10, 11, 10, 4, 11, 6, 7, 11, 4, 7, 9, 9, 11, 10, 8, 5, 9, 10, 11, 11, 5, 5, 10, 10, 10, 7, 11, 9, 9, 6, 11, 8, 10, 5, 7, 7, 10, 11, 8, 8, 4, 9, 10, 9, 10, 9, 9, 10, 5, 7, 11, 10, 11, 6, 6, 8, 9, 6, 11, 5, 10, 9, 11, 4, 10, 10, 5, 8, 9, 9, 10, 11, 10\",\"results\":[11,6,7,10,10,5,11,10,10,10,6,10,8,11,5,4,9,5,8,9,10,8,6,6,7,5,6,10,11,10,4,11,6,7,11,4,7,9,9,11,10,8,5,9,10,11,11,5,5,10,10,10,7,11,9,9,6,11,8,10,5,7,7,10,11,8,8,4,9,10,9,10,9,9,10,5,7,11,10,11,6,6,8,9,6,11,5,10,9,11,4,10,10,5,8,9,9,10,11,10]}"
+        }
+      ],
+      "resultStatus": "success",
+      "message": null,
+      "independentCheck": {
+        "status": "PASS",
+        "detail": "200 results; all in [4,11]=True"
+      }
+    },
+    {
+      "key": "utility-random-dice-d20",
+      "id": "arcade.utility.random",
+      "status": "FAIL",
+      "exitCode": 0,
+      "elapsedMs": 27.3,
+      "command": "/home/harneet/.cache/arcade-audit/releases/Arcade-box/extract-bm/squashfs-root/usr/bin/arcade-box run arcade.utility.random --options-json {\"mode\":\"dice\",\"count\":20,\"sides\":20} --json",
+      "stderrExcerpt": "",
+      "outputs": [
+        {
+          "kind": "text",
+          "mime": "structured/random",
+          "value": "{\"headline\":\"Total 187\",\"results\":[18,18,1,8,12,1,13,12,10,15,3,10,4,5,16,6,1,8,8,18],\"total\":187}"
+        }
+      ],
+      "resultStatus": "success",
+      "message": null,
+      "independentCheck": {
+        "status": "FAIL",
+        "detail": "22 dice values within 1..20=False"
+      }
+    },
+    {
+      "key": "utility-random-invalid-count-limit",
+      "id": "arcade.utility.random",
+      "status": "PASS",
+      "exitCode": 1,
+      "elapsedMs": 27.09,
+      "command": "/home/harneet/.cache/arcade-audit/releases/Arcade-box/extract-bm/squashfs-root/usr/bin/arcade-box run arcade.utility.random --options-json {\"mode\":\"number\",\"count\":10001,\"min\":1,\"max\":10} --json",
+      "stderrExcerpt": "Arcade Box: how many must be between 1 and 10000",
+      "outputs": [],
+      "independentCheck": {
+        "status": "PASS",
+        "detail": "Count above the catalog maximum 10000 was rejected."
+      }
+    },
+    {
+      "key": "password-random-length32",
+      "id": "arcade.security.password",
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 18.33,
+      "command": "/home/harneet/.cache/arcade-audit/releases/Arcade-box/extract-bm/squashfs-root/usr/bin/arcade-box run arcade.security.password --options-json {\"mode\":\"password\",\"length\":32,\"symbols\":true,\"excludeAmbiguous\":true} --json",
+      "stderrExcerpt": "",
+      "outputs": [
+        {
+          "kind": "text",
+          "mime": "text/plain",
+          "value": "[generated secret redacted]"
+        },
+        {
+          "kind": "text",
+          "mime": "structured/password-strength",
+          "value": "[generated secret redacted]"
+        }
+      ],
+      "resultStatus": "success",
+      "message": "Generated on this device with the system's secure random source",
+      "independentCheck": {
+        "status": "PASS",
+        "detail": "{'length': 32, 'hasSymbol': True, 'ambiguousPresent': False}; entropy metadata fields=[]"
+      }
+    },
+    {
+      "key": "password-passphrase-4-words",
+      "id": "arcade.security.password",
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 18.42,
+      "command": "/home/harneet/.cache/arcade-audit/releases/Arcade-box/extract-bm/squashfs-root/usr/bin/arcade-box run arcade.security.password --options-json {\"mode\":\"passphrase\",\"words\":4,\"separator\":\"_\"} --json",
+      "stderrExcerpt": "",
+      "outputs": [
+        {
+          "kind": "text",
+          "mime": "text/plain",
+          "value": "[generated phrase redacted]"
+        },
+        {
+          "kind": "text",
+          "mime": "structured/password-strength",
+          "value": "[generated phrase redacted]"
+        }
+      ],
+      "resultStatus": "success",
+      "message": "Generated on this device with the system's secure random source",
+      "independentCheck": {
+        "status": "PASS",
+        "detail": "pseudo-word count=4; separator=_; value redacted"
+      }
+    },
+    {
+      "key": "password-pin-6-digits",
+      "id": "arcade.security.password",
+      "status": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 18.61,
+      "command": "/home/harneet/.cache/arcade-audit/releases/Arcade-box/extract-bm/squashfs-root/usr/bin/arcade-box run arcade.security.password --options-json {\"mode\":\"pin\",\"digits\":6} --json",
+      "stderrExcerpt": "",
+      "outputs": [
+        {
+          "kind": "text",
+          "mime": "text/plain",
+          "value": "[generated PIN redacted]"
+        },
+        {
+          "kind": "text",
+          "mime": "structured/password-strength",
+          "value": "[generated PIN redacted]"
+        }
+      ],
+      "resultStatus": "success",
+      "message": "Generated on this device with the system's secure random source",
+      "independentCheck": {
+        "status": "PASS",
+        "detail": "length=6; all digits=True; value redacted"
+      }
+    },
+    {
+      "key": "password-invalid-length7",
+      "id": "arcade.security.password",
+      "status": "PASS",
+      "exitCode": 1,
+      "elapsedMs": 7.85,
+      "command": "/home/harneet/.cache/arcade-audit/releases/Arcade-box/extract-bm/squashfs-root/usr/bin/arcade-box run arcade.security.password --options-json {\"mode\":\"password\",\"length\":7} --json",
+      "stderrExcerpt": "Arcade Box: Password length must be between 8 and 128",
+      "outputs": [],
+      "independentCheck": {
+        "status": "PASS",
+        "detail": "Length 7 below the documented minimum 8 was rejected."
+      }
+    },
+    {
+      "key": "password-check-weak-dummy",
+      "id": "arcade.security.password",
+      "status": "FAIL",
+      "exitCode": 1,
+      "elapsedMs": 7.84,
+      "command": "/home/harneet/.cache/arcade-audit/releases/Arcade-box/extract-bm/squashfs-root/usr/bin/arcade-box run arcade.security.password password --options-json {\"mode\":\"check\"} --json",
+      "stderrExcerpt": "Arcade Box: tool arcade.security.password does not accept input type text/plain",
+      "outputs": []
+    }
+  ]
+}

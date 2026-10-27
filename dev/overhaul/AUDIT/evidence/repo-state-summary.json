@@ -1,0 +1,130 @@
+[
+  {
+    "app": "Find",
+    "repo": "Arcade-Find",
+    "local": "/home/harneet/Work/Coding/Rust/Arcade-Find",
+    "local_head": "53e9b670571039b32d76035d8d1b64bdfff81c76 2026-10-11T01:31:51+05:30 Make overlay backgrounds fully opaque",
+    "local_status": "## main...origin/main [behind 50]",
+    "current_main": "f4083483fdca116cfaa9772802cd914422e56a93 2026-10-19T10:58:17+05:30 Merge pull request #10 from qa-p1/claude/epic-ramanujan-afo4yy",
+    "behind_ahead": "50\t0",
+    "latest_release": "v0.4.3",
+    "open_prs": [],
+    "open_issue_count": 0
+  },
+  {
+    "app": "Box",
+    "repo": "Arcade-box",
+    "local": "/home/harneet/Work/Coding/Rust/Arcade Box",
+    "local_head": "ca8df43b1def979614f68f0b7a0d127895e206f9 2026-10-26T22:48:38+05:30 UI: adopt the Arcade shared tokens and fix overflowing layouts",
+    "local_status": "## fix/ui-and-tools\n M crates/arcade-core/src/converter_tools/calculator.rs\n M crates/arcade-core/src/converter_tools/units.rs",
+    "current_main": "76ece8d8447e5e142b3ecbe8964017ad077d6bc4 2026-10-19T15:14:02+05:30 Merge pull request #13 from qa-p1/claude/epic-ramanujan-afo4yy",
+    "behind_ahead": "61\t1",
+    "latest_release": "v0.3.5",
+    "open_prs": [],
+    "open_issue_count": 0
+  },
+  {
+    "app": "Tools",
+    "repo": "Arcade-tools",
+    "local": "/home/harneet/Work/Coding/Rust/Arcade-tools",
+    "local_head": "2169576049e23240fb31df099632711fedc6211c 2026-10-26T22:09:11+05:30 Merge pull request #14 from qa-p1/release/0.3.8-tools-ui",
+    "local_status": "## main...origin/main",
+    "current_main": "2169576049e23240fb31df099632711fedc6211c 2026-10-26T22:09:11+05:30 Merge pull request #14 from qa-p1/release/0.3.8-tools-ui",
+    "behind_ahead": "0\t0",
+    "latest_release": "v0.3.8",
+    "open_prs": [],
+    "open_issue_count": 0
+  },
+  {
+    "app": "Look",
+    "repo": "Arcade-look",
+    "local": "/home/harneet/Work/Coding/Rust/arcade-look",
+    "local_head": "ecf70446d5bee99708eec20dbf2e71c142d5eea1 2026-10-11T01:44:10+05:30 Merge pull request #4 from qa-p1/feature/back-forward-navigation",
+    "local_status": "## main...origin/main [behind 57]",
+    "current_main": "c31b82080fc32835b2824240158c46264996df19 2026-10-19T17:10:30+05:30 Merge pull request #14 from qa-p1/claude/epic-ramanujan-afo4yy",
+    "behind_ahead": "57\t0",
+    "latest_release": "v0.3.5",
+    "open_prs": [],
+    "open_issue_count": 0
+  },
+  {
+    "app": "Wheel",
+    "repo": "Arcade-wheel",
+    "local": "/home/harneet/Work/Coding/C++/Arcade wheel",
+    "local_head": "1ee601c7df219ea5955b14e087c8d4b232b6635c 2026-10-25T23:08:38+05:30 Merge pull request #15 from qa-p1/claude/hotfix-0.4.5-no-vulkan",
+    "local_status": "## main...origin/main",
+    "current_main": "1ee601c7df219ea5955b14e087c8d4b232b6635c 2026-10-25T23:08:38+05:30 Merge pull request #15 from qa-p1/claude/hotfix-0.4.5-no-vulkan",
+    "behind_ahead": "0\t0",
+    "latest_release": "v0.4.5+build.73",
+    "open_prs": [],
+    "open_issue_count": 0
+  },
+  {
+    "app": "Clipboard",
+    "repo": "Arcade-clipboard",
+    "local": "/home/harneet/Work/Coding/App dev/Arcade-clipboard",
+    "local_head": "2ab2c94fc919853ca253bb454bfc3210235a20eb 2026-10-10T21:11:46+05:30 Merge pull request #2 from qa-p1/feature/add-to-shelf",
+    "local_status": "## main...origin/main [behind 55]",
+    "current_main": "fdd4788a455d13dfe4deaeb4898f3fb444d3d57b 2026-10-19T16:08:11+05:30 Merge pull request #12 from qa-p1/claude/epic-ramanujan-afo4yy",
+    "behind_ahead": "55\t0",
+    "latest_release": "v0.2.5",
+    "open_prs": [],
+    "open_issue_count": 0
+  },
+  {
+    "app": "Lens",
+    "repo": "Arcade-lens",
+    "local": "/home/harneet/Work/Coding/Rust/Arcade-lens",
+    "local_head": "c862102c19a9839f40ef371953f7bb922ce055a6 2026-10-25T15:35:13+05:30 Merge pull request #11 from qa-p1/claude/wayland-clipboard-flicker",
+    "local_status": "## main...origin/main",
+    "current_main": "c862102c19a9839f40ef371953f7bb922ce055a6 2026-10-25T15:35:13+05:30 Merge pull request #11 from qa-p1/claude/wayland-clipboard-flicker",
+    "behind_ahead": "0\t0",
+    "latest_release": "v0.3.4",
+    "open_prs": [],
+    "open_issue_count": 0
+  },
+  {
+    "app": "Shelf",
+    "repo": "Arcade-Shelf",
+    "local": "/home/harneet/Work/Coding/C++/Arcade-Shelf",
+    "local_head": "6a0885eed4e91d7fbc1dc27afa1223a3c7fb76d6 2026-10-11T00:30:47+05:30 Shelf 0.1.1: Hyprland fixes and Linux AppImage (#2)",
+    "local_status": "## main...origin/main [behind 45]",
+    "current_main": "52c1e2580cb606b25aad3364fc1ce144d2918902 2026-10-19T10:58:25+05:30 Merge pull request #10 from qa-p1/claude/epic-ramanujan-afo4yy",
+    "behind_ahead": "45\t0",
+    "latest_release": "v0.3.3",
+    "open_prs": [],
+    "open_issue_count": 0
+  },
+  {
+    "app": "Link",
+    "repo": "Arcade-Link",
+    "local": "/home/harneet/Work/Coding/Rust/Arcade-link",
+    "local_head": "7e69e013fce8863c092b80b3c399357dc0b0dbd4 2026-10-10T22:22:59+05:30 Merge pull request #2 from qa-p1/test/look-0.1.2",
+    "local_status": "## main...origin/main [behind 104]",
+    "current_main": "8a19346586a2ef27984dd0b18a073af9b444d3ec 2026-10-19T17:04:59+05:30 Merge pull request #12 from qa-p1/claude/epic-ramanujan-afo4yy",
+    "behind_ahead": "104\t0",
+    "latest_release": null,
+    "open_prs": [],
+    "open_issue_count": 0
+  },
+  {
+    "app": "Catalog",
+    "repo": "Arcade-catalog",
+    "local": "/home/harneet/Work/Coding/Rust/Arcade-catalog",
+    "local_head": "09e96b75cb0f54e23c20e3070d9e658c45ac054f 2026-10-14T12:13:42+05:30 fix(catalog): use canonical GitHub repository names",
+    "local_status": "## arcade/tools-hub...origin/arcade/tools-hub",
+    "current_main": "bda5e35d7a31d34ec7debb0525b17fc1220eac21 2026-10-19T17:22:10+05:30 Merge pull request #10 from qa-p1/claude/epic-ramanujan-afo4yy",
+    "behind_ahead": "16\t3",
+    "latest_release": null,
+    "open_prs": [
+      {
+        "number": 9,
+        "title": "Real-user stress test report, October 2026 (draft)",
+        "headRefName": "qa/stress-2026-10",
+        "url": "https://github.com/qa-p1/Arcade-catalog/pull/9",
+        "mergeable": "UNKNOWN"
+      }
+    ],
+    "open_issue_count": 0
+  }
+]

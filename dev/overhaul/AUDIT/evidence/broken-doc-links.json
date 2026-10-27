@@ -1,0 +1,200 @@
+[
+  {
+    "repo": "Arcade-Link",
+    "file": "ARCADE_ECOSYSTEM_PLAN.md",
+    "line": 2,
+    "target": "ARCADE_TOOLS_PLAN.md"
+  },
+  {
+    "repo": "Arcade-Shelf",
+    "file": "vendor/arcade-link/SPEC.md",
+    "line": 712,
+    "target": "packaging/windows/README.md"
+  },
+  {
+    "repo": "Arcade-Shelf",
+    "file": "vendor/arcade-link/shared/packaging/windows/README.md",
+    "line": 26,
+    "target": "../../SPEC.md#86-install-standard"
+  },
+  {
+    "repo": "Arcade-Shelf",
+    "file": "vendor/arcade-link/shared/packaging/windows/README.md",
+    "line": 27,
+    "target": "../../spec/vectors/windows-path-identity.json"
+  },
+  {
+    "repo": "Arcade-box",
+    "file": "packaging/windows/README.md",
+    "line": 26,
+    "target": "../../SPEC.md#86-install-standard"
+  },
+  {
+    "repo": "Arcade-box",
+    "file": "packaging/windows/README.md",
+    "line": 27,
+    "target": "../../spec/vectors/windows-path-identity.json"
+  },
+  {
+    "repo": "Arcade-catalog",
+    "file": "dev/ARCADE_ECOSYSTEM_PLAN.md",
+    "line": 6,
+    "target": "SPEC.md"
+  },
+  {
+    "repo": "Arcade-catalog",
+    "file": "dev/ARCADE_ECOSYSTEM_PLAN.md",
+    "line": 7,
+    "target": "COMPLETION_REPORT.md"
+  },
+  {
+    "repo": "Arcade-lens",
+    "file": "packaging/windows/README.md",
+    "line": 26,
+    "target": "../../SPEC.md#86-install-standard"
+  },
+  {
+    "repo": "Arcade-lens",
+    "file": "packaging/windows/README.md",
+    "line": 27,
+    "target": "../../spec/vectors/windows-path-identity.json"
+  },
+  {
+    "repo": "Arcade-look",
+    "file": "src-tauri/windows/README.md",
+    "line": 26,
+    "target": "../../SPEC.md#86-install-standard"
+  },
+  {
+    "repo": "Arcade-look",
+    "file": "src-tauri/windows/README.md",
+    "line": 27,
+    "target": "../../spec/vectors/windows-path-identity.json"
+  },
+  {
+    "repo": "Arcade-tools",
+    "file": "src-tauri/resources/docs/arcade.box/local/features.md",
+    "line": 79,
+    "target": "../tool-catalog.md"
+  },
+  {
+    "repo": "Arcade-tools",
+    "file": "src-tauri/resources/docs/arcade.box/local/features.md",
+    "line": 79,
+    "target": "../tool-matrix.md"
+  },
+  {
+    "repo": "Arcade-tools",
+    "file": "src-tauri/resources/docs/arcade.box/local/features.md",
+    "line": 79,
+    "target": "../providers.md"
+  },
+  {
+    "repo": "Arcade-tools",
+    "file": "src-tauri/resources/docs/arcade.box/local/with-other-apps.md",
+    "line": 24,
+    "target": "../arcade-link.md"
+  },
+  {
+    "repo": "Arcade-tools",
+    "file": "src-tauri/resources/docs/arcade.clipboard/local/getting-started.md",
+    "line": 31,
+    "target": "../ios.md"
+  },
+  {
+    "repo": "Arcade-tools",
+    "file": "src-tauri/resources/docs/arcade.clipboard/local/troubleshooting.md",
+    "line": 33,
+    "target": "../linux.md"
+  },
+  {
+    "repo": "Arcade-tools",
+    "file": "src-tauri/resources/docs/arcade.clipboard/local/with-other-apps.md",
+    "line": 23,
+    "target": "../arcade-link.md"
+  },
+  {
+    "repo": "Arcade-tools",
+    "file": "src-tauri/resources/docs/arcade.ecosystem/main/shortcuts.md",
+    "line": 43,
+    "target": "../CONTRIBUTING.md"
+  },
+  {
+    "repo": "Arcade-tools",
+    "file": "src-tauri/resources/docs/arcade.find/local/with-other-apps.md",
+    "line": 23,
+    "target": "../STATUS.md"
+  },
+  {
+    "repo": "Arcade-tools",
+    "file": "src-tauri/resources/docs/arcade.lens/local/features.md",
+    "line": 60,
+    "target": "../STATUS.md"
+  },
+  {
+    "repo": "Arcade-tools",
+    "file": "src-tauri/resources/docs/arcade.lens/local/troubleshooting.md",
+    "line": 13,
+    "target": "../STATUS.md"
+  },
+  {
+    "repo": "Arcade-tools",
+    "file": "src-tauri/resources/docs/arcade.lens/local/with-other-apps.md",
+    "line": 25,
+    "target": "../ARCADE_LINK.md"
+  },
+  {
+    "repo": "Arcade-tools",
+    "file": "src-tauri/resources/docs/arcade.lens/local/with-other-apps.md",
+    "line": 25,
+    "target": "../STATUS.md"
+  },
+  {
+    "repo": "Arcade-tools",
+    "file": "src-tauri/resources/docs/arcade.look/local/faq.md",
+    "line": 23,
+    "target": "../PLUGINS.md"
+  },
+  {
+    "repo": "Arcade-tools",
+    "file": "src-tauri/resources/docs/arcade.look/local/faq.md",
+    "line": 31,
+    "target": "../STATUS.md"
+  },
+  {
+    "repo": "Arcade-tools",
+    "file": "src-tauri/resources/docs/arcade.look/local/features.md",
+    "line": 43,
+    "target": "../PLUGINS.md"
+  },
+  {
+    "repo": "Arcade-tools",
+    "file": "src-tauri/resources/docs/arcade.look/local/index.md",
+    "line": 11,
+    "target": "../hero.webp"
+  },
+  {
+    "repo": "Arcade-tools",
+    "file": "src-tauri/resources/docs/arcade.shelf/local/faq.md",
+    "line": 27,
+    "target": "../STATUS.md"
+  },
+  {
+    "repo": "Arcade-tools",
+    "file": "src-tauri/resources/docs/arcade.shelf/local/index.md",
+    "line": 11,
+    "target": "../images/expanded.png"
+  },
+  {
+    "repo": "Arcade-tools",
+    "file": "src-tauri/resources/docs/arcade.wheel/local/faq.md",
+    "line": 27,
+    "target": "../STATUS.md"
+  },
+  {
+    "repo": "Arcade-wheel",
+    "file": "src/link/SPEC.md",
+    "line": 712,
+    "target": "packaging/windows/README.md"
+  }
+]

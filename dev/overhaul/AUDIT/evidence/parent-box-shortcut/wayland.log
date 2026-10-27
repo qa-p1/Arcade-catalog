@@ -1,0 +1,7 @@
+Arcade Box shortcut status: state=invalid_trigger message=Use XDG shortcut syntax such as CTRL+ALT+space
+MESA-EGL: warning: failed to get driver name for fd -1
+MESA-EGL: warning: MESA-LOADER: failed to retrieve device information
+MESA-EGL: warning: failed to get driver name for fd -1
+
+** (process:47986): WARNING **: 23:50:34.431: Failed to get atspi registered event listeners: GDBus.Error:org.freedesktop.DBus.Error.NameHasNoOwner: Could not activate remote peer 'org.a11y.atspi.Registry': unit failed
+

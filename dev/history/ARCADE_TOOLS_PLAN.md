@@ -8,7 +8,7 @@ hosts, documents and teaches all of them.**
 | Goal | **Every Arcade app ships a standard installer on all three operating systems** (§7: self-installing AppImage on Linux, per-user Inno/NSIS setup on Windows, dmg with move-to-Applications on macOS), each writing the same receipt, launcher entry and CLI. **Every app can be installed, updated, rolled back and uninstalled from Arcade Tools** through those same installers (§11), and still installs and works without Tools. Done means it works and nothing fails: three-OS CI green, the e2e groups in §17.2 passing, and the real-desktop checks in §17.3 recorded (owner goal, restated 2026-10-13). |
 | Status | **In progress** (started 2026-10-11 after owner review). Progress is ticked in §19. |
 | Written | 2026-10-11, from `origin/main` of every repository: Box `360e6e8`, Lens `4eecf79`, Look `a26d8d2`, Wheel `9ebaa65`, Clipboard `2ab2c94`, Find `0e903c1`, Shelf `6a0885e` (+ unmerged `fix/hyprland-desktop` `050776c`), Link `7e69e01` (`v0.2.0`), Tools `bdefa44` (`v0.1.0`). |
-| Builds on | [ARCADE_ECOSYSTEM_PLAN.md](ARCADE_ECOSYSTEM_PLAN.md) (done, historical), Link's `SPEC.md`, [NEW_APP_SPEC.md](NEW_APP_SPEC.md), each repository's `docs/STATUS.md`. |
+| Builds on | [ARCADE_ECOSYSTEM_PLAN.md](ARCADE_ECOSYSTEM_PLAN.md) (done, historical), Link's `SPEC.md`, [NEW_APP_SPEC.md](https://github.com/qa-p1/Arcade-Link/blob/main/NEW_APP_SPEC.md), each repository's `docs/STATUS.md`. |
 | Audience | The orchestrating agent, which runs this plan in T3 Code with GPT sub-agents (§0.5), and the owner, who reviews it first. |
 
 ---
@@ -1159,7 +1159,7 @@ All local work was pushed:
 - Look branch `arcade/release-webview` (WIP);
 - `arcade/ci-speed` branches in Find, Lens, Shelf, Box and Clipboard.
 
-Open work and how to finish it: `dev/HANDOFF.md` in `qa-p1/Arcade-catalog`.
+Open work and how to finish it: `dev/history/HANDOFF.md` in `qa-p1/Arcade-catalog`.
 
 ### 2026-10-16 cloud session
 

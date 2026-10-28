@@ -198,6 +198,35 @@ class ValidatorTests(unittest.TestCase):
                 write_json(root / "catalog.json", catalog)
                 self.assert_error(root, expected)
 
+    def test_tagline_is_optional_one_line_and_ends_a_sentence(self) -> None:
+        cases: list[tuple[str, Callable[[dict[str, Any]], None], str]] = [
+            ("app-empty", lambda catalog: catalog["apps"][0].update(tagline=" "), "/apps/0/tagline"),
+            ("app-long", lambda catalog: catalog["apps"][0].update(tagline="x" * 100 + "."), "/apps/0/tagline"),
+            ("app-two-lines", lambda catalog: catalog["apps"][0].update(tagline="One.\nTwo."), "/apps/0/tagline"),
+            ("app-no-stop", lambda catalog: catalog["apps"][0].update(tagline="Press Space, see anything"), "/apps/0/tagline"),
+            ("app-type", lambda catalog: catalog["apps"][0].update(tagline=3), "/apps/0/tagline"),
+            ("tools", lambda catalog: catalog["tools"].update(tagline="The optional home"), "/tools/tagline"),
+        ]
+        for label, mutate, expected in cases:
+            with self.subTest(label=label):
+                root = self.new_root()
+                catalog = json.loads((root / "catalog.json").read_text())
+                mutate(catalog)
+                write_json(root / "catalog.json", catalog)
+                self.assert_error(root, expected)
+        root = self.new_root()
+        catalog = json.loads((root / "catalog.json").read_text())
+        catalog["apps"][0]["tagline"] = "Press Space, see anything."
+        catalog["tools"]["tagline"] = "The optional home for the Arcade apps."
+        write_json(root / "catalog.json", catalog)
+        self.assertEqual(self.errors_for(root), [])
+
+    def test_published_catalog_has_a_tagline_for_every_app(self) -> None:
+        catalog = json.loads((REPO / "catalog.json").read_text(encoding="utf-8"))
+        for app in catalog["apps"] + [catalog["tools"]]:
+            with self.subTest(app=app["id"]):
+                self.assertTrue(app.get("tagline"))
+
     def test_duplicate_and_unsorted_app_ids_are_rejected(self) -> None:
         root = self.new_root()
         catalog = json.loads((root / "catalog.json").read_text())

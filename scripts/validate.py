@@ -206,6 +206,17 @@ def _count_sentences(text: str) -> int:
     return len(re.findall(r"[.!?]+(?=\s|$)", text.strip()))
 
 
+def _check_tagline(obj: dict[str, Any], file: str, path: str, reporter: Reporter) -> None:
+    """Optional README one-liner: one line, at most 100 characters, ending a sentence."""
+    tagline = _string_field(obj, "tagline", file, path, reporter)
+    if tagline is None:
+        return
+    if "\n" in tagline or len(tagline) > 100:
+        reporter.error(file, f"{path}/tagline", f"must be one line of at most 100 characters (found {len(tagline)})")
+    elif not re.search(r"[.!?]$", tagline):
+        reporter.error(file, f"{path}/tagline", "must end with . ! or ?")
+
+
 def _validate_app(
     app: Any,
     index: int,
@@ -238,6 +249,8 @@ def _validate_app(
     pitch = _string_field(app, "pitch", file, path, reporter)
     if pitch is not None and len(pitch) > 60:
         reporter.error(file, f"{path}/pitch", f"must be at most 60 characters (found {len(pitch)})")
+
+    _check_tagline(app, file, path, reporter)
 
     description = _string_field(app, "description", file, path, reporter)
     if description is not None and _count_sentences(description) not in {2, 3}:
@@ -342,6 +355,7 @@ def _validate_catalog(data: Any, root: Path, reporter: Reporter) -> set[str]:
                 else:
                     seen_ids[tools_id] = "/tools/id"
             _string_field(tools, "name", file, "/tools", reporter)
+            _check_tagline(tools, file, "/tools", reporter)
             repo = _string_field(tools, "repo", file, "/tools", reporter)
             if repo is not None:
                 _check_repo(repo, file, "/tools/repo", reporter)

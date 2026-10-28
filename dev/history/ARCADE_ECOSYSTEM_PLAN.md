@@ -3,8 +3,8 @@
 
 > Historical execution plan, written 2026-10-05. Early inventories, proposed
 > dependencies and intermediate verification notes describe that point in the
-> work. For the final implementation use §16, [SPEC.md](SPEC.md), the
-> [completion report](COMPLETION_REPORT.md) and each app’s `docs/STATUS.md`.
+> work. For the final implementation use §16, [SPEC.md](https://github.com/qa-p1/Arcade-Link/blob/main/SPEC.md), the
+> [completion report](https://github.com/qa-p1/Arcade-Link/blob/main/docs/dev/history/COMPLETION_REPORT.md) and each app’s `docs/STATUS.md`.
 > In particular, dependencies now use the published `v0.1.0` tag; the Rust
 > library has `watch` and `engines` features, not a `tokio` feature.
 

@@ -12,7 +12,11 @@ display name.
 
 Include every required catalog field. Keep `pitch` to 60 characters or fewer
 and write a two- or three-sentence `description` in plain language based on the
-app's README. Use one of the documented categories: `files`, `capture`,
+app's README. Set `tagline` (in each app and in `tools`) to the README's
+one-line summary, word for word: Tools shows it unchanged on app cards, in
+onboarding and in tray tooltips, and keeps `description` for app details. The
+field is optional, so older Tools versions ignore it; the validator checks that
+it is one line of at most 100 characters that ends a sentence. Use one of the documented categories: `files`, `capture`,
 `clipboard`, `launcher`, or `toolbox`. Set `minTools` to the supported Tools
 version and set `linkProtocol` to `[1]`.
 

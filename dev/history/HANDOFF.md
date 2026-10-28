@@ -4,7 +4,7 @@ You are taking over the Arcade Tools overhaul for the owner (GitHub: `qa-p1`). T
 owner's desktop; you're working remotely. Everything is on GitHub. Nothing important lives on the owner's
 machine any more: all Arcade apps were uninstalled and cleaned up there.
 
-Read this file fully before you touch anything. Then read `dev/ARCADE_TOOLS_PLAN.md` (§19 checklist,
+Read this file fully before you touch anything. Then read `dev/history/ARCADE_TOOLS_PLAN.md` (§19 checklist,
 §20 bugs and lessons, §21 completion report) in this repository (`qa-p1/Arcade-catalog`).
 
 ## 0. If you run in a claude.ai/code cloud session (read first)
@@ -38,7 +38,7 @@ Arcade is a suite of 7 independent desktop apps plus a hub app (Arcade Tools). T
 3. The apps work together over Arcade Link (local IPC) without Tools running.
 4. Everything verified on GitHub (3-OS CI green before merge), released, with standard READMEs (logo + image,
    like Arcade Wheel's) and docs.
-5. A cloud "real user" stress test (prompt in `dev/CLOUD_STRESS_TEST_PROMPT.md`), including the plan §18
+5. A cloud "real user" stress test (prompt in `dev/history/CLOUD_STRESS_TEST_PROMPT.md`), including the plan §18
    performance budgets.
 
 ## 2. Repositories (all `github.com/qa-p1/…`)
@@ -103,7 +103,7 @@ equal to `v{version}`.
   published.
 - Link #4: the e2e harness is merged.
 - Real-desktop test, partial, on CachyOS + Hyprland 0.56 with an AMD GPU. Results are in
-  `dev/REAL_DESKTOP_TEST_LOG.md`:
+  `dev/history/REAL_DESKTOP_TEST_LOG.md`:
   - all 7 apps installed from releases;
   - they worked together over Link without Tools;
   - tray icons registered and were removed on quit;
@@ -177,7 +177,7 @@ with `real_apps=true` on the PR branch, or re-run the failed job of the PR's lat
 
 #### C. Wheel 0.3.1: PR qa-p1/Arcade-wheel#9, branch `arcade/icons-layout`, head `60565f8`
 
-What the owner saw (screenshot evidence in `dev/REAL_DESKTOP_TEST_LOG.md`):
+What the owner saw (screenshot evidence in `dev/history/REAL_DESKTOP_TEST_LOG.md`):
 - **Icons:** most app icons show a grey "A" placeholder. The Qt log said
   `system theme "hicolor" and SVG support false`.
   - Cause 1: the AppImage lacked `usr/plugins/iconengines/libqsvgicon.so`.
@@ -244,9 +244,9 @@ To do:
 #### F. After releases: update the docs
 
 Update these, in a docs-only PR to this repo:
-- `dev/CLOUD_STRESS_TEST_PROMPT.md` release table: Tools v0.2.1, Box v0.2.1, Look v0.2.1, Wheel v0.3.1.
+- `dev/history/CLOUD_STRESS_TEST_PROMPT.md` release table: Tools v0.2.1, Box v0.2.1, Look v0.2.1, Wheel v0.3.1.
 - the "known recent fixes" list in the same prompt;
-- `dev/ARCADE_TOOLS_PLAN.md` §21.
+- `dev/history/ARCADE_TOOLS_PLAN.md` §21.
 
 The owner queues the cloud stress test with that prompt.
 
@@ -309,10 +309,10 @@ If the owner gives you their machine again, see the safety rules in §5.
 | Wheel AppImage: no SVG icon engine, no icon theme, layout clipped at small sizes, wrong footer version | PR #9, item C |
 | CI double runs and no caching in several repos | item E |
 
-Idle baseline for all apps (Xvfb runner and the real desktop) is in `dev/ARCADE_TOOLS_PLAN.md` §21 and
-`dev/REAL_DESKTOP_TEST_LOG.md`.
+Idle baseline for all apps (Xvfb runner and the real desktop) is in `dev/history/ARCADE_TOOLS_PLAN.md` §21 and
+`dev/history/REAL_DESKTOP_TEST_LOG.md`.
 
-## 7. Files in `dev/`
+## 7. Files in `dev/` (now `dev/history/`)
 
 - `HANDOFF.md`: this file.
 - `ARCADE_TOOLS_PLAN.md`: the full plan. §19 is the checklist; §20 has the risks, bugs and lessons; §21 is the

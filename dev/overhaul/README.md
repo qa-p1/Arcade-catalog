@@ -1,5 +1,11 @@
 # Arcade overhaul
 
+> **Paused 2026-10-31 at the owner's request.** Read the current
+> [handoff and preservation limits](HANDOFF-2026-10-31.md) before resuming.
+> Find is unfinished; Lens's unpushed work was affected by a workspace reset.
+> Shelf, Wheel and the Box/Tools follow-ups have not started.
+
+
 On GitHub this folder is `qa-p1/Arcade-catalog` › `dev/overhaul/`. Paths in the specs like `AUDIT/…` are
 relative to this folder.
 

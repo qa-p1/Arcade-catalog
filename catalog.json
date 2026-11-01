@@ -104,7 +104,7 @@
       "category": "files",
       "icon": "icons/arcade.look.svg",
       "screenshots": [
-        "https://raw.githubusercontent.com/qa-p1/Arcade-look/main/docs/hero.webp"
+        "https://raw.githubusercontent.com/qa-p1/Arcade-look/main/docs/user/images/preview.png"
       ],
       "platforms": {
         "linux": "verified",
@@ -129,7 +129,7 @@
       "category": "files",
       "icon": "icons/arcade.shelf.svg",
       "screenshots": [
-        "https://raw.githubusercontent.com/qa-p1/Arcade-Shelf/main/docs/images/expanded.png"
+        "https://raw.githubusercontent.com/qa-p1/Arcade-Shelf/main/docs/user/images/panel-light.png"
       ],
       "platforms": {
         "linux": "verified",

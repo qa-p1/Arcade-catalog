@@ -1,0 +1,57 @@
+{
+ "schema": 1,
+ "id": "arcade.lens",
+ "version": "0.2.0",
+ "channel": "stable",
+ "method": "appimage",
+ "managedBy": "self",
+ "path": "/home/upd/Applications/Arcade/Arcade-Lens.AppImage",
+ "integration": {
+  "desktopEntry": null,
+  "icons": [
+   "/home/upd/.local/share/icons/hicolor/22x22/apps/arcade-lens.png",
+   "/home/upd/.local/share/icons/hicolor/24x24/apps/arcade-lens.png",
+   "/home/upd/.local/share/icons/hicolor/512x512/apps/arcade-lens.png",
+   "/home/upd/.local/share/icons/hicolor/scalable/apps/arcade-lens.svg"
+  ],
+  "cli": "/home/upd/.local/bin/arcade-lens",
+  "autostart": null,
+  "uninstaller": null,
+  "skipped": [
+   {
+    "path": "/home/upd/.local/share/applications/arcade-lens.desktop",
+    "reason": "existing entry belongs to another installation"
+   },
+   {
+    "path": "/home/upd/.local/share/icons/hicolor/16x16/apps/arcade-lens.png",
+    "reason": "existing entry belongs to another installation"
+   },
+   {
+    "path": "/home/upd/.local/share/icons/hicolor/32x32/apps/arcade-lens.png",
+    "reason": "existing entry belongs to another installation"
+   },
+   {
+    "path": "/home/upd/.local/share/icons/hicolor/48x48/apps/arcade-lens.png",
+    "reason": "existing entry belongs to another installation"
+   },
+   {
+    "path": "/home/upd/.local/share/icons/hicolor/64x64/apps/arcade-lens.png",
+    "reason": "existing entry belongs to another installation"
+   },
+   {
+    "path": "/home/upd/.local/share/icons/hicolor/128x128/apps/arcade-lens.png",
+    "reason": "existing entry belongs to another installation"
+   },
+   {
+    "path": "/home/upd/.local/share/icons/hicolor/256x256/apps/arcade-lens.png",
+    "reason": "existing entry belongs to another installation"
+   },
+   {
+    "path": "/home/upd/.config/autostart/arcade-lens.desktop",
+    "reason": "existing entry belongs to another installation"
+   }
+  ]
+ },
+ "installedAt": "2026-10-16T17:14:46Z",
+ "updatedAt": "2026-10-16T17:14:46Z"
+}

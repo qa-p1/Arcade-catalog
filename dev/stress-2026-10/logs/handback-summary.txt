@@ -1,0 +1,8 @@
+runs: 19 items returned per run: Counter({7: 19})
+AppRun.wrapped   n=19 median   57.7 ms  p95 1107.5 ms  max 1107.5 ms
+arcade-desktop   n=19 median   21.9 ms  p95   45.2 ms  max   45.2 ms
+arcade-find      n=19 median   23.6 ms  p95   41.0 ms  max   41.0 ms
+arcade-lens      n=19 median   30.2 ms  p95   44.0 ms  max   44.0 ms
+arcade-look      n=19 median   30.2 ms  p95   44.9 ms  max   44.9 ms
+arcade-shelf     n=19 median   23.8 ms  p95   45.2 ms  max   45.2 ms
+clipboard        n=19 median   30.6 ms  p95   44.9 ms  max   44.9 ms

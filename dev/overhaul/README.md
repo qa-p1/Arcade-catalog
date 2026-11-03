@@ -1,5 +1,7 @@
 # Arcade overhaul
 
+Current implementation and release verification is recorded in [STATUS.md](STATUS.md).
+
 On GitHub this folder is `qa-p1/Arcade-catalog` › `dev/overhaul/`. Paths in the specs like `AUDIT/…` are
 relative to this folder.
 

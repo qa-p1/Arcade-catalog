@@ -7,8 +7,8 @@ Detail lives in each repo's `docs/v1/PROGRESS.md`.
 
 | # | Repo | Step (1 lock · 2 untangle · 3 fix · 4 dead code · 5 memory/perf · 6 CI · 7 Round 5 · 8 release) | Latest rc | Stable |
 |---|---|---|---|---|
-| 1 | Link | PR [#32](https://github.com/qa-p1/Arcade-Link/pull/32): release primitives, peer check, runtime, ARCADE_APP.md + conformance, reusable workflows, harness (CI pending) | — | — |
-| 2 | Tools | not started | — | — |
+| 1 | Link | **v1.0.0 tagged** ([PR #32](https://github.com/qa-p1/Arcade-Link/pull/32), [#44](https://github.com/qa-p1/Arcade-Link/pull/44)); 1.0.1 collecting shared fixes on the branch | — | [v1.0.0](https://github.com/qa-p1/Arcade-Link/tree/v1.0.0) (tag) |
+| 2 | Tools | 1 lock done · 2 manager split · 3 fixes: TL-8, TL-4, CLI-2, TL-6, TL-2, TL-3, TL-10, RD-TOOLS-1, TL-7 done; next TL-9, updater | — | — |
 | 3 | Box | not started | — | — |
 | 4 | Clipboard | not started | — | — |
 | 5 | Look | not started | — | — |
@@ -31,6 +31,14 @@ Detail lives in each repo's `docs/v1/PROGRESS.md`.
   mark it as a template.
 
 ## Log
+
+- 2026-11-07 — **Link v1.0.0 tagged** at `d60772c` through "Tag a release", after every gate passed on that commit:
+  CI (3 OSes), Ecosystem e2e, release-flow e2e (draft rc → promote → signature → byte-identical), Desktop harness
+  (Tier 1 Hyprland incl. C0 reproduced on released Clipboard 0.3.2; Tier 2 sway/KWin/Mutter/X11) and Contract on
+  the same code. Template `Cargo.lock` committed against the tag. Owner-only steps are in `LOCAL.md`.
+- 2026-11-07 — Tools: spec and audit in `docs/v1`; behaviour lock (known bugs as `should_panic`/XFAIL, D3; TL-11's
+  "120 s total timeout" disproved by test, resume is the real gap); `manager.rs` split by area (D4); fixes listed in
+  the table, each with a regression test that failed first. T3 (legacy folders) fixed in Link for 1.0.1.
 
 - 2026-11-07 — Link: release primitives, protocol/peer check, shared runtime, QML dialog fix, ARCADE_APP.md and
   conformance checker, reusable release workflows and the Hyprland harness are on Link PR #32. Conformance baseline

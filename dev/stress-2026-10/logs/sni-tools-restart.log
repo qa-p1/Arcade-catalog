@@ -1,0 +1,6 @@
+      5 ms  n=6 ['AppRun.wrapped', 'arcade-desktop', 'arcade-lens', 'arcade-look', 'arcade-shelf', 'clipboard']
+   1462 ms  n=7 ['AppRun.wrapped', 'arcade-desktop', 'arcade-lens', 'arcade-look', 'arcade-shelf', 'arcade-tools', 'clipboard']
+   1493 ms  n=5 ['?', 'AppRun.wrapped', 'arcade-desktop', 'arcade-lens', 'arcade-tools']
+   1519 ms  n=2 ['AppRun.wrapped', 'arcade-tools']
+   4569 ms  n=1 ['arcade-tools']
+max items seen: 7

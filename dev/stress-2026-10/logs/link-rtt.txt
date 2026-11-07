@@ -1,0 +1,8 @@
+box        n=100 median   3.33 ms p95   4.39 ms max   5.31 ms
+clipboard  n=100 median   3.27 ms p95   4.42 ms max   6.39 ms
+find       n=100 median   3.39 ms p95   4.26 ms max   6.56 ms
+lens       n=100 median   3.48 ms p95   4.37 ms max   5.38 ms
+look       n=100 median   3.66 ms p95   4.58 ms max   6.44 ms
+shelf      n=100 median   4.07 ms p95   4.95 ms max   6.58 ms
+wheel      n=100 median   3.42 ms p95   4.87 ms max   6.11 ms
+tools      n=100 median   3.56 ms p95   4.50 ms max   7.79 ms

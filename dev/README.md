@@ -1,6 +1,8 @@
 # Developer notes
 
-- [`overhaul/`](overhaul/): the current work. The Arcade overhaul specs, one per app, with the shared
+- [`v1/`](v1/): the current work. The Arcade 1.0.0 plan: start with [v1/PLAN.md](v1/PLAN.md); decisions in
+  [v1/README.md](v1/README.md), progress in [v1/PROGRESS.md](v1/PROGRESS.md).
+- [`overhaul/`](overhaul/): the previous work (done; its STANDARD.md still applies unless v1 says otherwise). The Arcade overhaul specs, one per app, with the shared
   [standard](overhaul/STANDARD.md) and the audit evidence they are based on. Start with
   [overhaul/README.md](overhaul/README.md).
 - [`history/`](history/): past work, kept for reference. These plans, handoffs and test logs describe

@@ -1,0 +1,4 @@
+{"label": "before", "app": "shelf", "rss": 61.0, "pss": 50.1, "anon": 23.1, "swap": 14.3, "thr": 8, "procs": 1, "stub_rss": 7.6, "stub_pss": 7.6}
+{"label": "open+4s", "app": "shelf", "rss": 62.3, "pss": 50.7, "anon": 24.3, "swap": 14.3, "thr": 8, "procs": 1, "stub_rss": 7.6, "stub_pss": 7.6}
+{"label": "hidden+3s", "app": "shelf", "rss": 61.1, "pss": 50.1, "anon": 23.2, "swap": 14.3, "thr": 8, "procs": 1, "stub_rss": 7.6, "stub_pss": 7.6}
+{"label": "hidden+30s", "app": "shelf", "rss": 61.1, "pss": 50.1, "anon": 23.2, "swap": 14.3, "thr": 8, "procs": 1, "stub_rss": 7.6, "stub_pss": 7.6}

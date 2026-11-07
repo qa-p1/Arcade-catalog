@@ -1,0 +1,13 @@
+    pid name                  RSS      PSS     anon     file    shmem     swap  thr
+   1360 AppRun.wrapped      135.8     76.5     36.6     99.2      0.0     16.3   24
+  TOTAL 1                   135.8     76.5     36.6     99.2      0.0     16.3   24
+
+by mapping class (all procs; MB):  rss  pss  anon  swap  nmaps
+  qt-libs                    29.2     29.2      1.3      0.4    131
+  heap(brk)                  19.3     19.3     19.3      9.6      1
+  anon(mmap/arena)           13.9     13.9     13.9      2.3     89
+  other-libs                 16.2      5.7      0.6      1.1    538
+  file:other                  6.5      4.1      0.1      0.0     17
+  mesa/llvm                  49.2      3.4      0.6      2.3      9
+  memfd                       0.7      0.7      0.7      0.5     16
+  caches                      0.6      0.0      0.0      0.0      6

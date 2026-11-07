@@ -1,0 +1,4 @@
+{"label": "before", "app": "look", "rss": 193.8, "pss": 111.2, "anon": 54.9, "swap": 46.1, "thr": 63, "procs": 2, "stub_rss": 17.1, "stub_pss": 17.1}
+{"label": "open+4s", "app": "look", "rss": 437.7, "pss": 265.5, "anon": 142.7, "swap": 46.1, "thr": 130, "procs": 3, "stub_rss": 17.1, "stub_pss": 17.1}
+{"label": "hidden+3s", "app": "look", "rss": 437.7, "pss": 265.5, "anon": 142.6, "swap": 46.1, "thr": 131, "procs": 3, "stub_rss": 17.1, "stub_pss": 17.1}
+{"label": "hidden+40s", "app": "look", "rss": 194.9, "pss": 112.4, "anon": 55.9, "swap": 46.1, "thr": 64, "procs": 2, "stub_rss": 17.1, "stub_pss": 17.1}

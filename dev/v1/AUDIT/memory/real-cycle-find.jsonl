@@ -1,0 +1,4 @@
+{"label": "before", "app": "find", "rss": 51.7, "pss": 46.7, "anon": 38.1, "swap": 9.9, "thr": 31, "procs": 1, "stub_rss": 5.3, "stub_pss": 5.3}
+{"label": "open+4s", "app": "find", "rss": 51.7, "pss": 46.7, "anon": 38.1, "swap": 9.9, "thr": 31, "procs": 1, "stub_rss": 5.3, "stub_pss": 5.3}
+{"label": "hidden+3s", "app": "find", "rss": 51.7, "pss": 46.7, "anon": 38.1, "swap": 9.9, "thr": 31, "procs": 1, "stub_rss": 5.3, "stub_pss": 5.3}
+{"label": "hidden+25s", "app": "find", "rss": 51.7, "pss": 46.7, "anon": 38.1, "swap": 9.9, "thr": 31, "procs": 1, "stub_rss": 5.3, "stub_pss": 5.2}

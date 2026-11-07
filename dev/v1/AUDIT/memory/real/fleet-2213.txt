@@ -1,0 +1,10 @@
+app       procs     RSS     PSS anon+shm    swap  thr  stubRSS  stubPSS  processes
+box           2   208.5   119.7     68.4    41.8   61     18.4     18.4  WebKitNetworkP,arcade-desktop
+clipboard     1   174.6   102.9     69.4     0.0   73     18.5     18.5  clipboard
+find          1    51.0    45.9     36.7    10.9   31      0.7      0.7  arcade-find
+lens          1     7.0     4.6      2.0     3.1   10     13.9     13.9  arcade-lens
+look          2   194.3   109.7     55.9    42.7   63     16.8     16.6  WebKitNetworkP,arcade-look
+shelf         1    60.0    48.9     21.1    16.0    8      5.5      5.5  arcade-shelf
+tools         2   253.4   146.3     62.5     9.1   73     21.0     21.0  WebKitNetworkP,arcade-tools
+wheel         1   135.4    76.7     36.7    16.3   24     16.9     16.9  AppRun.wrapped
+FLEET            1084.1   654.6    352.8   139.9  343    111.8    111.5

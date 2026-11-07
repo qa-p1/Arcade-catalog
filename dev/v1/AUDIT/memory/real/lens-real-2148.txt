@@ -1,0 +1,10 @@
+    pid name                  RSS      PSS     anon     file    shmem     swap  thr
+  27008 arcade-lens           7.7      5.4      1.9      5.9      0.0      3.2   10
+ 223656 arcade-lens           0.0      0.0      0.0      0.0      0.0      0.0    1
+  TOTAL 2                     7.7      5.4      1.9      5.9      0.0      3.2   11
+
+by mapping class (all procs; MB):  rss  pss  anon  swap  nmaps
+  file:other                  3.6      3.6      0.1      0.8      5
+  anon(mmap/arena)            1.4      1.4      1.4      0.4     31
+  heap(brk)                   0.3      0.3      0.3      2.0      1
+  other-libs                  2.2      0.0      0.0      0.0     20

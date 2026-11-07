@@ -1,0 +1,12 @@
+    pid name                  RSS      PSS     anon     file    shmem     swap  thr
+   1359 arcade-shelf         69.1     57.9     30.2     38.9      0.0      6.9    8
+  TOTAL 1                    69.1     57.9     30.2     38.9      0.0      6.9    8
+
+by mapping class (all procs; MB):  rss  pss  anon  swap  nmaps
+  qt-libs                    22.1     22.1      1.0      0.6     98
+  heap(brk)                  21.0     21.0     21.0      2.1      1
+  anon(mmap/arena)            5.4      5.4      5.4      3.4     65
+  file:other                  6.3      3.9      0.1      0.0     17
+  other-libs                 11.5      3.1      0.3      0.8    349
+  memfd                       2.3      2.2      2.2      0.0     33
+  fonts                       0.3      0.0      0.0      0.0      1

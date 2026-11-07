@@ -7,7 +7,7 @@ Detail lives in each repo's `docs/v1/PROGRESS.md`.
 
 | # | Repo | Step (1 lock · 2 untangle · 3 fix · 4 dead code · 5 memory/perf · 6 CI · 7 Round 5 · 8 release) | Latest rc | Stable |
 |---|---|---|---|---|
-| 1 | Link | 0 brief done; working on §3 release primitives | — | — |
+| 1 | Link | PR [#32](https://github.com/qa-p1/Arcade-Link/pull/32): release primitives, peer check, runtime, ARCADE_APP.md + conformance, reusable workflows, harness (CI pending) | — | — |
 | 2 | Tools | not started | — | — |
 | 3 | Box | not started | — | — |
 | 4 | Clipboard | not started | — | — |
@@ -32,5 +32,8 @@ Detail lives in each repo's `docs/v1/PROGRESS.md`.
 
 ## Log
 
+- 2026-11-07 — Link: release primitives, protocol/peer check, shared runtime, QML dialog fix, ARCADE_APP.md and
+  conformance checker, reusable release workflows and the Hyprland harness are on Link PR #32. Conformance baseline
+  of the 8 released apps: `AUDIT/conformance-baseline.md`. Detail: Link `docs/v1/PROGRESS.md`.
 - 2026-11-07 — Session 1 started. `setup-env.sh` run. Link step 0 done: brief copied to Link `docs/v1/`
   (branch `claude/tender-feynman-3vt7dg`). Blockers B1, B2 recorded.

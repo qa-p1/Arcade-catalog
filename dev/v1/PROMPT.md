@@ -37,5 +37,9 @@ Rules:
 - Don't stop to ask questions. When a decision is missing, choose what fits README.md best, record it in the repo's
   `docs/v1/DECISIONS.md`, and continue.
 - Never delete releases or tags, and never force-push main.
+- Update signing: if the `ARCADE_UPDATE_SIGNING_KEY` Actions secret doesn't exist yet, generate one ed25519 keypair,
+  set the private key as that secret on every app repo with `gh secret set`, keep it nowhere else, and commit only the
+  public key into Tools. If you lack permission to set secrets, record it as a blocker in PROGRESS.md and keep
+  working on everything that doesn't need it.
 - When all nine are released as 1.0.0 and `specs/FLEET.md` passes, tick PLAN.md's "Owner requests checklist" with evidence links and write a final summary at the top of `dev/v1/PROGRESS.md`: versions, links,
   and anything moved to BACKLOG.md.

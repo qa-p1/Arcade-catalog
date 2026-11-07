@@ -8,7 +8,7 @@ Detail lives in each repo's `docs/v1/PROGRESS.md`.
 | # | Repo | Step (1 lock · 2 untangle · 3 fix · 4 dead code · 5 memory/perf · 6 CI · 7 Round 5 · 8 release) | Latest rc | Stable |
 |---|---|---|---|---|
 | 1 | Link | **v1.0.0 tagged** ([PR #32](https://github.com/qa-p1/Arcade-Link/pull/32), [#44](https://github.com/qa-p1/Arcade-Link/pull/44)); 1.0.1 collecting shared fixes on the branch | — | [v1.0.0](https://github.com/qa-p1/Arcade-Link/tree/v1.0.0) (tag) |
-| 2 | Tools | 1 lock done · 2 manager split · 3 fixes: TL-8, TL-4, CLI-2, TL-6, TL-2, TL-3, TL-10, RD-TOOLS-1, TL-7 done; next TL-9, updater | — | — |
+| 2 | Tools | 1 lock done · 2 manager split · 3 fixes: TL-8, TL-4, CLI-2, TL-6, TL-2, TL-3, TL-10, RD-TOOLS-1, TL-7 done · updater: listing discovery + signed manifests done; next download ladder (delta/resume/idle), bad flag, TL-9 | — | — |
 | 3 | Box | not started | — | — |
 | 4 | Clipboard | not started | — | — |
 | 5 | Look | not started | — | — |

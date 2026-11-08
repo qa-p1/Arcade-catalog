@@ -7,8 +7,8 @@ Detail lives in each repo's `docs/v1/PROGRESS.md`.
 
 | # | Repo | Step (1 lock · 2 untangle · 3 fix · 4 dead code · 5 memory/perf · 6 CI · 7 Round 5 · 8 release) | Latest rc | Stable |
 |---|---|---|---|---|
-| 1 | Link | **v1.0.0 tagged** ([PR #32](https://github.com/qa-p1/Arcade-Link/pull/32), [#44](https://github.com/qa-p1/Arcade-Link/pull/44)); **1.0.1** in review ([PR #45](https://github.com/qa-p1/Arcade-Link/pull/45): migration archive fix (Tools T3), template lockfile, fleet budget tool follows U1 relaunches) | — | [v1.0.0](https://github.com/qa-p1/Arcade-Link/tree/v1.0.0) (tag) |
-| 2 | Tools | 1–3 done (all findings fixed but T3, waiting for Link 1.0.1) · 4 dead code done · 5 memory done (U1, W1/W3b, OPEN1, TD1; budget step with Link 1.0.1) · 6 CI: rc → promote/nightly via Link workflows, tray e2e, timeouts ([PR #23](https://github.com/qa-p1/Arcade-tools/pull/23)) · next: Link 1.0.1 bump + budgets, 7 Round 5, 8 rc | — | — |
+| 1 | Link | **v1.0.1 tagged** (a68e801; [PR #45](https://github.com/qa-p1/Arcade-Link/pull/45): migration archive fix for Tools T3, template lockfile, fleet budget follows U1 relaunches) · template on v1.0.1 in review ([PR #46](https://github.com/qa-p1/Arcade-Link/pull/46)) | — | [v1.0.1](https://github.com/qa-p1/Arcade-Link/tree/v1.0.1) (tag) |
+| 2 | Tools | 1–6 done (every finding fixed, T3 on Link 1.0.1) · 7 Round 5 in progress: cargo deny clean, SECURITY, Keep a Changelog, generated notices shown in About, desktop identity, conformance repo rules pass · CI fixes for macOS/Windows and the U1 package smoke ([PR #23](https://github.com/qa-p1/Arcade-tools/pull/23)) · next: rest of 7, then 8 rc | — | — |
 | 3 | Box | not started | — | — |
 | 4 | Clipboard | not started | — | — |
 | 5 | Look | not started | — | — |
@@ -32,6 +32,10 @@ Detail lives in each repo's `docs/v1/PROGRESS.md`.
 
 ## Log
 
+- 2026-11-08 — Link v1.0.1 tagged through its workflow after the desktop harness passed on main. Tools moved to it:
+  T3 is a normal test; `cargo deny` clean (zip 9); notices generated (`scripts/notices.py`) and shown in About;
+  SECURITY.md, Keep a Changelog, Dependabot; all repository conformance rules pass. PR #23's red macOS/Windows/Linux
+  checks were a Linux-only test built everywhere and a package smoke that predated U1's relaunch; both fixed.
 - 2026-11-08 — Tools (PR #23): VENDORED moved to Link v1.0.0 (CI was red on it); the release-gate Test channel
   override was never wired and a stored Test channel would have trusted unsigned rc manifests (fixed, D5); dead code
   removed (an unused second backup implementation, ~1,300 lines); the memory items applied (D7); releases now rc →

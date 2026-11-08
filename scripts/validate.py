@@ -496,6 +496,8 @@ def _validate_engines(data: Any, app_ids: set[str], reporter: Reporter) -> None:
                     if app_id is not None and app_id not in app_ids:
                         reporter.error(file, f"{use_path}/app", f"unknown catalog app {app_id!r}")
                     _string_field(usage, "for", file, use_path, reporter)
+                    if "optional" in usage and type(usage["optional"]) is not bool:
+                        reporter.error(file, f"{use_path}/optional", "expected a boolean")
 
         install = engine.get("install")
         if "install" in engine:

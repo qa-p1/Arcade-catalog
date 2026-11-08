@@ -333,12 +333,14 @@ class ValidatorTests(unittest.TestCase):
         engines = json.loads((root / "engines.json").read_text())
         engines["schema"] = 2
         engines["engines"][0]["usedBy"][0]["app"] = "arcade.missing"
+        engines["engines"][0]["usedBy"][0]["optional"] = "yes"
         engines["engines"][0]["detect"]["binaries"] = []
         engines["engines"][0]["install"] = {"unknown": "install this"}
         write_json(root / "engines.json", engines)
         errors = self.errors_for(root)
         self.assertTrue(any("engines.json:/schema" in error for error in errors))
         self.assertTrue(any("unknown catalog app" in error for error in errors))
+        self.assertTrue(any("/usedBy/0/optional" in error for error in errors))
         self.assertTrue(any("/detect/binaries" in error for error in errors))
         self.assertTrue(any("unknown package manager" in error for error in errors))
 

@@ -153,6 +153,13 @@
           "type": "string",
           "format": "uri",
           "pattern": "^https://github\\.com(/|$)"
+        },
+        "bad": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/badRelease"
+          },
+          "uniqueItems": true
         }
       }
     },
@@ -196,6 +203,13 @@
         },
         "icon": {
           "$ref": "#/$defs/icon"
+        },
+        "bad": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/badRelease"
+          },
+          "uniqueItems": true
         }
       }
     },
@@ -235,6 +249,28 @@
               }
             }
           ]
+        }
+      }
+    },
+    "badRelease": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "tag",
+        "reason"
+      ],
+      "description": "A withdrawn release. Tools never offers it and tells anyone who has it installed to roll back.",
+      "properties": {
+        "tag": {
+          "type": "string",
+          "pattern": "^v[0-9]+\\.[0-9]+\\.[0-9]+(-(nightly\\.[0-9]{8}\\.[0-9]+|rc\\.[0-9]+))?$",
+          "description": "The GitHub release tag, e.g. v1.2.0 or v1.3.0-nightly.20261107.1."
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "One sentence shown to users."
         }
       }
     }

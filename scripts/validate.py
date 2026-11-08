@@ -31,6 +31,7 @@ SEMVER = re.compile(
     r"(?:\+[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?$"
 )
 DATE = re.compile(r"^[0-9]{4}-[0-9]{2}-[0-9]{2}$")
+RELEASE_TAG = re.compile(r"^v[0-9]+\.[0-9]+\.[0-9]+(-(nightly\.[0-9]{8}\.[0-9]+|rc\.[0-9]+))?$")
 MODIFIERS = ("Ctrl", "Alt", "Shift", "Super")
 KEY_NAMES = {
     "Space", "Enter", "Tab", "Escape", "Backspace", "Delete", "Insert", "Home", "End",
@@ -217,6 +218,33 @@ def _check_tagline(obj: dict[str, Any], file: str, path: str, reporter: Reporter
         reporter.error(file, f"{path}/tagline", "must end with . ! or ?")
 
 
+def _check_bad(obj: dict[str, Any], file: str, path: str, reporter: Reporter) -> None:
+    """Withdrawn releases: Tools never offers them and asks anyone who has one installed to roll back."""
+    if "bad" not in obj:
+        return
+    bad = obj["bad"]
+    if not isinstance(bad, list):
+        reporter.error(file, f"{path}/bad", "expected an array")
+        return
+    tags: set[str] = set()
+    for index, entry in enumerate(bad):
+        where = f"{path}/bad/{index}"
+        if not _required_object(entry, file, where, ("tag", "reason"), reporter):
+            continue
+        for key in sorted(set(entry) - {"tag", "reason"}):
+            reporter.error(file, f"{where}/{key}", "unknown field")
+        tag = _string_field(entry, "tag", file, where, reporter)
+        if tag is not None:
+            if not RELEASE_TAG.fullmatch(tag):
+                reporter.error(file, f"{where}/tag", "expected a release tag such as v1.2.0")
+            elif tag in tags:
+                reporter.error(file, f"{where}/tag", "listed twice")
+            tags.add(tag)
+        reason = _string_field(entry, "reason", file, where, reporter)
+        if reason is not None and not 1 <= len(reason) <= 200:
+            reporter.error(file, f"{where}/reason", "expected 1-200 characters")
+
+
 def _validate_app(
     app: Any,
     index: int,
@@ -308,6 +336,7 @@ def _validate_app(
 
     if "homepage" in app:
         _https_url(app["homepage"], file, f"{path}/homepage", reporter, hosts={"github.com"})
+    _check_bad(app, file, path, reporter)
     return app_id, name
 
 
@@ -362,6 +391,7 @@ def _validate_catalog(data: Any, root: Path, reporter: Reporter) -> set[str]:
             if "minTools" in tools:
                 _check_semver(tools["minTools"], file, "/tools/minTools", reporter)
             _check_icon(tools.get("icon"), root, file, "/tools/icon", reporter)
+            _check_bad(tools, file, "/tools", reporter)
 
     bundles = data.get("bundles")
     if "bundles" in data:

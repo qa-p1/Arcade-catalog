@@ -7,8 +7,8 @@ Detail lives in each repo's `docs/v1/PROGRESS.md`.
 
 | # | Repo | Step (1 lock · 2 untangle · 3 fix · 4 dead code · 5 memory/perf · 6 CI · 7 Round 5 · 8 release) | Latest rc | Stable |
 |---|---|---|---|---|
-| 1 | Link | **v1.0.1 tagged** (a68e801; [PR #45](https://github.com/qa-p1/Arcade-Link/pull/45): migration archive fix for Tools T3, template lockfile, fleet budget follows U1 relaunches) · template on v1.0.1 in review ([PR #46](https://github.com/qa-p1/Arcade-Link/pull/46)) | — | [v1.0.1](https://github.com/qa-p1/Arcade-Link/tree/v1.0.1) (tag) |
-| 2 | Tools | 1–6 done (every finding fixed, T3 on Link 1.0.1) · 7 Round 5 in progress: cargo deny clean, SECURITY, Keep a Changelog, generated notices shown in About, desktop identity, conformance repo rules pass · CI fixes for macOS/Windows and the U1 package smoke ([PR #23](https://github.com/qa-p1/Arcade-tools/pull/23)) · next: rest of 7, then 8 rc | — | — |
+| 1 | Link | **v1.0.1 tagged** (a68e801) · **1.0.2 in review** ([PR #47](https://github.com/qa-p1/Arcade-Link/pull/47)): tab-panel focus ring, Qt tray startup race, trim reverted written code pages (fixed) and now drops clean `r--p` data, uninstall leaves no `<id>.lock` / empty icon or desktop cache (Rust and Qt), template on v1.0.1 · next: green CI → merge → desktop harness on main → tag v1.0.2 | — | [v1.0.1](https://github.com/qa-p1/Arcade-Link/tree/v1.0.1) (tag) |
+| 2 | Tools | 1–6 done · 7 Round 5 in progress ([PR #23](https://github.com/qa-p1/Arcade-tools/pull/23)): macOS/Windows CI green; Linux package lifecycle waits on Link 1.0.2's clean uninstall; `--repair` from another copy no longer repoints the receipt; memory: background met (15–18 PSS vs 30), window open 261–334 PSS vs 225 recorded as D10 (ratchet set from CI, owner option in `LOCAL.md` §4) · next: pin Link 1.0.2, commit trim timing, perf job in CI, N-1, design pass, then 8 rc | — | — |
 | 3 | Box | not started | — | — |
 | 4 | Clipboard | not started | — | — |
 | 5 | Look | not started | — | — |
@@ -31,6 +31,13 @@ Detail lives in each repo's `docs/v1/PROGRESS.md`.
   mark it as a template.
 
 ## Log
+
+- 2026-11-08 (session 2) — Tools memory measured on the packaged AppImage against Link's new trim: background
+  40 → 15–18 PSS (budget 30 met), after close 71 → 28–45 (30 met with swap, as on CI runners), window open
+  350 → 261–334 (225 not reachable without a UX trade: WebKitWebProcess keeps ~123 MB of in-use malloc for
+  llvmpipe compositing; Tools D10, `LOCAL.md` §4). CI's Linux package check then found that uninstall left
+  `arcade.tools.lock`, `icon-theme.cache` and `mimeinfo.cache` in a fresh HOME; fixed in Link (PR #47) with
+  tests that failed first, plus a flaky `ETXTBSY` runtime test.
 
 - 2026-11-08 — Link v1.0.1 tagged through its workflow after the desktop harness passed on main. Tools moved to it:
   T3 is a normal test; `cargo deny` clean (zip 9); notices generated (`scripts/notices.py`) and shown in About;

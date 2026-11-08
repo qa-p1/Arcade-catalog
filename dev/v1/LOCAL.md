@@ -49,3 +49,17 @@ gh repo edit qa-p1/Arcade-template --template
 
 None yet. Anything the CI harness (headless Hyprland plus sway, KWin, Mutter and X11) can't reproduce is listed here
 with the exact steps, the expected result and where to record it.
+
+## 4. Your call: trade a little UX for memory with a WebKit window open (optional)
+
+Nothing is blocked on this. With its window open, Tools measures about 261–334 MB PSS on CI's virtual display, against
+the 225 the audit estimated (Tools `docs/v1/DECISIONS.md` D10 has the numbers). Every change that costs no UX is
+already in. The rest is WebKit drawing the page. Two switches would cut it, and both change how the app feels, so
+the agent won't turn them on by itself:
+
+- **Compositing off** (`WEBKIT_DISABLE_COMPOSITING_MODE=1`): about −50 MB. The audit measured slower frames in Box's
+  island on your GPU (p95 15–17 → 19–22 ms). Tools has little motion.
+- **Paging out the open window:** about −80 MB, but a click can stall while memory comes back from swap.
+
+If you want either for Tools, say so in the catalog README's owner decisions and it will be applied and measured.
+Otherwise the window-open cap stays at what CI measures and only goes down.

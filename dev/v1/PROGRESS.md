@@ -8,7 +8,7 @@ Detail lives in each repo's `docs/v1/PROGRESS.md`.
 | # | Repo | Step (1 lock · 2 untangle · 3 fix · 4 dead code · 5 memory/perf · 6 CI · 7 Round 5 · 8 release) | Latest rc | Stable |
 |---|---|---|---|---|
 | 1 | Link | **v1.0.5 tagged** (601af05, through "Tag a release" after CI, Ecosystem e2e and the desktop harness passed on it): Tier 2 smoke polls `--status` ([PR #52](https://github.com/qa-p1/Arcade-Link/pull/52)), `perf_budget.py` counts wakeups per thread ([PR #53](https://github.com/qa-p1/Arcade-Link/pull/53)) · 1.0.4 (a076adb): desktop app outside the checkout, `perf_budget.py` | — | [v1.0.5](https://github.com/qa-p1/Arcade-Link/tree/v1.0.5) (tag) |
-| 2 | Tools | 1–7 done ([PR #23](https://github.com/qa-p1/Arcade-tools/pull/23) merged as 7682ac9, green on every job: Linux, Windows, macOS, Tier 1 Hyprland, Tier 2 sway/KWin/Mutter/X11; on Link 1.0.5; memory bg 12 / closed 12 / open 258 PSS; perf cold 712 ms, show 630 ms, open 8.5 wakeups/s, disk 374 MB; design pass D13) · **8: `v1.0.0-rc.1` tagged**, but its Release failed in `prepare` (Python 3.10 has no `tomllib`; nothing published) → fix in [PR #39](https://github.com/qa-p1/Arcade-tools/pull/39); rc.2's macOS bundle failed (`wc -l` padding; nothing published) → fix with the Gates workflow in [PR #40](https://github.com/qa-p1/Arcade-tools/pull/40) (D14) · next: rc.3, Gates on it, rc.4 + Gates with `update-from: v1.0.0-rc.3` · stable blocked by B1 | — | — |
+| 2 | Tools | 1–7 done ([PR #23](https://github.com/qa-p1/Arcade-tools/pull/23) merged as 7682ac9, green on every job: Linux, Windows, macOS, Tier 1 Hyprland, Tier 2 sway/KWin/Mutter/X11; on Link 1.0.5; memory bg 12 / closed 12 / open 258 PSS; perf cold 712 ms, show 630 ms, open 8.5 wakeups/s, disk 374 MB; design pass D13) · **8: `v1.0.0-rc.1` tagged**, but its Release failed in `prepare` (Python 3.10 has no `tomllib`; nothing published) → fix in [PR #39](https://github.com/qa-p1/Arcade-tools/pull/39); rc.2's macOS bundle failed (`wc -l` padding; nothing published) → fix with the Gates workflow in [PR #40](https://github.com/qa-p1/Arcade-tools/pull/40) (D14), merged · **[`v1.0.0-rc.3`](https://github.com/qa-p1/Arcade-tools/releases/tag/v1.0.0-rc.3) published** (Linux bundle needed one re-run: an unexplained 25 s hang on the first window open, open item) · Gates on rc.3 running · next: rc.4 + Gates with `update-from: v1.0.0-rc.3` · stable blocked by B1 | rc.3 | — |
 | 3 | Box | not started | — | — |
 | 4 | Clipboard | not started | — | — |
 | 5 | Look | not started | — | — |
@@ -32,6 +32,10 @@ Detail lives in each repo's `docs/v1/PROGRESS.md`.
 
 ## Log
 
+- 2026-11-08 (session 2) — **Tools `v1.0.0-rc.3` published** (hidden prerelease, test channel) from f246c5b after PR #40
+  passed every check. The Linux bundle's first attempt timed out opening the window right after a background start;
+  it passed elsewhere every time and on one re-run, so the cause is still open and the next failure will show the
+  hung launch's output and processes. Gates on rc.3 started.
 - 2026-11-08 (session 2) — Tools rc.2's Release failed in the macOS bundle job after its smoke passed: the staging
   step compared macOS's space-padded `wc -l` as a string. Nothing published. PR #40 fixes it and adds `gates.yml`
   (Tools D14), which runs every exit gate against a published rc's files, including Tools' delta, signature and

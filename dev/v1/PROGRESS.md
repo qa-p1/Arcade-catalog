@@ -8,7 +8,7 @@ Detail lives in each repo's `docs/v1/PROGRESS.md`.
 | # | Repo | Step (1 lock · 2 untangle · 3 fix · 4 dead code · 5 memory/perf · 6 CI · 7 Round 5 · 8 release) | Latest rc | Stable |
 |---|---|---|---|---|
 | 1 | Link | **v1.0.3 tagged** (4cf9eff, through "Tag a release" after CI, Ecosystem e2e and the desktop harness passed on main): page-out of every private mapping of a hidden app, Tools' window-open cap · template, reusable defaults and the desktop workflows' app location in review ([PR #51](https://github.com/qa-p1/Arcade-Link/pull/51)) | — | [v1.0.3](https://github.com/qa-p1/Arcade-Link/tree/v1.0.3) (tag) |
-| 2 | Tools | 1–6 done · 7 Round 5 in progress ([PR #23](https://github.com/qa-p1/Arcade-tools/pull/23)): on Link 1.0.3 (6e4ac67); memory: background 12.6 and closed 12.4 PSS vs 30 (met), window open 263–268 PSS within the 281 cap set from CI (D10, owner option in `LOCAL.md` §4); Tier 2 desktop green on sway, KWin, Mutter and X11; Tier 1 Hyprland test fixed (layer geometry, install outside the checkout) · next: CI green, perf job, N-1, design pass, then 8 rc | — | — |
+| 2 | Tools | 1–6 done · 7 Round 5 in progress ([PR #23](https://github.com/qa-p1/Arcade-tools/pull/23)): on Link 1.0.3 (6e4ac67); memory: background 12.6 and closed 12.4 PSS vs 30 (met), window open 263–268 PSS within the 281 cap set from CI (D10, owner option in `LOCAL.md` §4); Tier 2 desktop green on sway, KWin, Mutter and X11; Tier 1 Hyprland test fixed (layer geometry, install outside the checkout) · N-1, upgrade and tampered-chunk checks added · next: CI green, perf job (Link 1.0.4), design pass, then 8 rc | — | — |
 | 3 | Box | not started | — | — |
 | 4 | Clipboard | not started | — | — |
 | 5 | Look | not started | — | — |
@@ -32,6 +32,13 @@ Detail lives in each repo's `docs/v1/PROGRESS.md`.
 
 ## Log
 
+- 2026-11-08 (session 2) — **Tools gates prepared** on PR #23 (e2b0104, 8dffc89): N-1 runs the tray test's peer
+  checks with the mock peer on the v0.4.4 and v0.4.15 Link CLIs the published apps use (Tools D11; passes locally);
+  `scripts/verify-upgrade.py` installs the published 0.4.6, runs it on a user's data, installs the new AppImage over
+  it and checks everything is kept (passes locally from the verified 0.4.6 file; runs on the rc at step 8); the delta
+  test now covers a tampered chunk (rejected, intact file installed) and a tampered file (never installed). Guide
+  screenshots are generated and Features covers channels, signing and deltas. CI is still red only from GitHub's
+  release-download 504s (NSIS, linuxdeploy, appimagetool, Nix): bundling now retries twice.
 - 2026-11-08 (session 2) — **Link v1.0.3 tagged** at 4cf9eff after CI, Ecosystem e2e and the harness passed on that
   commit: page-out now covers the heap and every private mapping (Tools' closed PSS 36 → 12), and `budgets.json` sets
   Tools' window-open cap to 281 PSS from CI measurements (Tools D10). Tools moved to it (6e4ac67). Tools' Tier 1 test

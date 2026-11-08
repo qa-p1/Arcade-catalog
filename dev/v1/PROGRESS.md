@@ -7,8 +7,8 @@ Detail lives in each repo's `docs/v1/PROGRESS.md`.
 
 | # | Repo | Step (1 lock · 2 untangle · 3 fix · 4 dead code · 5 memory/perf · 6 CI · 7 Round 5 · 8 release) | Latest rc | Stable |
 |---|---|---|---|---|
-| 1 | Link | **v1.0.4 tagged** (a076adb, through "Tag a release" after CI, Ecosystem e2e and the desktop harness passed on main; [PR #51](https://github.com/qa-p1/Arcade-Link/pull/51)): desktop workflows run the app outside the checkout, `perf_budget.py`, template PNG icon | — | [v1.0.4](https://github.com/qa-p1/Arcade-Link/tree/v1.0.4) (tag) |
-| 2 | Tools | 1–6 done · 7 Round 5 in progress ([PR #23](https://github.com/qa-p1/Arcade-tools/pull/23)): on Link 1.0.4 (37ba008); memory: background 12.6 and closed 12.4 PSS vs 30 (met), window open 263–268 PSS within the 281 cap set from CI (D10, owner option in `LOCAL.md` §4); Tier 2 desktop green on sway, KWin, Mutter and X11; Tier 1 Hyprland test fixed (layer geometry, install outside the checkout) · N-1, upgrade and tampered-chunk checks added · perf budgets in CI (D12) · design pass done (D13: `verify-design.py` in CI, 4 states × 2 themes captured; 10e29ae) · next: Tier 2 sway smoke race → Link 1.0.5 ([PR #52](https://github.com/qa-p1/Arcade-Link/pull/52)), CI green, then 8 rc | — | — |
+| 1 | Link | **v1.0.5 tagged** (601af05, through "Tag a release" after CI, Ecosystem e2e and the desktop harness passed on it): Tier 2 smoke polls `--status` ([PR #52](https://github.com/qa-p1/Arcade-Link/pull/52)), `perf_budget.py` counts wakeups per thread ([PR #53](https://github.com/qa-p1/Arcade-Link/pull/53)) · 1.0.4 (a076adb): desktop app outside the checkout, `perf_budget.py` | — | [v1.0.5](https://github.com/qa-p1/Arcade-Link/tree/v1.0.5) (tag) |
+| 2 | Tools | 1–6 done · 7 Round 5 in progress ([PR #23](https://github.com/qa-p1/Arcade-tools/pull/23)): on Link 1.0.5 (af2b20b); memory: background 12.6 and closed 12.4 PSS vs 30 (met), window open 263–268 PSS within the 281 cap set from CI (D10, owner option in `LOCAL.md` §4); Tier 2 desktop green on sway, KWin, Mutter and X11; Tier 1 Hyprland test fixed (layer geometry, install outside the checkout) · N-1, upgrade and tampered-chunk checks added · perf budgets in CI (D12) · design pass done (D13: `verify-design.py` in CI, 4 states × 2 themes captured; 10e29ae) · PR #23 green on every job at 10e29ae (perf: cold 731 ms, show 635 ms, open ~11 wakeups/s, disk 374 MB) · next: CI green on af2b20b, then 8 rc | — | — |
 | 3 | Box | not started | — | — |
 | 4 | Clipboard | not started | — | — |
 | 5 | Look | not started | — | — |
@@ -32,6 +32,10 @@ Detail lives in each repo's `docs/v1/PROGRESS.md`.
 
 ## Log
 
+- 2026-11-08 (session 2) — **Link v1.0.5 tagged** on 601af05 after CI, e2e and the harness passed on it: the Tier 2
+  smoke polls `--status` (PR #52; Qt CI's broken-toolchain cleanup now on every OS), and `perf_budget.py` counts
+  wakeups per thread (PR #53): its first Tools run read open-window wakeups as -2.3/s, which passes any budget; the
+  real figure is about 11/s (budget 20). Tools moved to 1.0.5 (af2b20b) with D12 corrected.
 - 2026-11-08 (session 2) — Tools **design pass** (D13, 10e29ae): a check in `scripts/check` holds the UI to the kit
   (colours, type, tokens, spacing scale, "Couldn't …" wording); 6 off-scale gaps and 8 messages fixed, and the
   error state now says what failed. Tier 2 sway smoke failed once on a fixed 8 s sleep (Tier 1 Hyprland and the other

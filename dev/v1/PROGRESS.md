@@ -7,8 +7,8 @@ Detail lives in each repo's `docs/v1/PROGRESS.md`.
 
 | # | Repo | Step (1 lock · 2 untangle · 3 fix · 4 dead code · 5 memory/perf · 6 CI · 7 Round 5 · 8 release) | Latest rc | Stable |
 |---|---|---|---|---|
-| 1 | Link | **v1.0.0 tagged** ([PR #32](https://github.com/qa-p1/Arcade-Link/pull/32), [#44](https://github.com/qa-p1/Arcade-Link/pull/44)); 1.0.1 collecting shared fixes on the branch | — | [v1.0.0](https://github.com/qa-p1/Arcade-Link/tree/v1.0.0) (tag) |
-| 2 | Tools | 1 lock done · 2 manager split · 3 fixes: TL-8, TL-4, CLI-2, TL-6, TL-2, TL-3, TL-10, RD-TOOLS-1, TL-7 done · updater done (discovery, signed manifests, delta + resume, bad flag), TL-9 done; next TL-1, TL-5, RD-TOOLS-2/3/6, TL-12 | — | — |
+| 1 | Link | **v1.0.0 tagged** ([PR #32](https://github.com/qa-p1/Arcade-Link/pull/32), [#44](https://github.com/qa-p1/Arcade-Link/pull/44)); **1.0.1** in review ([PR #45](https://github.com/qa-p1/Arcade-Link/pull/45): migration archive fix (Tools T3), template lockfile, fleet budget tool follows U1 relaunches) | — | [v1.0.0](https://github.com/qa-p1/Arcade-Link/tree/v1.0.0) (tag) |
+| 2 | Tools | 1–3 done (all findings fixed but T3, waiting for Link 1.0.1) · 4 dead code done · 5 memory done (U1, W1/W3b, OPEN1, TD1; budget step with Link 1.0.1) · 6 CI: rc → promote/nightly via Link workflows, tray e2e, timeouts ([PR #23](https://github.com/qa-p1/Arcade-tools/pull/23)) · next: Link 1.0.1 bump + budgets, 7 Round 5, 8 rc | — | — |
 | 3 | Box | not started | — | — |
 | 4 | Clipboard | not started | — | — |
 | 5 | Look | not started | — | — |
@@ -31,6 +31,12 @@ Detail lives in each repo's `docs/v1/PROGRESS.md`.
   mark it as a template.
 
 ## Log
+
+- 2026-11-08 — Tools (PR #23): VENDORED moved to Link v1.0.0 (CI was red on it); the release-gate Test channel
+  override was never wired and a stored Test channel would have trusted unsigned rc manifests (fixed, D5); dead code
+  removed (an unused second backup implementation, ~1,300 lines); the memory items applied (D7); releases now rc →
+  promote and nightlies through Link's reusable workflows (D8). Link 1.0.1 opened (PR #45), including fixes to
+  `tools/fleet/fleet_budget.py` (it could never have started its D-Bus session, and would have read U1 apps as 0 MB).
 
 - 2026-11-07 — **Link v1.0.0 tagged** at `d60772c` through "Tag a release", after every gate passed on that commit:
   CI (3 OSes), Ecosystem e2e, release-flow e2e (draft rc → promote → signature → byte-identical), Desktop harness

@@ -7,8 +7,8 @@ Detail lives in each repo's `docs/v1/PROGRESS.md`.
 
 | # | Repo | Step (1 lock · 2 untangle · 3 fix · 4 dead code · 5 memory/perf · 6 CI · 7 Round 5 · 8 release) | Latest rc | Stable |
 |---|---|---|---|---|
-| 1 | Link | **v1.0.2 tagged** (3e4aa6c, through "Tag a release" after CI, Ecosystem e2e and the desktop harness passed on main): tab-panel focus ring, Qt tray startup race, read-only trim (and no more reverting written code pages), clean uninstall · template on v1.0.2 in review ([PR #49](https://github.com/qa-p1/Arcade-Link/pull/49)) | — | [v1.0.2](https://github.com/qa-p1/Arcade-Link/tree/v1.0.2) (tag) |
-| 2 | Tools | 1–6 done · 7 Round 5 in progress ([PR #23](https://github.com/qa-p1/Arcade-tools/pull/23)): on Link 1.0.2 (eba0634; fixes the Linux package check's uninstall leftovers); `--repair` from another copy no longer repoints the receipt; memory: background met (15–18 PSS vs 30), window open 261–334 PSS vs 225 recorded as D10 (ratchet set from CI, owner option in `LOCAL.md` §4) · next: CI green, perf job in CI, N-1, design pass, then 8 rc | — | — |
+| 1 | Link | **v1.0.3 tagged** (4cf9eff, through "Tag a release" after CI, Ecosystem e2e and the desktop harness passed on main): page-out of every private mapping of a hidden app, Tools' window-open cap · template, reusable defaults and the desktop workflows' app location in review ([PR #51](https://github.com/qa-p1/Arcade-Link/pull/51)) | — | [v1.0.3](https://github.com/qa-p1/Arcade-Link/tree/v1.0.3) (tag) |
+| 2 | Tools | 1–6 done · 7 Round 5 in progress ([PR #23](https://github.com/qa-p1/Arcade-tools/pull/23)): on Link 1.0.3 (6e4ac67); memory: background 12.6 and closed 12.4 PSS vs 30 (met), window open 263–268 PSS within the 281 cap set from CI (D10, owner option in `LOCAL.md` §4); Tier 2 desktop green on sway, KWin, Mutter and X11; Tier 1 Hyprland test fixed (layer geometry, install outside the checkout) · next: CI green, perf job, N-1, design pass, then 8 rc | — | — |
 | 3 | Box | not started | — | — |
 | 4 | Clipboard | not started | — | — |
 | 5 | Look | not started | — | — |
@@ -32,6 +32,11 @@ Detail lives in each repo's `docs/v1/PROGRESS.md`.
 
 ## Log
 
+- 2026-11-08 (session 2) — **Link v1.0.3 tagged** at 4cf9eff after CI, Ecosystem e2e and the harness passed on that
+  commit: page-out now covers the heap and every private mapping (Tools' closed PSS 36 → 12), and `budgets.json` sets
+  Tools' window-open cap to 281 PSS from CI measurements (Tools D10). Tools moved to it (6e4ac67). Tools' Tier 1 test
+  failed on its own harness use (a layer surface has no `at`/`size`); fixed, and found that the desktop workflows put
+  the app inside the caller's checkout, where it counts as a dev build: fixed in Link PR #51 for the next tag.
 - 2026-11-08 (session 2) — **Link v1.0.2 tagged** at 3e4aa6c ("Tag a release", after CI, Ecosystem e2e and the
   desktop harness passed on that commit). Tools moved to it (Cargo, lockfile, workflows, design kit, vendored
   trimmer; the local focus-ring override removed).

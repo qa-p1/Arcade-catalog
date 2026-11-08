@@ -7,8 +7,8 @@ Detail lives in each repo's `docs/v1/PROGRESS.md`.
 
 | # | Repo | Step (1 lock · 2 untangle · 3 fix · 4 dead code · 5 memory/perf · 6 CI · 7 Round 5 · 8 release) | Latest rc | Stable |
 |---|---|---|---|---|
-| 1 | Link | **v1.0.1 tagged** (a68e801) · **1.0.2 in review** ([PR #47](https://github.com/qa-p1/Arcade-Link/pull/47)): tab-panel focus ring, Qt tray startup race, trim reverted written code pages (fixed) and now drops clean `r--p` data, uninstall leaves no `<id>.lock` / empty icon or desktop cache (Rust and Qt), template on v1.0.1 · next: green CI → merge → desktop harness on main → tag v1.0.2 | — | [v1.0.1](https://github.com/qa-p1/Arcade-Link/tree/v1.0.1) (tag) |
-| 2 | Tools | 1–6 done · 7 Round 5 in progress ([PR #23](https://github.com/qa-p1/Arcade-tools/pull/23)): macOS/Windows CI green; Linux package lifecycle waits on Link 1.0.2's clean uninstall; `--repair` from another copy no longer repoints the receipt; memory: background met (15–18 PSS vs 30), window open 261–334 PSS vs 225 recorded as D10 (ratchet set from CI, owner option in `LOCAL.md` §4) · next: pin Link 1.0.2, commit trim timing, perf job in CI, N-1, design pass, then 8 rc | — | — |
+| 1 | Link | **v1.0.2 tagged** (3e4aa6c, through "Tag a release" after CI, Ecosystem e2e and the desktop harness passed on main): tab-panel focus ring, Qt tray startup race, read-only trim (and no more reverting written code pages), clean uninstall · template on v1.0.2 in review ([PR #49](https://github.com/qa-p1/Arcade-Link/pull/49)) | — | [v1.0.2](https://github.com/qa-p1/Arcade-Link/tree/v1.0.2) (tag) |
+| 2 | Tools | 1–6 done · 7 Round 5 in progress ([PR #23](https://github.com/qa-p1/Arcade-tools/pull/23)): on Link 1.0.2 (eba0634; fixes the Linux package check's uninstall leftovers); `--repair` from another copy no longer repoints the receipt; memory: background met (15–18 PSS vs 30), window open 261–334 PSS vs 225 recorded as D10 (ratchet set from CI, owner option in `LOCAL.md` §4) · next: CI green, perf job in CI, N-1, design pass, then 8 rc | — | — |
 | 3 | Box | not started | — | — |
 | 4 | Clipboard | not started | — | — |
 | 5 | Look | not started | — | — |
@@ -31,6 +31,10 @@ Detail lives in each repo's `docs/v1/PROGRESS.md`.
   mark it as a template.
 
 ## Log
+
+- 2026-11-08 (session 2) — **Link v1.0.2 tagged** at 3e4aa6c ("Tag a release", after CI, Ecosystem e2e and the
+  desktop harness passed on that commit). Tools moved to it (Cargo, lockfile, workflows, design kit, vendored
+  trimmer; the local focus-ring override removed).
 
 - 2026-11-08 (session 2) — Tools memory measured on the packaged AppImage against Link's new trim: background
   40 → 15–18 PSS (budget 30 met), after close 71 → 28–45 (30 met with swap, as on CI runners), window open

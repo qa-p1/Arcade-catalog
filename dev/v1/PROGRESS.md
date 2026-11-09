@@ -32,6 +32,18 @@ Detail lives in each repo's `docs/v1/PROGRESS.md`.
 
 ## Log
 
+- 2026-11-09 (session 2) — **State for resuming.** Link main 8059160 (PR #55: seatd race, Nix download,
+  portal `trigger_description`, lazy crash folder) green on CI, Ecosystem e2e and Desktop harness, but not tagged:
+  Box's Island test then failed with "hyprland_binding_unavailable" because Box checks that Hyprland lists its
+  portal shortcut, which only xdg-desktop-portal-hyprland made happen. The stand-in now registers bound shortcuts
+  with Hyprland itself (Link branch 94dc587, `gshortcuts` helper; self-test covers it); Box PR #19 runs on it
+  (fede6ae). Next: merge that into Link, tag **v1.0.6**, then Tools: pin Link `tag = "v1.0.6"` (now a rev),
+  notices, PR (crash reports 50e5349 + cargo-deny over the workspace 85e46a0, Tools D19/D20), rc.11, Gates
+  (`update-from: v1.0.0-rc.10`). Box: local branch `box-standard` (Link runtime, crash reports, CLI-2, Linux
+  identity, notices incl. 142 native packages, SECURITY.md, Wasmtime 36 LTS, zip 9, cargo deny; Box D4/D5; all
+  workspace tests pass) waits for PR #19 to merge, then moves to tag v1.0.6.
+  Correction to Tools D20's context: Tools' cargo-deny job was green only because a root package checks just
+  itself; with `--workspace` it found 10 advisories, now each accepted with a reason or fixed.
 - 2026-11-09 (session 2) — **Correction: Tools is not ready to promote.** Wiring Box to Link's runtime showed
   Tools never calls `runtime::install_crash_reports` and has no crash-report view, though TOOLS.md requires
   "<App> crashed" with "Copy report" and "Open GitHub issue" (owner checklist: local crash reports). No exit gate

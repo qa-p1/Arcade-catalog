@@ -32,6 +32,14 @@ Detail lives in each repo's `docs/v1/PROGRESS.md`.
 
 ## Log
 
+- 2026-11-10 (session 3) — **Owner rule (chat): parallel code-writing pass with Sonnet agents.** "Write most of the
+  code part of all the steps … use sonnet agents … at least complete the writing code part; checking and releasing
+  after." This replaces "one agent, no subagents" for writing code. Seven agents started ~06:00 UTC, one per app repo
+  (Box, Clipboard, Look, Find, Lens, Shelf, Wheel), with a common brief: steps 0–7 in priority order (brief, behaviour
+  lock, P0/P1 fixes, app standard on Link v1.0.6, CI workflows, dead code, untangle, memory/Round 5), committing to
+  `claude/tender-feynman-3vt7dg` in their own repo only, documenting every commit as tested locally or not run in the
+  repo's `docs/v1/PROGRESS.md`. They open no PRs, merge nothing, tag and release nothing; Link changes they need are
+  listed, not made. Tools and Link stay with the lead. Checking (CI, gates) and releases follow, by the PLAN's rules.
 - 2026-11-10 (session 3) — **Box PR #20 merged** (effb510): Link 1.0.6 runtime (crash reports, arena cap), CLI-2,
   Linux identity, notices, SECURITY.md, Wasmtime 36 LTS, cargo deny over the workspace (RUSTSEC-2026-0459 accepted,
   D6); green on 3 OSes and Hyprland. CI-speed note for Box step 6: the Windows check took 41 min, macOS 40, Linux 35

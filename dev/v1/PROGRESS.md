@@ -32,6 +32,19 @@ Detail lives in each repo's `docs/v1/PROGRESS.md`.
 
 ## Log
 
+- 2026-11-10 (session 3, 21:30 UTC) — **Resumed after a usage-limit stop.** The account's 5-hour limit ended every
+  agent at about 06:10 UTC, ten minutes into the code-writing pass; nothing was lost (work was on disk). Committed
+  work is pushed and all seven Sonnet agents were resumed where they stopped, now told to commit and push after every
+  unit of work. On their branches at the stop: Wheel 8 commits (to b2160fd), Clipboard 4 (to ab746fa: retention with
+  a storage budget), Look 3 (to 4fe14c6: Escape steps back one level), Find and Shelf 1 each (the brief), Box and Lens
+  uncommitted edits only. Their own `docs/v1/PROGRESS.md` files list each commit; a summary per repo follows here
+  when each agent reports.
+  **Tools memory, judged by the rule fixed in D21** (probe [run 42764576055](https://github.com/qa-p1/Arcade-tools/actions/runs/42764576055),
+  7 runners): normal passes 217–220 MB; under load two runners read 293–294 at 6 s, all of it WebKit code
+  (file-backed 95–101 MB, other memory within 4.3 MB), settled by 10 s. So the gate may wait for the app to be idle
+  (Tools D22): Link [PR #60](https://github.com/qa-p1/Arcade-Link/pull/60), and a probe run with that gate is
+  measuring before v1.0.7 is tagged. New finding, within budget: Tools' first update check 60 s after start lifts an
+  open window to 252–266 MB until the next trim (Tools D21, open item).
 - 2026-11-10 (session 3) — **Owner rule (chat): parallel code-writing pass with Sonnet agents.** "Write most of the
   code part of all the steps … use sonnet agents … at least complete the writing code part; checking and releasing
   after." This replaces "one agent, no subagents" for writing code. Seven agents started ~06:00 UTC, one per app repo

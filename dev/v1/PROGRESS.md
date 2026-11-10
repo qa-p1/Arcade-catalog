@@ -32,6 +32,11 @@ Detail lives in each repo's `docs/v1/PROGRESS.md`.
 
 ## Log
 
+- 2026-11-10 — **Owner rule (chat):** when something has failed after repeated attempts, ask a Fable model
+  (medium effort) for advice or let it fix it, instead of retrying again; an exception to "use no subagents".
+  First use: Tools PR #49's open-window memory gate (PSS 309 vs 281; rc.10 measured 252). CI on the 9th
+  (07:30–07:46 UTC) failed in Box and Tools AppImage bundling during a GitHub release-download outage (504s,
+  linuxdeploy); the re-runs bundled fine. Box PR #19 now builds on all three OSes; its Island test is running.
 - 2026-11-09 (session 2) — **Link v1.0.6 tagged** (cd380d6) after PR #56 (stand-in registers shortcuts with
   Hyprland) and main's CI, Ecosystem e2e and Desktop harness passed; the self-test proves `hyprctl globalshortcuts`
   lists a bound shortcut and `hl.dsp.global` reaches the client. Box PR #19's Island test now binds on the harness

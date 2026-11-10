@@ -32,6 +32,17 @@ Detail lives in each repo's `docs/v1/PROGRESS.md`.
 
 ## Log
 
+- 2026-11-10 (session 3) — **Tools PR #49's memory gate: cause found and fixed** (diagnosed with Fable 5.2's
+  advice). Not the PR: the probe on unchanged rc.10 ([run 42750339792](https://github.com/qa-p1/Arcade-tools/actions/runs/42750339792))
+  read 247.6–251.5 on 7 runners and 289.5 in the gate's own command on a slow one, with 48 MB more WebKit code
+  resident: the trimmer ran at 2 s and then every 20 s, and a page still loading at 2 s kept its code until 22 s, past
+  the gate's 6 s sample. Link [PR #58](https://github.com/qa-p1/Arcade-Link/pull/58) (merged, a4c1ff6): the trimmer
+  trims again while a helper settles (Link D14), and `relaunch_unpacked` no longer leaks the arena cap into apps
+  Tools starts (also in rc.10; test fails without the fix). Tools eb89d96 (D21) vendors it and uses Link's cap:
+  **its CI gate read 219.7 MB open PSS** (was 309; cap 281), all other jobs green; the 8-runner probe on that
+  build is running. Link 1.0.7 release PR [#59](https://github.com/qa-p1/Arcade-Link/pull/59). The background
+  1.4 MB reading is real (resident paged out to swap; PSS excludes swap), unchanged since rc.3. Box
+  [PR #20](https://github.com/qa-p1/Arcade-box/pull/20) opened from the handoff patches (local `scripts/check` green).
 - 2026-11-10 (session 3) — **Box PR #19 (behaviour lock) merged** (b958041) after [run 42751978552](https://github.com/qa-p1/Arcade-box/actions/runs/42751978552)
   passed on 3 OSes and Hyprland, 11 of 11 Island checks as expected (BR-2, BR-1, BR-0 XFAIL; BR-0 now behind two
   passing locks: Escape clears typed text, Return keeps the Island open). **Link [PR #57](https://github.com/qa-p1/Arcade-Link/pull/57)

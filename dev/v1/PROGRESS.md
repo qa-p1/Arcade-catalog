@@ -32,6 +32,15 @@ Detail lives in each repo's `docs/v1/PROGRESS.md`.
 
 ## Log
 
+- 2026-11-10 (session 3) — **Correction: the memory fix is not complete; Link v1.0.7 not tagged.** Link main
+  51d8ad8 (1.0.7, [PR #59](https://github.com/qa-p1/Arcade-Link/pull/59)) passed CI, Ecosystem e2e and the
+  Desktop harness (dispatched; an earlier harness run on f199e6a lost sway/KWin to an Azure apt mirror outage, also
+  seen in Tools probes). The 8-runner probe on Tools PR #49's build ([run 42758214825](https://github.com/qa-p1/Arcade-tools/actions/runs/42758214825))
+  read ~220 MB open PSS in every normal pass (WebKit file-backed 20.8 MB, was 56/104), but its pass with every CPU
+  busy through the 6 s sample read **289.7** on one runner (budget 281). The tag waits; the slow-open case goes back
+  to the Fable advisor with the probe data. Box [PR #20](https://github.com/qa-p1/Arcade-box/pull/20): cargo deny
+  found RUSTSEC-2026-0459 (bundled SQLite); accepted for Box's own database with reason (Box D6, SECURITY.md), fix
+  with the fleet's Rust 1.89.
 - 2026-11-10 (session 3) — **Tools PR #49's memory gate: cause found and fixed** (diagnosed with Fable 5.2's
   advice). Not the PR: the probe on unchanged rc.10 ([run 42750339792](https://github.com/qa-p1/Arcade-tools/actions/runs/42750339792))
   read 247.6–251.5 on 7 runners and 289.5 in the gate's own command on a slow one, with 48 MB more WebKit code

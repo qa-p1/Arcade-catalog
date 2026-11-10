@@ -32,6 +32,15 @@ Detail lives in each repo's `docs/v1/PROGRESS.md`.
 
 ## Log
 
+- 2026-11-10 — **Handoff state.** Box PR #19 run 42578967289 attempt 2 (c5d1e98, harness Link cd380d6): Linux,
+  Windows, macOS green; `desktop / hyprland` fails at "The shortcut opens the Island" after 30.3 s. Box binds the
+  shortcut both times (portal stand-in log), but after the press there is **no WebKit process at all** (only
+  `arcade-desktop --background` and its AppImage), so the Island's WebView was never created: either Box did not get
+  or act on `Activated`, or `with_island`/`island_window` failed silently. Next: log the activation path in Box (or
+  check the stand-in's Press return and `portal.log`) before touching timeouts again.
+  Box's unpushed `box-standard` commits (Link runtime, crash reports, CLI-2, Linux identity, notices, SECURITY.md,
+  Wasmtime 36 LTS, zip 9, cargo deny, Link v1.0.6 tag) are saved as patches in `dev/v1/handoff/box-standard/`
+  (base 262565b, on PR #19's branch): after PR #19 merges, restart the Box branch from main and `git am` them.
 - 2026-11-10 — **Owner rule (chat):** when something has failed after repeated attempts, ask a Fable model
   (medium effort) for advice or let it fix it, instead of retrying again; an exception to "use no subagents".
   First use: Tools PR #49's open-window memory gate (PSS 309 vs 281; rc.10 measured 252). CI on the 9th

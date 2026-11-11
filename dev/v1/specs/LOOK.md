@@ -18,7 +18,7 @@ Starting point: `qa-p1/Arcade-look`, Look 0.4.3. Read `AUDIT/look.md`, `AUDIT/re
 | LK-10 | P1 | Escape with the Info panel open closes the whole preview. The order must be: help/menu → Info → fullscreen → close. | `src/app.ts:776-790` |
 | LK-2 | P1 | The keyboard-shortcuts dialog overflows its card, so the rows and the Close button are unreachable. Add a max height and scrolling. Generate the list from the real key map (it omits M, `,`/`.` and the 3D group; A is listed twice). | `src/lib/welcome.ts:68-150` |
 | LK-11 | P1 | A valid AVIF falls back to a hex dump. Enable the AVIF decoder, or bundle the codec WebKit needs; test HEIC the same way. | `src-tauri/Cargo.toml:43` (`image` without `avif`), `src/viewers/image.ts:68-104` |
-| L1 | P1 | Duplicate `arcade-look.desktop` and `dev.arcade.Look.desktop` in autostart and applications, logged on every start. Retire the legacy entry once. | integration (Link install code) |
+| L1 | P1 | Duplicate `arcade-look.desktop` and `dev.arcade.Look.desktop` in autostart and applications, logged on every start. Retire the legacy entry once. Fixed fleet-wide in Link 1.0.7 (PLAN.md "One launcher per app"): move Look to Link ≥ 1.0.7 and drop it from Link's `LEGACY_PENDING`. | integration (Link install code) |
 | LK-1 | P1 | "Couldn't…" error toasts never auto-dismiss and carry over to the next file. | `src/app.ts:588-598` |
 | LK-3 | P1 | Unreadable or broken-symlink files show a generic render error and a hex dump. Show "Permission denied" or "Broken link to …". | open path |
 | LK-7 | P2 | `--bogus` exits 0 silently; a nonexistent path opens "This file no longer exists". Print usage and exit 2; report "not found". | CLI |

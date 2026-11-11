@@ -10,7 +10,9 @@ through the same rc → promote path.
 2. **Fleet end to end:**
    - Install everything from scratch through Tools on a fresh HOME, then use one real cross-app flow per Link
      action: Box → Lens capture, Look → actions to Box, Clipboard and Shelf, Find → Look preview, Wheel actions.
-   - Upgrade from the full 0.x fleet (the real released files) to the 1.0 fleet, and keep all data.
+   - Upgrade from the full 0.x fleet (the real released files) to the 1.0 fleet, and keep all data. Then
+     `~/.local/share/applications` holds exactly one entry per app and `~/.config/autostart` at most one per app
+     (fleet rule "One launcher per app" in `PLAN.md`).
    - Uninstall everything, and nothing is left behind.
 3. **Design pass:**
    - Capture the same states (empty, list, settings, error, light and dark) for all 8 apps under the harness and

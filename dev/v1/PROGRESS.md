@@ -33,6 +33,19 @@ None. B1 and B2 were done from the owner's PC on 2026-11-11:
 
 ## Log
 
+- 2026-11-11 (local session, owner's PC) — **Duplicate launchers fixed at the root; B1 and B2 done; Lens #16 and
+  Box #34 merged.**
+  - The owner saw two menu entries for Box, Look, Shelf, Clipboard and Wheel, and Look started twice at login. Cause:
+    Link ≤ 1.0.6 kept an entry under an old desktop id (`dev.arcadebox.app`, `arcade-look`, `arcade.shelf`,
+    `dev.arcade.clipboard`, `com.arcadewheel.ArcadeWheel`) whenever it ran the same AppImage as the new one; every
+    app already listed those ids. Fixed in the Rust and Qt installers on Link #61 (3dbaab9, CHANGELOG 1.0.7) with
+    tests that failed before; new real-fleet e2e check per app. New fleet rule and checklist item "One launcher per
+    app" in `PLAN.md`. The owner's own desktop was cleaned by hand.
+  - B1: signing key set on all 8 app repos, public key on Tools PR #49 (6bfba35). B2: `qa-p1/Arcade-template`.
+  - [Lens #16](https://github.com/qa-p1/Arcade-lens/pull/16) merged (e889670) and
+    [Box #34](https://github.com/qa-p1/Arcade-box/pull/34) merged (67d0359) after re-checking green; Box's Tier 1
+    job showed BR-0/BR-1 passing and BR-2 XFAIL.
+
 - 2026-11-11 (session 3, 09:40 UTC) — **Tools "close under load" was a harness bug; Box step 3 core + Island fixes;
   e2e down to two causes.**
   - **Close under load (Tools open item) is Link's `wmclose`, not Tools.** Locally under CPU load the first close

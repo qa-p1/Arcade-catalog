@@ -32,6 +32,31 @@ Detail lives in each repo's `docs/v1/PROGRESS.md`.
 
 ## Log
 
+- 2026-11-11 (session 3, 09:40 UTC) — **Tools "close under load" was a harness bug; Box step 3 core + Island fixes;
+  e2e down to two causes.**
+  - **Close under load (Tools open item) is Link's `wmclose`, not Tools.** Locally under CPU load the first close
+    was lost about half the time (7 of 13). Tools was idle in `poll` and a second close worked. `XEventsQueued`
+    showed nothing queued, and an X protocol trace (xtrace) showed the server never delivered the first
+    ClientMessage, neither to Tools nor to an independent `xev` listener. `wmclose` only flushed and exited, and an
+    X server that polls a client after it has gone drops it unread. With `XSync` + `XCloseDisplay` it was 0 of 10.
+    The fix is on Link [PR #61](https://github.com/qa-p1/Arcade-Link/pull/61) (46400dd) and ships in Link 1.0.7.
+  - **Real-fleet e2e (run 42988304697, head e6442e2):** shortcuts 20/20, trayhost 27/27, tools-hub 39/42,
+    install 15/16 (from 21 failing before the picker/adapter/signing fixes). The three tools-hub failures are one
+    cause: Lens labels main builds `0.4.2-dev.<sha>`, a prerelease that Tools' stable channel rightly refuses.
+    Fixed in Lens [PR #16](https://github.com/qa-p1/Arcade-lens/pull/16) (Lens D6: main builds carry the Cargo
+    version, like every other app). The install failure (Tools does not quit on `app.quit` after its install
+    relaunch) is being reproduced.
+  - **Box step 3 (fixes), pushed to `claude/tender-feynman-3vt7dg`, PR to follow:**
+    - Core: B-7 calculator, B-8 units, B-9 date spans and time-zone inputs/abbreviations, B-10 diff, B-25
+      processes, U-1 numeric options, BR-15/16 downloads, BR-4 search. Typed expressions now route to their
+      converter, and whole words rank first.
+    - Island: BR-0 (P0, Escape goes back one step; a running job stays reachable), BR-5/6 hints, BR-11 highlight,
+      BR-12 fresh re-show, BR-1 lost shortcut release.
+    - Each finding's lock test was flipped with its fix; `cargo test -p arcade-core`, clippy, svelte-check, the
+      key lock and the layout check all pass locally. Decisions D7 (ambiguous converter input).
+    - Left in step 3: BR-2 (input region, needs the Hyprland harness on CI), BR-3 (GStreamer packaging), BR-7,
+      BR-8, BR-9.
+
 - 2026-11-11 (session 3, 09:00 UTC) — **Link: gate change merged; the real-fleet e2e had been blind since Nov 8.**
   The owner stopped the code-writing subagents; the lead works the plan in order again. Long waits (CI runs,
   releases, probes) now go to a read-only Sonnet watcher that reports back while the lead keeps working; local

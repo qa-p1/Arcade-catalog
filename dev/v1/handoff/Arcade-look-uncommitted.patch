@@ -1,0 +1,28 @@
+diff --git a/src-tauri/Cargo.lock b/src-tauri/Cargo.lock
+index 8bb5786..20ebb4b 100644
+--- a/src-tauri/Cargo.lock
++++ b/src-tauri/Cargo.lock
+@@ -49,8 +49,8 @@ checksum = "330a5ed07fa54e4702c9d6c4174f74427fc0ef6e214bbd677ae50a5099946470"
+ 
+ [[package]]
+ name = "arcade-link"
+-version = "0.4.4"
+-source = "git+https://github.com/qa-p1/Arcade-Link?tag=v0.4.4#1d150983114b36c6adb2dc80f8889cec43079bf8"
++version = "1.0.6"
++source = "git+https://github.com/qa-p1/Arcade-Link?tag=v1.0.6#cd380d622d327af17e2a4baa8c52e781a1cc72a8"
+ dependencies = [
+  "getrandom 0.4.3",
+  "interprocess",
+diff --git a/src-tauri/Cargo.toml b/src-tauri/Cargo.toml
+index d092bd7..8c0f5b1 100644
+--- a/src-tauri/Cargo.toml
++++ b/src-tauri/Cargo.toml
+@@ -44,7 +44,7 @@ image = { version = "0.25", default-features = false, features = ["png", "jpeg",
+ kamadak-exif = "0.6"
+ imagesize = "0.15"
+ # Arcade Link (the shared protocol and install/tray runtime).
+-arcade-link = { git = "https://github.com/qa-p1/Arcade-Link", tag = "v0.4.4", features = ["install", "trayhost", "design"] }
++arcade-link = { git = "https://github.com/qa-p1/Arcade-Link", tag = "v1.0.6", features = ["install", "trayhost", "design"] }
+ tauri-plugin-dialog = "2"
+ tauri-plugin-notification = "2"
+ 

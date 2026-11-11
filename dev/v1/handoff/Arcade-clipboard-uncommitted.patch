@@ -1,0 +1,262 @@
+diff --git a/apps/flutter_app/lib/overlay/quick_overlay.dart b/apps/flutter_app/lib/overlay/quick_overlay.dart
+index af17f76..0f2be8c 100644
+--- a/apps/flutter_app/lib/overlay/quick_overlay.dart
++++ b/apps/flutter_app/lib/overlay/quick_overlay.dart
+@@ -158,6 +158,21 @@ class _MeshOverlayState extends State<MeshOverlay> {
+                     child: Column(
+                         crossAxisAlignment: CrossAxisAlignment.stretch,
+                         children: [
++                          if (controller.status?.paused == true)
++                            Padding(
++                              padding: const EdgeInsets.only(
++                                  top: ArcadeTokens.space6),
++                              child: ArcadeNotice(
++                                  'Nothing you copy is being saved or shared.',
++                                  tone: ArcadeTone.warn,
++                                  title: 'Private mode is on',
++                                  action: ArcadeButton(
++                                      label: 'Turn off',
++                                      small: true,
++                                      onPressed: () =>
++                                          controller.setPrivatePause(false,
++                                              cause: 'picker'))),
++                            ),
+                           LinkWorkStatus(controller: controller),
+                           WaitingPhoto(controller: controller),
+                           if (controller.error case final error?)
+diff --git a/apps/flutter_app/lib/pages/history.dart b/apps/flutter_app/lib/pages/history.dart
+index 2397e98..e6141e6 100644
+--- a/apps/flutter_app/lib/pages/history.dart
++++ b/apps/flutter_app/lib/pages/history.dart
+@@ -171,13 +171,14 @@ class _ClipboardPageState extends State<_ClipboardPage> {
+           Padding(
+             padding: const EdgeInsets.only(bottom: ArcadeTokens.space12),
+             child: ArcadeNotice(
+-                'Sharing is paused. Existing clips are still available.',
++                'Nothing you copy is being saved or shared. Existing clips are still available.',
+                 tone: ArcadeTone.warn,
+                 title: 'Private mode',
+                 action: ArcadeButton(
+-                    label: 'Resume',
++                    label: 'Turn off',
+                     small: true,
+-                    onPressed: () => controller.setPrivatePause(false))),
++                    onPressed: () => controller.setPrivatePause(false,
++                        cause: 'history header'))),
+           ),
+         if (controller.status?.connection == 'offline' &&
+             controller.devices.isNotEmpty)
+diff --git a/apps/flutter_app/lib/services/app_controller.dart b/apps/flutter_app/lib/services/app_controller.dart
+index c37781a..e226e6c 100644
+--- a/apps/flutter_app/lib/services/app_controller.dart
++++ b/apps/flutter_app/lib/services/app_controller.dart
+@@ -387,7 +387,7 @@ class AppController extends ChangeNotifier with WidgetsBindingObserver {
+           _link.onRestart = _desktop.restart;
+           _link.onShortcutSet = _setShortcutFromLink;
+           _desktop.onTogglePrivateMode =
+-              () => setPrivatePause(_status?.paused != true);
++              () => setPrivatePause(_status?.paused != true, cause: 'tray');
+           _link.listen();
+           try {
+             // Wait for Tools' first tray-host answer (300 ms cap) so a hosted
+@@ -832,9 +832,13 @@ class AppController extends ChangeNotifier with WidgetsBindingObserver {
+         await refreshHistory(query: _query);
+       });
+ 
+-  Future<void> setPrivatePause(bool paused) async => _perform(() async {
++  Future<void> setPrivatePause(bool paused,
++          {String cause = 'settings'}) async =>
++      _perform(() async {
++        Diagnostics.log(
++            'private', 'Private mode ${paused ? 'on' : 'off'} (cause: $cause)');
+         await _core.invoke('settings', {
+-          'values': {'paused': paused}
++          'values': {'paused': paused, 'cause': cause}
+         });
+         await refreshStatus();
+       });
+diff --git a/apps/flutter_app/test/app_widget_test.dart b/apps/flutter_app/test/app_widget_test.dart
+index eb04709..5842ca6 100644
+--- a/apps/flutter_app/test/app_widget_test.dart
++++ b/apps/flutter_app/test/app_widget_test.dart
+@@ -226,6 +226,30 @@ void main() {
+     await tester.pumpAndSettle();
+   });
+ 
++  testWidgets(
++      'Private mode is visible in History and the picker, and turns off',
++      (tester) async {
++    await tester.binding.setSurfaceSize(const Size(900, 700));
++    addTearDown(() => tester.binding.setSurfaceSize(null));
++    final fixture =
++        (await tester.runAsync(() => _Fixture.create(hasMesh: true)))!;
++    addTearDown(fixture.dispose);
++    await fixture.controller.addText('A clip');
++    await fixture.controller.setPrivatePause(true, cause: 'test');
++    await tester.pumpWidget(ArcadeApp(controller: fixture.controller));
++    await tester.pumpAndSettle();
++    expect(find.text('Private mode'), findsWidgets);
++    expect(find.text('Turn off'), findsOneWidget);
++
++    await fixture.controller.openOverlay();
++    await tester.pumpAndSettle();
++    expect(find.text('Private mode is on'), findsOneWidget);
++    await tester.tap(find.text('Turn off').last);
++    await tester.pumpAndSettle();
++    expect(fixture.controller.status?.paused, isFalse);
++    expect(find.text('Private mode is on'), findsNothing);
++  });
++
+   testWidgets(
+       'overlay supports arrow, Home, End, Enter, and Escape while search has focus',
+       (tester) async {
+diff --git a/core/rust/src/core.rs b/core/rust/src/core.rs
+index 2ae4e49..5267eb5 100644
+--- a/core/rust/src/core.rs
++++ b/core/rust/src/core.rs
+@@ -1551,12 +1551,28 @@ impl Core {
+             .ok_or_else(|| "Settings values must be an object".to_string())?;
+         let mut state = self.state.lock().await;
+         let was_paused = state.store.setting("paused", false);
++        let cause = object
++            .get("cause")
++            .and_then(|value| value.as_str())
++            .unwrap_or("unspecified")
++            .chars()
++            .filter(|c| !c.is_control())
++            .take(64)
++            .collect::<String>();
+         for (key, value) in object {
+             match key.as_str() {
++                "cause" => {}
+                 "paused" => {
+                     let paused = value
+                         .as_bool()
+                         .ok_or_else(|| "The paused setting must be true or false".to_string())?;
++                    if paused != was_paused {
++                        // Every path that changes Private mode leaves a trace.
++                        eprintln!(
++                            "arcade-clipboard: Private mode {} (cause: {cause})",
++                            if paused { "on" } else { "off" }
++                        );
++                    }
+                     state
+                         .store
+                         .set_setting("paused", if paused { "true" } else { "false" })?;
+diff --git a/core/rust/src/link.rs b/core/rust/src/link.rs
+index df88ff4..207f394 100644
+--- a/core/rust/src/link.rs
++++ b/core/rust/src/link.rs
+@@ -546,7 +546,7 @@ impl ClipboardHandler {
+         self.runtime
+             .block_on(core.request(json!({
+                 "op": "settings",
+-                "values": {"paused": paused}
++                "values": {"paused": paused, "cause": "Link menu"}
+             })))
+             .map_err(LinkError::unavailable)?;
+         if let Err(error) = refresh_document(&core, &self.runtime) {
+@@ -590,9 +590,11 @@ impl ClipboardHandler {
+         let previous_portable = PortableSettings::from_core(&previous)?;
+         portable_settings::save_backup(core.data_dir(), &previous)
+             .map_err(portable_settings::io_error)?;
++        let mut values = document.core_values();
++        values["cause"] = json!("settings import");
+         let apply = self.runtime.block_on(core.request(json!({
+             "op": "settings",
+-            "values": document.core_values()
++            "values": values
+         })));
+         if let Err(error) = apply {
+             let rollback = self.runtime.block_on(core.request(json!({
+diff --git a/core/rust/src/store.rs b/core/rust/src/store.rs
+index 542de66..7030eeb 100644
+--- a/core/rust/src/store.rs
++++ b/core/rust/src/store.rs
+@@ -1040,8 +1040,7 @@ impl Store {
+             .conn
+             .path()
+             .map(|path| {
+-                let mut wal = path.as_os_str().to_owned();
+-                wal.push("-wal");
++                let wal = format!("{path}-wal");
+                 std::fs::metadata(wal).map(|meta| meta.len()).unwrap_or(0)
+             })
+             .unwrap_or(0);
+diff --git a/platform/desktop/arcade_desktop_bridge/linux/lifecycle_bridge.cc b/platform/desktop/arcade_desktop_bridge/linux/lifecycle_bridge.cc
+index 5308ff9..f46a706 100644
+--- a/platform/desktop/arcade_desktop_bridge/linux/lifecycle_bridge.cc
++++ b/platform/desktop/arcade_desktop_bridge/linux/lifecycle_bridge.cc
+@@ -171,7 +171,8 @@ GVariant* EmptyPixmaps() { return g_variant_new_array(G_VARIANT_TYPE("(iiay)"),
+ // The tray icon: Clipboard's glyph in white for the usual dark panels
+ // (STANDARD §8), as ARGB32 in network byte order. Rendered by
+ // scripts/sync-design.py into the app's assets; empty if it is missing.
+-GVariant* TrayPixmaps() {
++// With [badge], an amber dot marks the icon while Private mode is on.
++GVariant* TrayPixmaps(bool badge) {
+   static GBytes* argb = nullptr;
+   static int width = 0, height = 0;
+   if (argb == nullptr) {
+@@ -203,7 +204,23 @@ GVariant* TrayPixmaps() {
+     }
+   }
+   if (g_bytes_get_size(argb) == 0) return EmptyPixmaps();
+-  GVariant* data = g_variant_new_from_bytes(G_VARIANT_TYPE("ay"), argb, TRUE);
++  GBytes* shown = argb;
++  if (badge) {
++    gsize size = 0;
++    const guchar* source = static_cast<const guchar*>(g_bytes_get_data(argb, &size));
++    auto* copy = static_cast<guchar*>(g_memdup2(source, size));
++    const int radius = width / 4 > 3 ? width / 4 : 3;
++    const int cx = width - radius - 1, cy = height - radius - 1;
++    for (int y = 0; y < height; ++y) {
++      for (int x = 0; x < width; ++x) {
++        if ((x - cx) * (x - cx) + (y - cy) * (y - cy) > radius * radius) continue;
++        guchar* pixel = copy + (static_cast<gsize>(y) * width + x) * 4;
++        pixel[0] = 255; pixel[1] = 255; pixel[2] = 170; pixel[3] = 0;  // ARGB amber
++      }
++    }
++    shown = g_bytes_new_take(copy, size);
++  }
++  GVariant* data = g_variant_new_from_bytes(G_VARIANT_TYPE("ay"), shown, TRUE);
+   GVariant* pixmap = g_variant_new("(ii@ay)", width, height, data);
+   return g_variant_new_array(G_VARIANT_TYPE("(iiay)"), &pixmap, 1);
+ }
+@@ -213,15 +230,19 @@ GVariant* ItemProperty(GDBusConnection*, const gchar*, const gchar*, const gchar
+   auto* state = static_cast<LinuxLifecycle*>(data);
+   if (g_strcmp0(name, "Category") == 0) return g_variant_new_string("ApplicationStatus");
+   if (g_strcmp0(name, "Id") == 0) return g_variant_new_string("arcade-clipboard");
+-  if (g_strcmp0(name, "Title") == 0) return g_variant_new_string("Arcade Clipboard");
++  if (g_strcmp0(name, "Title") == 0) {
++    return g_variant_new_string(state->private_mode ? "Arcade Clipboard (Private mode)" : "Arcade Clipboard");
++  }
+   if (g_strcmp0(name, "Status") == 0) return g_variant_new_string(state->background && !state->tray_hosted ? "Active" : "Passive");
+   // A pixmap rather than a theme icon name, so the tray shows Clipboard's glyph.
+   if (g_strcmp0(name, "IconName") == 0) return g_variant_new_string("");
+-  if (g_strcmp0(name, "IconPixmap") == 0) return TrayPixmaps();
++  if (g_strcmp0(name, "IconPixmap") == 0) return TrayPixmaps(state->private_mode);
+   if (g_strcmp0(name, "Menu") == 0) return g_variant_new_object_path("/Menu");
+   if (g_strcmp0(name, "ItemIsMenu") == 0) return g_variant_new_boolean(FALSE);
+-  if (g_strcmp0(name, "ToolTip") == 0) return g_variant_new("(s@a(iiay)ss)", "", EmptyPixmaps(), "Arcade Clipboard",
+-                                                               "An encrypted copy history, synced across your own devices.");
++  if (g_strcmp0(name, "ToolTip") == 0) return g_variant_new("(s@a(iiay)ss)", "", EmptyPixmaps(), 
++      state->private_mode ? "Arcade Clipboard (Private mode)" : "Arcade Clipboard",
++      state->private_mode ? "Private mode is on: nothing you copy is being saved or shared."
++                          : "An encrypted copy history, synced across your own devices.");
+   if (g_str_has_suffix(name, "Pixmap")) return EmptyPixmaps();
+   return g_variant_new_string("");
+ }
+@@ -655,6 +676,13 @@ bool HandleLifecycleMethod(LinuxLifecycle* state, FlMethodCall* call) {
+         g_dbus_connection_emit_signal(state->bus, nullptr, "/Menu", "com.canonical.dbusmenu", "LayoutUpdated",
+             g_variant_new("(ui)", state->menu_revision, 0), nullptr);
+       }
++      if (state->bus != nullptr && state->item_registration != 0) {
++        // The tray icon carries the badge, so Private mode is never hidden.
++        for (const char* signal : {"NewIcon", "NewTitle", "NewToolTip"}) {
++          g_dbus_connection_emit_signal(state->bus, nullptr, "/StatusNotifierItem", "org.kde.StatusNotifierItem", signal,
++              nullptr, nullptr);
++        }
++      }
+     }
+     Respond(call);
+     return true;

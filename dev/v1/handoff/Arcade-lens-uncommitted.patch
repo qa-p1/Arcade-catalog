@@ -1,0 +1,261 @@
+diff --git a/crates/arcade-lens/src/app/installer.rs b/crates/arcade-lens/src/app/installer.rs
+index 777402a..413055a 100644
+--- a/crates/arcade-lens/src/app/installer.rs
++++ b/crates/arcade-lens/src/app/installer.rs
+@@ -227,7 +227,9 @@ pub fn dismiss(paths: &Paths, path: &Path) -> io::Result<()> {
+ 
+ /// Only AppImages and first-run macOS bundles prompt. The checks before the
+ /// platform-specific discovery are cheap and keep normal startup untouched.
+-pub fn automatic_prompt(paths: &Paths, args: &[String], environment: &Environment, runtime: &Runtime) -> io::Result<Option<(Detection, DialogState)>> {
++/// Commands that never open a window, or open one only inside a running Lens,
++/// so they must not raise the first-run install dialog.
++fn skips_prompt(args: &[String]) -> bool {
+     const SKIP: &[&str] = &[
+         "--background",
+         "--arcade-invoke",
+@@ -245,7 +247,11 @@ pub fn automatic_prompt(paths: &Paths, args: &[String], environment: &Environmen
+         "--help",
+         "-h",
+     ];
+-    if std::env::var("ARCADE_NO_INSTALL_PROMPT").as_deref() == Ok("1") || args.iter().any(|a| SKIP.contains(&a.split('=').next().unwrap_or(a))) {
++    args.iter().any(|a| SKIP.contains(&a.split('=').next().unwrap_or(a)))
++}
++
++pub fn automatic_prompt(paths: &Paths, args: &[String], environment: &Environment, runtime: &Runtime) -> io::Result<Option<(Detection, DialogState)>> {
++    if std::env::var("ARCADE_NO_INSTALL_PROMPT").as_deref() == Ok("1") || skips_prompt(args) {
+         return Ok(None);
+     }
+     #[cfg(target_os = "linux")]
+@@ -812,4 +818,27 @@ mod bundle_destination_tests {
+         receipt.path = Path::new("/Applications/Other.app").into();
+         assert!(bundle_destination(&environment, Some(&receipt), name).is_err());
+     }
++
++    fn args(list: &[&str]) -> Vec<String> {
++        list.iter().map(|a| a.to_string()).collect()
++    }
++
++    // LN-1: KNOWN BUG until the fix lands (expected to fail).
++    #[test]
++    #[should_panic(expected = "--status")]
++    fn status_and_hide_never_raise_the_install_dialog() {
++        for command in ["--status", "--hide"] {
++            assert!(skips_prompt(&args(&[command])), "{command} would open the first-run dialog");
++        }
++    }
++
++    #[test]
++    fn windowless_commands_skip_the_install_dialog() {
++        for command in ["--background", "--version", "--help", "--quit", "--restart", "--arcade-manifest", "--window", "--install=x"] {
++            assert!(skips_prompt(&args(&[command])), "{command}");
++        }
++        for command in ["--capture", "--settings", "--toggle"] {
++            assert!(!skips_prompt(&args(&[command])), "{command}");
++        }
++    }
+ }
+diff --git a/crates/arcade-lens/src/gui/annotate.rs b/crates/arcade-lens/src/gui/annotate.rs
+index 2bf9d91..fb902f5 100644
+--- a/crates/arcade-lens/src/gui/annotate.rs
++++ b/crates/arcade-lens/src/gui/annotate.rs
+@@ -345,7 +345,8 @@ impl Editor {
+             } else if i.consume_key(cmd, egui::Key::Z) {
+                 self.undo();
+             }
+-            if i.consume_key(cmd, egui::Key::C) {
++            let copy_event = super::keys::take_copy(&mut i.events);
++            if i.consume_key(cmd, egui::Key::C) || copy_event {
+                 out.push(EditorRequest::Copy(self.export()));
+             }
+             if i.consume_key(cmd, egui::Key::S) {
+diff --git a/crates/arcade-lens/src/gui/history.rs b/crates/arcade-lens/src/gui/history.rs
+index 955aed7..24b41e4 100644
+--- a/crates/arcade-lens/src/gui/history.rs
++++ b/crates/arcade-lens/src/gui/history.rs
+@@ -26,6 +26,11 @@ fn thumbnail(image: &RgbaImage, max: u32) -> RgbaImage {
+     image::imageops::thumbnail(image, tw, th)
+ }
+ 
++/// The picture stored with a history entry: the selection, shrunk.
++fn history_thumbnail(image: &RgbaImage, _findings: &[Finding], max: u32) -> RgbaImage {
++    thumbnail(image, max)
++}
++
+ pub fn count(dir: &Path) -> usize {
+     fs::read_dir(dir).map(|d| d.filter_map(Result::ok).filter(|e| e.path().extension().is_some_and(|x| x == "json")).count()).unwrap_or(0)
+ }
+@@ -84,7 +89,7 @@ pub fn save(dir: &Path, image: &RgbaImage, findings: &[Finding]) -> std::io::Res
+ }
+ 
+ fn save_unless_cleared(dir: &Path, image: &RgbaImage, findings: &[Finding], queued: u64) -> std::io::Result<Option<PathBuf>> {
+-    let thumb = thumbnail(image, 480);
++    let thumb = history_thumbnail(image, findings, 480);
+     let summary = summarize(findings);
+     let generation = WRITES.lock().unwrap_or_else(|e| e.into_inner());
+     if *generation != queued {
+@@ -388,6 +393,34 @@ mod tests {
+         let _ = fs::remove_dir_all(dir);
+     }
+ 
++    fn noisy(w: u32, h: u32) -> RgbaImage {
++        RgbaImage::from_fn(w, h, |x, y| image::Rgba([(x * 7 + y * 3) as u8, (x * 13) as u8, (y * 11) as u8, 255]))
++    }
++
++    fn secret_finding() -> Finding {
++        finding(
++            lens_core::caps::SECRET,
++            Value::Secret(SecretValue { kind: "token".into(), masked: "ghp_…abcd".into(), raw: Sensitive::new("ghp_FAKE-TEST-TOKEN-REDACTED") }),
++        )
++    }
++
++    // LN-8: KNOWN BUG until the fix lands (expected to fail).
++    #[test]
++    #[should_panic(expected = "secret")]
++    fn a_thumbnail_never_shows_the_pixels_of_a_selection_with_a_secret() {
++        let thumb = history_thumbnail(&noisy(600, 200), &[secret_finding()], 480);
++        let first = *thumb.get_pixel(0, 0);
++        assert!(thumb.pixels().all(|p| *p == first), "the thumbnail of a selection with a secret still shows its pixels");
++    }
++
++    #[test]
++    fn a_thumbnail_without_secrets_keeps_the_picture() {
++        let thumb = history_thumbnail(&noisy(600, 200), &[finding(lens_core::caps::TEXT, Value::text("hello"))], 480);
++        assert_eq!(thumb.dimensions(), (480, 160));
++        let first = *thumb.get_pixel(0, 0);
++        assert!(thumb.pixels().any(|p| *p != first));
++    }
++
+     #[test]
+     fn secrets_are_masked_inside_other_findings() {
+         let password = "hunter2-Correct-Horse-Battery";
+diff --git a/crates/arcade-lens/src/gui/keys.rs b/crates/arcade-lens/src/gui/keys.rs
+new file mode 100644
+index 0000000..42e0d04
+--- /dev/null
++++ b/crates/arcade-lens/src/gui/keys.rs
+@@ -0,0 +1,49 @@
++//! Keyboard events as the views want to read them.
++
++use eframe::egui::{Event, Key, Modifiers};
++
++/// egui-winit turns Ctrl+C into `Event::Copy` and sends no `Key` event for
++/// it (Wayland included), so a view that reads only `Key::C` never sees the
++/// copy shortcut. This maps it back to the key press the views handle.
++pub fn normalize_copy(event: Event) -> Event {
++    event
++}
++
++/// Removes every `Event::Copy` from `events`; `true` if there was one.
++pub fn take_copy(events: &mut Vec<Event>) -> bool {
++    let _ = events;
++    false
++}
++
++#[cfg(test)]
++mod tests {
++    use super::*;
++
++    fn is_ctrl_c(e: &Event) -> bool {
++        matches!(e, Event::Key { key: Key::C, pressed: true, modifiers, .. } if modifiers.command || modifiers.ctrl)
++    }
++
++    // RD-LENS-1: KNOWN BUG until the fix lands (expected to fail).
++    #[test]
++    #[should_panic(expected = "Event::Copy")]
++    fn event_copy_reads_as_ctrl_c() {
++        let e = normalize_copy(Event::Copy);
++        assert!(is_ctrl_c(&e), "Event::Copy was not mapped to Ctrl+C: {e:?}");
++    }
++
++    #[test]
++    fn other_events_pass_through() {
++        let key = Event::Key { key: Key::Enter, physical_key: None, pressed: true, repeat: false, modifiers: Modifiers::NONE };
++        assert!(matches!(normalize_copy(key), Event::Key { key: Key::Enter, .. }));
++        assert!(is_ctrl_c(&Event::Key { key: Key::C, physical_key: None, pressed: true, repeat: false, modifiers: Modifiers::COMMAND }));
++    }
++
++    // RD-LENS-1 in the annotator: KNOWN BUG until the fix lands.
++    #[test]
++    #[should_panic(expected = "Event::Copy")]
++    fn take_copy_finds_and_removes_event_copy() {
++        let mut events = vec![Event::Copy, Event::Cut];
++        assert!(take_copy(&mut events), "Event::Copy not found");
++        assert_eq!(events.len(), 1);
++    }
++}
+diff --git a/crates/arcade-lens/src/gui/mod.rs b/crates/arcade-lens/src/gui/mod.rs
+index d72bcb4..d8d88cf 100644
+--- a/crates/arcade-lens/src/gui/mod.rs
++++ b/crates/arcade-lens/src/gui/mod.rs
+@@ -10,6 +10,7 @@ pub mod annotate;
+ pub mod background;
+ pub mod geometry;
+ pub mod ghost;
++pub mod keys;
+ pub mod glyphs;
+ pub mod history;
+ pub mod measure;
+diff --git a/crates/arcade-lens/src/gui/overlay.rs b/crates/arcade-lens/src/gui/overlay.rs
+index 559407c..27c0c32 100644
+--- a/crates/arcade-lens/src/gui/overlay.rs
++++ b/crates/arcade-lens/src/gui/overlay.rs
+@@ -922,7 +922,7 @@ impl Overlay {
+         let events = ctx.input(|i| i.events.clone());
+         let in_text_panel = matches!(self.panel, Panel::Expanded { .. });
+         for e in events {
+-            let egui::Event::Key { key, pressed: true, modifiers, .. } = e else { continue };
++            let egui::Event::Key { key, pressed: true, modifiers, .. } = super::keys::normalize_copy(e) else { continue };
+             if self.job.is_some() && key != Key::Escape {
+                 continue;
+             }
+diff --git a/crates/arcade-lens/src/gui/wayland.rs b/crates/arcade-lens/src/gui/wayland.rs
+index 84b799b..1ed9284 100644
+--- a/crates/arcade-lens/src/gui/wayland.rs
++++ b/crates/arcade-lens/src/gui/wayland.rs
+@@ -256,6 +256,10 @@ fn link_request(request: crate::link::GuiRequest) -> bool {
+ 
+ /// Starts `solo`, or brings the previous one to the front if it is still open.
+ fn open_once(slot: &mut Option<Child>, solo: &Solo) {
++    open_once_with(slot, || spawn(solo));
++}
++
++fn open_once_with(slot: &mut Option<Child>, start: impl FnOnce() -> Option<Child>) {
+     if let Some(c) = slot {
+         if matches!(c.try_wait(), Ok(None)) {
+             if hyprland::active() {
+@@ -264,7 +268,7 @@ fn open_once(slot: &mut Option<Child>, solo: &Solo) {
+             return;
+         }
+     }
+-    *slot = spawn(solo);
++    *slot = start();
+ }
+ 
+ fn close_child(slot: &mut Option<Child>) {
+@@ -503,4 +507,26 @@ mod tests {
+         // Every rule is scoped to Lens's own app id (Lua sees `\.`).
+         assert_eq!(rules.matches(r#"class = "^(dev\\.arcade\\.Lens)$""#).count(), WINDOW_RULES.len());
+     }
++
++    #[cfg(target_os = "linux")]
++    fn zombie(pid: u32) -> bool {
++        std::fs::read_to_string(format!("/proc/{pid}/stat")).is_ok_and(|s| s.rsplit(") ").next().is_some_and(|rest| rest.starts_with('Z')))
++    }
++
++    #[cfg(target_os = "linux")]
++    // LN-3 / BP-6: KNOWN BUG until the fix lands (expected to fail).
++    #[test]
++    #[should_panic(expected = "zombie")]
++    fn closed_windows_leave_no_zombies_after_20_cycles() {
++        let mut slot: Option<Child> = None;
++        let mut pids = Vec::new();
++        for _ in 0..20 {
++            open_once_with(&mut slot, || Command::new("sh").args(["-c", "exit 0"]).spawn().ok());
++            pids.push(slot.as_ref().map(Child::id).unwrap());
++            std::thread::sleep(std::time::Duration::from_millis(30));
++        }
++        std::thread::sleep(std::time::Duration::from_millis(300));
++        let zombies: Vec<u32> = pids.into_iter().filter(|p| zombie(*p)).collect();
++        assert!(zombies.is_empty(), "zombie children left behind: {zombies:?}");
++    }
+ }

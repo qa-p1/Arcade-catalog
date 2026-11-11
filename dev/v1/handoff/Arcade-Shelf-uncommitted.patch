@@ -1,0 +1,228 @@
+diff --git a/src/link/Service.cpp b/src/link/Service.cpp
+index 653d991..a733406 100644
+--- a/src/link/Service.cpp
++++ b/src/link/Service.cpp
+@@ -77,7 +77,15 @@ Service::Service(QString root, QObject *parent, bool background) : QObject(paren
+             emit pickEnded();
+         }
+     });
++    m_removalTimer.setParent(this);
++    m_removalTimer.setSingleShot(true);
++    m_removalTimer.setInterval(30000);
++    connect(&m_removalTimer, &QTimer::timeout, this, [this] {
++        clearUndo();
++        refresh();
++    });
+ }
++Service::~Service() { commitRemoval(); }
+ void Service::start()
+ {
+     m_store = std::make_unique<Store>(m_root);
+@@ -255,7 +263,7 @@ void Service::configureLifecycle(ArcadeLink::Server &server)
+             r.fail(ArcadeLink::Error::make("denied", error));
+             return;
+         }
+-        m_undo.clear();
++        clearUndo();
+         refresh();
+         r.done({{"imported", true}, {"restartRequired", false}, {"items", imported}});
+         // Link's Responder queues the reply; stopping the public server aborts
+@@ -365,12 +373,38 @@ void Service::invoke(const QJsonObject &req, const ArcadeLink::Responder &r)
+ }
+ void Service::refresh()
+ {
+-    if (m_store) emit snapshot(m_store->shelves(), m_store->items(m_store->activeShelf()), m_store->activeShelf(),
+-                               m_store->settings(), !m_undo.isEmpty(), m_store->portableOwnedBytes());
++    if (!m_store) return;
++    const QString active = m_store->activeShelf();
++    QJsonArray items = m_store->items(active);
++    if (!m_pendingRemoval.isEmpty()) {
++        QJsonArray visible;
++        for (const auto &item : items)
++            if (!m_pendingRemoval.contains(item.toObject().value(QStringLiteral("id")).toString())) visible.append(item);
++        items = visible;
++    }
++    emit snapshot(m_store->shelves(), items, active, m_store->settings(), !m_undo.isEmpty() && m_undoShelf == active, m_store->portableOwnedBytes());
++}
++// An undone removal never touched the store; a finished one is applied here.
++void Service::commitRemoval()
++{
++    m_removalTimer.stop();
++    if (m_pendingRemoval.isEmpty()) return;
++    const auto ids = std::exchange(m_pendingRemoval, {});
++    if (m_store) removeNow(ids);
++}
++void Service::clearUndo()
++{
++    commitRemoval();
++    m_undo.clear();
++    m_undoShelf.clear();
+ }
+ void Service::finishAdd(const AddResult &result, bool reveal)
+ {
+-    if (!result.addedIds.isEmpty()) m_undo = result.addedIds;
++    if (!result.addedIds.isEmpty()) {
++        clearUndo();
++        m_undo = result.addedIds;
++        m_undoShelf = result.result.value(QStringLiteral("data")).toObject().value(QStringLiteral("shelf")).toObject().value(QStringLiteral("id")).toString();
++    }
+     refresh();
+     emit feedback(result.result["message"].toString(), reveal);
+ }
+@@ -380,7 +414,7 @@ void Service::add(QJsonArray inputs, QJsonObject options)
+     if (result.error.isError()) emit feedback(result.error.userMessage("Arcade Shelf"), false);
+     else finishAdd(result, options["reveal"].toBool(true));
+ }
+-void Service::remove(QStringList ids)
++void Service::removeNow(QStringList ids)
+ {
+     QStringList safe;
+     for (const auto &id : ids) {
+@@ -388,14 +422,34 @@ void Service::remove(QStringList ids)
+         else safe << id;
+     }
+     if (!m_store->remove(safe)) emit feedback("Couldn't remove the selected items.", false);
+-    m_undo.clear();
++}
++void Service::remove(QStringList ids)
++{
++    clearUndo();
++    if (ids.isEmpty()) return;
++    m_pendingRemoval = ids;
++    m_undo = ids;
++    m_undoShelf = m_store->activeShelf();
++    m_removalTimer.start();
+     refresh();
++    emit feedback(ids.size() == 1 ? QStringLiteral("Removed 1 item. Undo to bring it back.") : QStringLiteral("Removed %1 items. Undo to bring them back.").arg(ids.size()), false);
+ }
+ void Service::undo()
+ {
+-    auto ids = m_undo;
+-    m_undo.clear();
+-    remove(ids);
++    if (m_undo.isEmpty() || m_undoShelf != m_store->activeShelf()) return;
++    if (!m_pendingRemoval.isEmpty()) {
++        m_removalTimer.stop();
++        m_pendingRemoval.clear();
++        m_undo.clear();
++        m_undoShelf.clear();
++        refresh();
++        emit feedback("Removal undone.", false);
++        return;
++    }
++    auto ids = std::exchange(m_undo, {});
++    m_undoShelf.clear();
++    removeNow(ids);
++    refresh();
+     emit feedback("Last addition undone.", false);
+ }
+ void Service::reorder(QString shelf, QStringList ids)
+@@ -427,7 +481,7 @@ void Service::deleteShelf(QString id)
+         return;
+     }
+     if (!m_store->deleteShelf(id)) emit feedback("Couldn't delete Quick Shelf. It's the collection new items go to.", false);
+-    m_undo.clear();
++    clearUndo();
+     refresh();
+ }
+ void Service::pinShelf(QString id, bool pin)
+@@ -477,7 +531,7 @@ void Service::importPortableSettings(QString path)
+         emit feedback(error.isEmpty() ? QStringLiteral("Couldn't import the Shelf backup.") : error, false);
+         return;
+     }
+-    m_undo.clear();
++    clearUndo();
+     publish();
+     refresh();
+     emit feedback(QStringLiteral("Shelf backup restored (%1 item(s)).").arg(importedItems), false);
+diff --git a/src/link/Service.h b/src/link/Service.h
+index 38ab59d..4008be2 100644
+--- a/src/link/Service.h
++++ b/src/link/Service.h
+@@ -23,6 +23,7 @@ class Service : public QObject {
+     Q_OBJECT
+ public:
+     explicit Service(QString root, QObject *parent = nullptr, bool background = true);
++    ~Service() override;
+     void start();
+     void stop();
+     void refresh();
+@@ -69,6 +70,10 @@ private:
+     bool busy() const;
+     bool target(QString id);
+     void finishAdd(const AddResult &result, bool reveal);
++    // One-deep undo, scoped to the collection it happened in. A removal is only hidden until its undo window ends.
++    void commitRemoval();
++    void clearUndo();
++    void removeNow(QStringList ids);
+     QString m_root;
+     std::unique_ptr<Store> m_store;
+     std::unique_ptr<ArcadeLink::Server> m_server, m_control;
+@@ -76,7 +81,9 @@ private:
+     std::optional<ArcadeLink::Responder> m_shortcutResponder;
+     QString m_requestedShortcut, m_trayState = QStringLiteral("own"), m_installMethod;
+     QTimer m_pickTimer;
+-    QStringList m_pickTypes, m_undo, m_retained, m_deferredRemoval;
++    QStringList m_pickTypes, m_undo, m_retained, m_deferredRemoval, m_pendingRemoval;
++    QString m_undoShelf;
++    QTimer m_removalTimer;
+     bool m_multiple = false;
+     bool m_background = true;
+ };
+diff --git a/tests/tst_Service.cpp b/tests/tst_Service.cpp
+index b869996..8c9fd9b 100644
+--- a/tests/tst_Service.cpp
++++ b/tests/tst_Service.cpp
+@@ -128,6 +128,52 @@ private slots:
+         qunsetenv("ARCADE_HOME");
+         qunsetenv("ARCADE_DEV_BUILD");
+     }
++    void removalCanBeUndoneOnlyInItsOwnCollection()
++    {
++        QTemporaryDir root;
++        QVERIFY(root.isValid());
++        qputenv("ARCADE_HOME", (root.path() + "/link").toUtf8());
++        qputenv("ARCADE_DEV_BUILD", "1");
++        Service service(root.path() + "/shelf");
++        service.start();
++        QSignalSpy snapshots(&service, &Service::snapshot);
++        const auto last = [&] { return snapshots.last(); };
++        const auto ids = [&] {
++            QStringList out;
++            for (const auto &v : last().at(1).toJsonArray()) out << v.toObject()["id"].toString();
++            return out;
++        };
++        const auto text = [](const QString &t) { return QJsonObject{{"type", "text/plain"}, {"text", t}}; };
++        service.add({text("one"), text("two")}, {});
++        QTRY_VERIFY(!snapshots.isEmpty());
++        QStringList before = ids();
++        QCOMPARE(before.size(), 2);
++        // Removing hides the items and offers undo.
++        service.remove({before.first()});
++        QCOMPARE(ids().size(), 1);
++        QVERIFY(last().at(4).toBool());
++        // Another collection has nothing to undo, and Undo there does nothing.
++        service.createShelf("Work", false);
++        QVERIFY(!last().at(4).toBool());
++        service.undo();
++        QCOMPARE(ids().size(), 0);
++        service.switchShelf("quick");
++        QCOMPARE(ids().size(), 1);
++        QVERIFY(last().at(4).toBool());
++        // Undo brings the item back at its place.
++        service.undo();
++        QCOMPARE(ids(), before);
++        QVERIFY(!last().at(4).toBool());
++        // A second removal commits the first for good.
++        service.remove({before.first()});
++        service.remove({before.last()});
++        QCOMPARE(ids().size(), 0);
++        service.undo();
++        QCOMPARE(ids(), QStringList{before.last()});
++        Store view(root.path() + "/shelf");
++        QVERIFY(view.open());
++        QCOMPARE(view.items("quick").size(), 1);
++    }
+     void restoreMayTurnOffLinkAfterReply()
+     {
+         QTemporaryDir root;

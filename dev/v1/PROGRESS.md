@@ -32,6 +32,30 @@ Detail lives in each repo's `docs/v1/PROGRESS.md`.
 
 ## Log
 
+- 2026-11-11 (session 3, 09:00 UTC) — **Link: gate change merged; the real-fleet e2e had been blind since Nov 8.**
+  The owner stopped the code-writing subagents; the lead works the plan in order again. Long waits (CI runs,
+  releases, probes) now go to a read-only Sonnet watcher that reports back while the lead keeps working; local
+  long jobs run as background commands (brief: session scratchpad `watcher-brief.md`).
+  - Link [PR #60](https://github.com/qa-p1/Arcade-Link/pull/60) (the memory gate measures the open window once the
+    app is idle) merged as 39a86c7 after Tools probe
+    [run 42903942776](https://github.com/qa-p1/Arcade-tools/actions/runs/42903942776) on 8 runners: default and
+    arenas-2 passes open 217.5–221.2 MB PSS with no note; busy pass 207.5–221.9, measured after 8 s on 6 runners, no
+    "still busy" failure. Main CI and e2e contracts green.
+  - **Found:** every nightly real-fleet e2e since Nov 9 failed to compile (Tools removed `portable_backup`, which
+    Link's adapter imported), so no real-app check ran for three days. On Link's branch: the adapter uses the backup
+    Tools ships (bc86cd0); the artifact picker skips Dependabot jobs that hid Box's packaging run (811251d, test
+    fails without the fix); loopback fixture releases are signed with Tools' debug-only test key through Link's own
+    `release-manifest --sign` and served as a release list, as Tools now requires (e6442e2). First run with the
+    adapter fix ([42984806891](https://github.com/qa-p1/Arcade-Link/actions/runs/42984806891)): all six available
+    apps' backup round trips pass. A second run with all three fixes is being watched.
+  - **Found (Tools, real bug, blocks the next Tools rc):** with every CPU busy, a window close (WM_DELETE_WINDOW)
+    sent a few seconds after the window opens is ignored while Tools stays responsive; a second close works.
+    Reproduced locally (2 of 4 runs) and in the probe's busy pass (4/8 and 7/8 runners on two runs, before and after
+    the gate change). Being traced in GTK's delete path.
+  - Open from run 42984806891, under investigation: Tools did not quit within 15 s of `app.quit` in the install
+    check (not reproduced locally with Tools main's or PR #49's build: both quit in 3 s), and Find with Link
+    disabled did not report its own tray icon.
+
 - 2026-11-10 (session 3, 21:30 UTC) — **Resumed after a usage-limit stop.** The account's 5-hour limit ended every
   agent at about 06:10 UTC, ten minutes into the code-writing pass; nothing was lost (work was on disk). Committed
   work is pushed and all seven Sonnet agents were resumed where they stopped, now told to commit and push after every

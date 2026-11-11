@@ -4,7 +4,7 @@ The cloud session does everything it can: code, tests, CI, rc releases, and ever
 files. The steps below need something the cloud session doesn't have: your logged-in `gh`, permission to create
 repositories, or your real desktop. Each item says what it unblocks. Do them in order. Item 1 matters most.
 
-## 1. Create the update-signing key (unblocks every stable release)
+## 1. Create the update-signing key (unblocks every stable release) — DONE 2026-11-11 (key id 960D066D55F93A94)
 
 Why: `promote.yml` (rc → stable) and `nightly.yml` sign `manifest.json` with the `ARCADE_UPDATE_SIGNING_KEY` Actions
 secret and refuse to publish without it. The cloud session can't set Actions secrets (blocker B1), so no app can be
@@ -17,7 +17,7 @@ git clone https://github.com/qa-p1/Arcade-Link && cd Arcade-Link
 ```
 
 ```bash
-cargo run -q -p arcade-link-cli --features release -- keygen --secret-to-gh qa-p1/Arcade-tools --secret-to-gh qa-p1/Arcade-box --secret-to-gh qa-p1/Arcade-clipboard --secret-to-gh qa-p1/Arcade-look --secret-to-gh qa-p1/Arcade-Find --secret-to-gh qa-p1/Arcade-lens --secret-to-gh qa-p1/Arcade-Shelf --secret-to-gh qa-p1/Arcade-wheel
+cargo run -q -p arcade-link-cli --features arcade-link/release -- keygen --secret-to-gh qa-p1/Arcade-tools --secret-to-gh qa-p1/Arcade-box --secret-to-gh qa-p1/Arcade-clipboard --secret-to-gh qa-p1/Arcade-look --secret-to-gh qa-p1/Arcade-Find --secret-to-gh qa-p1/Arcade-lens --secret-to-gh qa-p1/Arcade-Shelf --secret-to-gh qa-p1/Arcade-wheel
 ```
 
 It prints the public key first (an `untrusted comment:` line and an `RW…` line), then pipes the private key straight
@@ -28,7 +28,7 @@ into `gh secret set` for each repo. The private key is never written to disk. Th
 
 Check: `gh secret list -R qa-p1/Arcade-tools` lists `ARCADE_UPDATE_SIGNING_KEY`.
 
-## 2. Create the `Arcade-template` repository (blocker B2)
+## 2. Create the `Arcade-template` repository (blocker B2) — DONE 2026-11-11
 
 Why: the cloud session may not create repositories. The template lives and is tested in Link `template/` (CI job
 "Template app"), so nothing is blocked. This step only makes it a one-click GitHub template.

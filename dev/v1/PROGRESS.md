@@ -20,15 +20,16 @@ Detail lives in each repo's `docs/v1/PROGRESS.md`.
 
 ## Open blockers
 
-- **B1 — `ARCADE_UPDATE_SIGNING_KEY` cannot be set from the cloud session.** `gh` has no valid token
-  (`GH_TOKEN` rejected) and the session's GitHub tools cannot write Actions secrets. No keypair was generated (the
-  private key may live nowhere but the secret). Owner action: run `arcade-link keygen --secret-to-gh` (see Link
-  `docs/SIGNING.md` once merged) on a machine with `gh` logged in, then commit the printed public key to Tools.
-  Until then every `promote.yml` fails by design, so **no stable promotion of Tools or any app is possible**; all
-  other work continues. Link's `v1.0.0` is a tag with no signed manifest and is not blocked.
-- **B2 — `qa-p1/Arcade-template` cannot be created** (the session may not create repositories). The template is
-  kept and tested in Link `template/` (Link `docs/v1/DECISIONS.md` D2). Owner action: create the repo from it and
-  mark it as a template.
+None. B1 and B2 were done from the owner's PC on 2026-11-11:
+- **B1 done:** `ARCADE_UPDATE_SIGNING_KEY` is set on all 8 app repos (Tools, Box, Clipboard, Look, Find, Lens, Shelf,
+  Wheel) by `arcade-link keygen --secret-to-gh`; the private key exists nowhere else. Public key (key id
+  `960D066D55F93A94`) `RWSUOvlVbQYNllRw2PgYmp2vg3GsQv3DJy868cCpzxQMnSL1ygcN/EXt` is committed to Tools
+  `resources/update-keys.pub` (Tools 6bfba35 on PR #49). Stable promotion is unblocked once a Tools build with
+  this key is released. Secrets can't be read back, so a new app repo can't get this key copied: give it a
+  key through a rotation (Link `docs/SIGNING.md` §Rotation) covering every app repo.
+- **B2 done:** [qa-p1/Arcade-template](https://github.com/qa-p1/Arcade-template) is created from Link `template/`
+  (origin/main) and marked as a GitHub template. Link `template/` stays the tested source; resync the repo when it
+  changes.
 
 ## Log
 

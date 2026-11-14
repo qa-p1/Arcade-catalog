@@ -89,6 +89,9 @@ None. B1 and B2 were done from the owner's PC on 2026-11-11:
     tag; it compiles and 101 tests pass against Link 1.0.8). **Clipboard `release.yml` has Box's rule-zero hazard**
     (a pushed `v*` tag publishes stable): fix in its step 6. Shelf re-vendor dry run at 1.0.8: 18 files plus
     `arcade_trim.h`; its legacy ids are already declared.
+  - All six 1.0.7 main builds green (Box bbc247a last, after its macOS DMG build). Link #65 green, squash-merged
+    (ce9a71c). On ce9a71c: CI (push), Desktop harness and real-fleet e2e (`real_apps=true`) dispatched; v1.0.8 is
+    tagged there through "Tag a release" when all three pass.
 
 - 2026-11-14 (local session) — **Link v1.0.7 tagged; fleet moving onto it; Box untangle and CI started.**
   - Link real-fleet e2e on 40ec027: tools-hub 42/42, trayhost 27/27, install 16/16 (+8 XFAIL), shortcuts 20/20,

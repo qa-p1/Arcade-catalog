@@ -92,6 +92,15 @@ None. B1 and B2 were done from the owner's PC on 2026-11-11:
   - All six 1.0.7 main builds green (Box bbc247a last, after its macOS DMG build). Link #65 green, squash-merged
     (ce9a71c). On ce9a71c: CI (push), Desktop harness and real-fleet e2e (`real_apps=true`) dispatched; v1.0.8 is
     tagged there through "Tag a release" when all three pass.
+  - **Real-fleet e2e on ce9a71c red** ([43608443967](https://github.com/qa-p1/Arcade-Link/actions/runs/43608443967)):
+    install group `*_update_retires_old_desktop_ids` failed for all six 1.0.7 apps. Each left the old *login item*,
+    never the old launcher. Cause, a test bug: every e2e session sets `ARCADE_HOME`, Link's `Environment::discover`
+    then roots config at `ARCADE_HOME/.config` and ignores `XDG_CONFIG_HOME`, and the check planted the old login
+    items under `XDG_CONFIG_HOME`. Link's own `legacy_id_entries_running_the_installed_file_are_retired` covers the
+    behaviour in that layout. Also `Development build (arcade.look)` lacked `libdav1d-dev`. Both fixed in
+    [Link #66](https://github.com/qa-p1/Arcade-Link/pull/66), labelled `e2e-real-fleet` so the matrix runs on the PR.
+    No v1.0.8 tag and no Tools promotion until the re-run on its merge commit is green; this check is Tools'
+    one-launcher exit gate. Box #40 waits too.
 
 - 2026-11-14 (local session) — **Link v1.0.7 tagged; fleet moving onto it; Box untangle and CI started.**
   - Link real-fleet e2e on 40ec027: tools-hub 42/42, trayhost 27/27, install 16/16 (+8 XFAIL), shortcuts 20/20,

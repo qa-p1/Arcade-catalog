@@ -72,6 +72,23 @@ None. B1 and B2 were done from the owner's PC on 2026-11-11:
     still pins Link v0.4.4, not 1.0.7) and Shelf. It merges once the six 1.0.7 main builds are green (Tools
     f4b86bd, Box bbc247a, Find 3456d57, Lens ba1d3f0, Look 09041ad, Wheel 870bbb8; none finished yet), since the
     picker takes each app's newest green main run.
+  - Tools rc.11 Gates green, 11/11 ([43604006265](https://github.com/qa-p1/Arcade-tools/actions/runs/43604006265)):
+    published files, macOS dmg, budgets, delta + signature + tampered chunk, Windows installer, Linux (conformance,
+    package, upgrade from v0.4.6 and rc.10, tray, N-1, self-update), Hyprland, sway, mutter, kwin, x11. **Promote is
+    held for one gate gates.yml doesn't cover:** "exactly one launcher and at most one login item" after an upgrade
+    (PLAN exit gates). Link's real-fleet e2e checks it (`arcade.tools_update_retires_old_desktop_ids`) on Tools
+    main f4b86bd, the rc.11 commit, once #65 is merged; promote rc.11 when that passes.
+  - Main builds at the 1.0.7 commits green: Tools, Look, Find, Wheel; Box and Lens running. Cancelled one more
+    Dependabot run (Link #40), queued ahead of release work.
+  - Box [#39](https://github.com/qa-p1/Arcade-box/pull/39) green 5/5 (incl. Hyprland), merged (merge commit
+    42a3d3b; #37's untangle lands with it). Steps 5 + 6b + Dependabot replayed on it: [Box #40](https://github.com/qa-p1/Arcade-box/pull/40)
+    (clippy 1.88 clean, 38 desktop tests). It merges after the Link v1.0.8 e2e, so the e2e's Box build stays the
+    one #65 expects.
+  - Prepared and pushed without PRs (no CI until opened): Find doc-comment fix (step 2), Tools and Wheel Dependabot
+    config, and Clipboard's Link 1.0.8 groundwork (install strings "Just run it", CI's isolated runner at the pinned
+    tag; it compiles and 101 tests pass against Link 1.0.8). **Clipboard `release.yml` has Box's rule-zero hazard**
+    (a pushed `v*` tag publishes stable): fix in its step 6. Shelf re-vendor dry run at 1.0.8: 18 files plus
+    `arcade_trim.h`; its legacy ids are already declared.
 
 - 2026-11-14 (local session) — **Link v1.0.7 tagged; fleet moving onto it; Box untangle and CI started.**
   - Link real-fleet e2e on 40ec027: tools-hub 42/42, trayhost 27/27, install 16/16 (+8 XFAIL), shortcuts 20/20,

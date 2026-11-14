@@ -64,6 +64,14 @@ None. B1 and B2 were done from the owner's PC on 2026-11-11:
     a run if a listed app passes, so the list must match the fleet when the e2e runs).
   - This session pushes to `claude/sharp-cori-29w5eg` in every repo (this file included), which continues
     `claude/tender-feynman-3vt7dg`.
+  - 15:10 UTC: Tools rc.11 Release ([43600684898](https://github.com/qa-p1/Arcade-tools/actions/runs/43600684898))
+    green, 14/14 jobs (published to the test channel); Gates dispatched on `v1.0.0-rc.11` with `update-from`
+    v1.0.0-rc.10, `previous` v0.4.6 ([43604006265](https://github.com/qa-p1/Arcade-tools/actions/runs/43604006265)).
+    Link #64 green on every check, squash-merged (e1a543b, `Cargo.toml` 1.0.8).
+  - `LEGACY_PENDING` PR: [Link #65](https://github.com/qa-p1/Arcade-Link/pull/65) keeps only Clipboard (main
+    still pins Link v0.4.4, not 1.0.7) and Shelf. It merges once the six 1.0.7 main builds are green (Tools
+    f4b86bd, Box bbc247a, Find 3456d57, Lens ba1d3f0, Look 09041ad, Wheel 870bbb8; none finished yet), since the
+    picker takes each app's newest green main run.
 
 - 2026-11-14 (local session) — **Link v1.0.7 tagged; fleet moving onto it; Box untangle and CI started.**
   - Link real-fleet e2e on 40ec027: tools-hub 42/42, trayhost 27/27, install 16/16 (+8 XFAIL), shortcuts 20/20,

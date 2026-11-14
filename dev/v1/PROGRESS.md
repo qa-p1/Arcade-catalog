@@ -134,6 +134,21 @@ None. B1 and B2 were done from the owner's PC on 2026-11-11:
     `DesktopShortcut`, `DesktopLogin` and the private `DesktopPrivate.h`, moved from line ranges (a line-multiset
     diff shows only the intended edits); `scripts/check.py` green locally with Qt 6.8.3 (17/17 ctest incl. `tst_Ui`
     under Xvfb), and the files also compile without DBus/X11. Windows/macOS compile only in CI (PR after v1.0.8).
+  - #66 on c6c0654: Look's development build now passes (libdav1d7); release-flow e2e (drafts) green with the Inno
+    assertion (the promoted Windows asset keeps `kind: inno`). Tools still failed: a silent `--no-launch` install
+    records no login item, so the planting skip didn't apply. Link's installer takes an existing entry at the app's
+    own autostart id as its login item (start at login carries over) and records it, which is what Tools did. The
+    check now excludes the login item the receipt records *after* the update (9316e43); an entry the receipt doesn't
+    own still fails, and "exactly one login item" is still asserted. Real fleet re-running.
+  - More step work on the branches (no PRs until v1.0.8): **Lens** step 2, the parked one-PATH-lookup commit merged in
+    (14a7493; clippy + tests on 1.88.0). **Find** CI saves Rust caches only on main (f7d2b38; the only repo left
+    without `save-if`), and step 2 by the untangle skill from a scripted module graph: one `identity` module
+    (`dev.arcade.Find` was defined twice; installer and tray imported Settings for the tagline), one `session` module
+    (three Wayland checks, two Hyprland detections, two `hyprctl -j` runners), and a real bug found on the way: the
+    event log and Link's captured stderr shared `arcade-find.log` with two rotation policies, so an event rotation
+    moved the live stderr log aside and later deleted it (events now in `events.log`, with a test that fails on the
+    old code). Find D11-D14. **Wheel** step 2 (D4): configuration included the platform interface for one value type.
+    Step 4 fleet-wide: `cargo machete` finds no unused dependency (Look's `kamadak-exif` is a false positive).
 
 - 2026-11-14 (local session) — **Link v1.0.7 tagged; fleet moving onto it; Box untangle and CI started.**
   - Link real-fleet e2e on 40ec027: tools-hub 42/42, trayhost 27/27, install 16/16 (+8 XFAIL), shortcuts 20/20,

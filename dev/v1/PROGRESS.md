@@ -101,6 +101,21 @@ None. B1 and B2 were done from the owner's PC on 2026-11-11:
     [Link #66](https://github.com/qa-p1/Arcade-Link/pull/66), labelled `e2e-real-fleet` so the matrix runs on the PR.
     No v1.0.8 tag and no Tools promotion until the re-run on its merge commit is green; this check is Tools'
     one-launcher exit gate. Box #40 waits too.
+  - Box #40 Ubuntu check failed `native-notices.py`: the new `usr/lib/libarcade-trim.so` (OPEN1) maps to no system
+    package. Listed as Box's own, as in Tools (b2a0d1f); re-running.
+  - **Step 6 (rule zero) across the fleet.** All six remaining apps built stable directly: Clipboard on any pushed
+    `v*` tag, Find, Lens, Look, Shelf and Wheel on a manual `stable` dispatch. None promoted a tested rc. Each now has
+    Tools' and Box's shape on its `claude/sharp-cori-29w5eg` branch: `tag.yml` makes only `vX.Y.Z-rc.N` and starts
+    `release.yml`, which publishes on the hidden `test` channel through Link `app-publish@v1.0.8`; `promote.yml`
+    (`app-promote`) and `nightly.yml` (`app-nightly`). Clipboard 4322ea0, Find 6e2fc47, Lens 343a0cc, Look da206ed,
+    Wheel ba1b238, Shelf 5287f11. Find, Look and Wheel keep their own installer verification in a stage job. Look's
+    installers lose the spaces in their names before upload (GitHub turns them into dots, so metadata would name
+    files that don't exist). The signing secret is in all eight repos (LOCAL.md item 1).
+  - Two Link gaps found doing it, fixed in a local Link commit (df91c7c) for 1.0.8, pushed after #66's real fleet
+    is green: the reusable publish described every Windows `.exe` as NSIS (Clipboard, Find, Lens and Wheel ship
+    Inno, which ignores `/S`); it now takes `windows-installer`, and promotion reads the kind from the rc's
+    `arcade-release.json`. `app-nightly` failed on per-platform artifacts that each carry metadata (Wheel): it now
+    leaves the metadata out. PRs for the six apps open once v1.0.8 is tagged, since they pin it.
 
 - 2026-11-14 (local session) — **Link v1.0.7 tagged; fleet moving onto it; Box untangle and CI started.**
   - Link real-fleet e2e on 40ec027: tools-hub 42/42, trayhost 27/27, install 16/16 (+8 XFAIL), shortcuts 20/20,

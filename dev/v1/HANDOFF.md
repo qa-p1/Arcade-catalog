@@ -1,92 +1,85 @@
-# Local handoff (2026-11-11, from the cloud session)
+# Handoff to the cloud session (2026-11-14, from the local session)
 
-The owner continues this work in a local session. Everything below is pushed: every repo is on branch
-`claude/tender-feynman-3vt7dg` with nothing unpushed. The plan, rules and log are unchanged: `PLAN.md`, `README.md`
-(owner decisions win), `PROGRESS.md` (newest first, update after every finished step), `LOCAL.md` (owner-only items),
-and each repo's `docs/v1/PROGRESS.md` and `DECISIONS.md`.
+The work moves from the owner's PC to Claude Code cloud. Read, in order: `README.md` (owner decisions win),
+`PLAN.md` (steps, exit gates, rule zero, fleet rules, owner-requests checklist), `PROGRESS.md` (newest first; the
+Status table and the 2026-11-13/14 log entries), `LOCAL.md` (owner-only items; don't do them), then each repo's
+`docs/v1/PROGRESS.md` and `DECISIONS.md`. Update `PROGRESS.md` after every finished step.
 
-## Open PRs (all opened by the lead; merge only through the repo's workflows after every gate passes)
+**Rough completion of the plan: about 50%.** Every app's P0/P1 findings are fixed. Link and Tools are at step 8.
+The other apps are mostly at steps 1+3 (lock, fix), with parts of 2, 4, 5 and 6. Nothing has shipped stable yet.
+Fleet finish (§10) has not started.
 
-| PR | Head | State at hand-off | Next |
-|---|---|---|---|
-| [Link #61](https://github.com/qa-p1/Arcade-Link/pull/61) | 46400dd | CI and the push/PR e2e runs reported green (09:19 UTC). The real-fleet e2e runs only on `workflow_dispatch`; last dispatched run 42988304697 (head e6442e2) was RED with two causes, both outside Link (below). | Merge once the Lens fix is on Lens main, then dispatch Ecosystem e2e on Link main and the Desktop harness, then tag **v1.0.7** with "Tag a release" (Cargo version is already 1.0.7). |
-| [Lens #16](https://github.com/qa-p1/Arcade-lens/pull/16) | a17197e | Check suites reported green (09:26 UTC). | Merge, so that Lens main builds report `0.4.2`, not `0.4.2-dev.<sha>` (Lens D6). |
-| [Box #34](https://github.com/qa-p1/Arcade-box/pull/34) | 2dc7c5d | Check suites reported green (09:56 UTC). Confirm the Tier 1 Hyprland job shows BR-0 and BR-1 passing and BR-2 still XFAIL. | Merge, then continue Box step 3 (below). |
+## Rules that bit us (follow them)
 
-"Reported green" comes from GitHub check-suite events, not a fresh read; re-check each PR before merging.
+- **Rule zero:** no broken releases. Testing happens on drafts and rc releases only; stable is promoted
+  byte-for-byte. Tag a Link release only after CI, the Desktop harness and the real-fleet Ecosystem e2e
+  (`e2e.yml`, `real_apps=true`) pass on that exact main commit, via "Tag a release" (`tag.yml`, inputs `tag`, `sha`).
+- **Commits:** `git -c user.name=Claude -c user.email=noreply@anthropic.com commit ...`. Never put the owner's
+  name or email anywhere. Merge only when every check on the PR head is green. Never force-push.
+- **Merge styles:** squash for Link; merge commits for Box, Lens, Shelf, Clipboard, Find, Look and Wheel.
+  Clipboard #16 was squash-merged and its branch then conflicted with main. That was fixed with
+  `git merge -s ours origin/main`, after checking that main's tree equaled the branch's merged head.
+- **Run clippy locally before every Rust push** and compare against the base: newer local toolchains flag lints
+  (`collapsible_if`, `chunks_exact`, `is_multiple_of`) that CI's pinned 1.88 doesn't. Box #37 lost two CI cycles
+  to a redundant closure and items after a test module, both of which `cargo check` alone didn't catch.
+- **Don't wait on CI yourself.** Hand watching to a cheap subagent (Haiku) that reports back. Waits must run as
+  background commands; foreground `sleep` is blocked, and watchers otherwise stop early or report stale state.
+- **GitHub runners are the bottleneck.** With about 10 PRs open, runs queued 30+ minutes (macOS worst). Batch
+  commits and avoid restarting runs needlessly.
 
-## What was found and done today
+## Open PRs and next actions (state at hand-off)
 
-1. **Tools "close under load" was a Link harness bug, not Tools.** `tools/fleet/wmclose.c` called `XFlush` and
-   exited. Under CPU load the X server saw the request and the hang-up together and dropped the client unread, so
-   the close was never delivered. An X protocol trace (xtrace) and an independent `xev` listener both confirmed it.
-   Losses: 7 of 13 local runs before, 0 of 10 with `XSync` + `XCloseDisplay`. The fix is in Link #61 (CHANGELOG
-   1.0.7). Tools PR #49 therefore needs no close fix; record that in Tools `docs/v1/DECISIONS.md` when you touch
-   it.
-2. **Real-fleet e2e (run 42988304697):** shortcuts 20/20, trayhost 27/27, tools-hub 39/42, install 15/16.
-   - The three tools-hub failures are all Lens: its main builds were prereleases (`-dev.<sha>`), which Tools'
-     stable channel correctly refuses. Fixed by Lens #16.
-   - The install failure (`arcade.tools did not quit` after its install relaunch, endpoint pid still alive after
-     `app.quit`) is **not yet explained**. My local probe (`peerquit`) was inconclusive: it looked for
-     `*tools*.json` but the endpoint file is `arcade/run/arcade.tools.endpoint`, so the quit was never sent.
-     Reproduce it locally first. The e2e sends `app.quit` over a raw Link connection whose hello claims client id
-     `arcade.tools` (`tools/real_apps.py` `Peer`), after
-     `--install --silent` with `APPIMAGE_EXTRACT_AND_RUN=1`.
-3. **Box step 3** (all in #34, each with its lock test flipped, tested locally):
-   - Core: B-7, B-8, B-9 (spans plus time zones), B-10, B-25, U-1, BR-15, BR-16, BR-4 (P0, search).
-   - Island: BR-0 (P0), BR-5, BR-6, BR-11, BR-12.
-   - Shortcut: BR-1.
-   - Decisions D7 (converter readings) and D8 (fresh re-show; footer regex).
+| PR | State | Next |
+|---|---|---|
+| [Tools #49](https://github.com/qa-p1/Arcade-tools/pull/49) (head ad45884) | Crash reports, cargo deny, **Link 1.0.7**, `ammonia` 4.2.5 (RUSTSEC-2026-0533). 14/15 green; the macOS dmg check was pending. | Merge when green → "Tag a release" `v1.0.0-rc.11` on the merged main SHA (Release builds and publishes a test-channel prerelease) → dispatch `gates.yml` with `update-from: v1.0.0-rc.10` → when every gate passes, "Promote" (`promote.yml`) rc.11 to stable 1.0.0. B1 (signing key) is done. |
+| Link main 079f954 = **1.0.8 (unreleased)** | #62 merged: Dart key chips no longer stretch (Clipboard RD-CLIPBOARD-2), QML HintBar elides (Shelf SH-3). CI and Desktop harness green; real-fleet e2e run 43580856047 was in progress. | When e2e is green on 079f954 (or a later main with only #63 on it), tag `v1.0.8`. Then move Clipboard and Shelf to it (vendored kit + pins). |
+| [Link #63](https://github.com/qa-p1/Arcade-Link/pull/63) | Rust caches saved only on main (PR caches took 2.6 of the 10 GB). | Merge when green. |
+| [Box #36](https://github.com/qa-p1/Arcade-box/pull/36) | Box on Link 1.0.7 (pin, CI link-ref 40ec027, lock, notices). Everything green except Windows (pending). | Merge when green. Then drop Box from `LEGACY_PENDING` in Link `tools/e2e_checks/real_hub.py` once a green Box main build exists. |
+| [Box #37](https://github.com/qa-p1/Arcade-box/pull/37) | Untangle (D12): desktop lib.rs 2,542 → 470 (`island`, `tray`, `instance`, `commands/<feature>`); core lib.rs → 767 (`catalog.rs`, pipeline helpers); one `safe_stem` (byte cap, fixes long CJK names), one `rgb_to_hsl`, one `unsafe_in_file_name` (6 copies), one `fileList(tool)`, the design kit's size/duration formatters. Head 8bf89a5 re-running after two clippy fixes. | Merge when green; resolve with #36/#38 (no overlap expected). |
+| [Box #38](https://github.com/qa-p1/Arcade-box/pull/38) | CI (D13): PRs build one Linux package; Windows/macOS trim their release build before main saves the cache. Windows PR check 19 min (was 37). | Merge when green; after main saves a cache, measure warm PR time (target < 8 min, Link spec §4). |
+| [Lens #19](https://github.com/qa-p1/Arcade-lens/pull/19) | Caches saved only on main. | Merge when green. |
+| [Clipboard #18](https://github.com/qa-p1/Arcade-clipboard/pull/18) | Caches saved only on main. | Merge when green. |
+| [Find #18](https://github.com/qa-p1/Arcade-Find/pull/18) | Partner agent: FD-1..FD-10, Link 1.0.7, memory trim (W0). 6 green, 2 pending. | Review the diff against `specs/FIND.md`, then merge when green. |
+| [Look #20](https://github.com/qa-p1/arcade-look/pull/20) | Partner: RD-LOOK-1, LK-1..LK-11, Link 1.0.7 (retires legacy entries), WebKit/arena memory work. 6 pending. | Review, then merge when green. |
+| [Wheel #17](https://github.com/qa-p1/Arcade-wheel/pull/17) | Partner: lock, WH-1..WH-6, RD-WHEEL-1/3, CLI-1/2, Link 1.0.7, W0 trim. 4/4 green. | Review, then merge. |
 
-## Next steps, in plan order
+Branches pushed without PRs (based on older main; merge main in first):
+- Lens `claude/untangle` (0b39213): one PATH lookup (`host::which`, now Windows-aware).
+- Shelf `claude/untangle` (6284fe5): docs only. The `Desktop.cpp` split plan (four concerns, one private
+  `Native` struct). Do the split: move `Native` to a private header, then split the implementation by concern.
 
-1. Merge Lens #16, then Link #61, then e2e and harness on Link main, then tag Link v1.0.7.
-2. **Tools PR #49:**
-   - Move the Link pins from v1.0.6 to v1.0.7:
-     - ci.yml lines 60, 292, 298, 303, 307
-     - gates.yml lines 39, 96, 180, 223, 282, 288, 291, 295
-     - memory-probe.yml line 51
-     - nightly.yml lines 22, 26
-     - promote.yml lines 15, 18
-     - release.yml lines 150, 156
-     - Cargo.toml line 24
-     - crates/arcade-tools-overlay/Cargo.toml lines 12, 16
-     - VENDORED Tag and Commit (both)
-   - Regenerate Cargo.lock and the notices.
-   - Explain the install-relaunch quit failure above.
-   - Crash reports (TOOLS.md §Crash reports, still missing in rc.10).
-   - Then CI green, merge, tag `v1.0.0-rc.11`, Release (test channel), and Gates with `update-from` rc.10.
-3. **Box (after #34):**
-   - BR-2: the Island's transparent area takes clicks on Hyprland. Box already calls GTK
-     `input_shape_combine_region`, and `gtkwindow.c` 3.24.41 does not reset it. Find out under the Hyprland
-     harness whether Hyprland honours the input region for focus and clicks; if not, resize the window to the card.
-   - BR-3: GStreamer plugins (P0, packaging).
-   - BR-7 (text/Markdown to PDF), BR-8 (engines list), BR-9 (Window Pin), CLI-2.
-   - Then the remaining steps.
-4. **Clipboard, Look, Find, Lens, Shelf, Wheel:** the stopped code-writing agents left uncommitted work. It is
-   saved, unreviewed, as patches in `dev/v1/handoff/<repo>-uncommitted.patch`. Each applies to the repo's
-   `claude/tender-feynman-3vt7dg` at the commit named below, with `git apply`. Review every change against the spec
-   before committing; none of it has been tested.
-   - Find @7653ec1: UI model, content search, a CLI search test, `tests/desktop/`.
-   - Shelf @27cf9ec: Link `Service`.
-   - Clipboard @ab746fa: overlay, history, controller, the Rust core and link store, the Linux lifecycle bridge.
-   - Lens @a17197e: keys (D2), installer, overlay and annotate.
-   - Look @4fe14c6: Cargo pin only.
-5. Lens `release.yml` labels nightlies `-dev.<sha>`, but fleet nightly tags are `-nightly.<date>.<n>`. Check this
-   against Tools' nightly channel in Lens step 4 (Lens PROGRESS).
-6. Last: tick PLAN's owner-requests checklist with evidence links and write the final summary at the top of
-   PROGRESS.md.
+## Per-app status and what's left
 
-## Owner-only (unchanged; LOCAL.md)
+- **Link:** 1.0.7 tagged (40ec027; real-fleet tools-hub 42/42, trayhost 27/27, install 16/16 + 8 XFAIL,
+  shortcuts 20/20). Earlier red runs were Lens main being red since the 11 Nov Azure DNS outage, so the picker
+  used an old `-dev` Lens build. The XFAILs are `LEGACY_PENDING`: remove each app as its 1.0.7 main build turns
+  green. Todo: tag 1.0.8, merge #63.
+- **Tools:** steps 1–7 done; step 8 at rc.10 (gates green). rc.11 adds crash reports + Link 1.0.7 + the advisory.
+- **Box:** 1, 3, 4 done; 2 well along (#37); 6 in progress (#38). Left: memory/perf (5), Round 5 (7), rc + gates.
+  Backlog with reasons (D-list): BP-1, BP-5, non-ASCII watermark.
+- **Lens:** 1, 3 done (all P0/P1, LN-2..LN-13 except LN-10 and RD-LENS-4, which need the harness); nightlies now
+  tagged `vX.Y.Z-nightly.YYYYMMDD.N`; 4 done (one unused dep). Left: 2, 5–8.
+- **Shelf:** every spec finding fixed (#12, #13). Left: Link 1.0.8, the Desktop.cpp untangle, 4–8.
+  RD-SHELF-3 (Hyprland blur needs a compositor rule Shelf doesn't install) is open.
+- **Clipboard:** all P0/P1, CB-5/6/8/9 fixed (#16, #17). Left: Link 1.0.8 (key chips; CB-10 colour emoji is
+  already in the kit), `--status` before the engine (CB-5 second half), 2, 4–8. One finding: the relay field
+  "looks disabled" is visual and needs a screen check.
+- **Find / Look / Wheel:** partner PRs above; then 2, 4–8.
+- **Fleet finish (§10):** not started. Last: tick PLAN's owner-requests checklist with evidence links and write the
+  final summary at the top of `PROGRESS.md`.
 
-- **B1:** set `ARCADE_UPDATE_SIGNING_KEY` (`arcade-link keygen --secret-to-gh`) and commit the public key to Tools.
-  Until then no stable promotion is possible.
-- **B2:** create `qa-p1/Arcade-template` from Link `template/`.
+## Step 6 finding that applies to every repo
 
-## Working rules carried over
+GitHub's 10 GB per-repo cache cap was full or over in Box, Lens, Clipboard, Tools and Link, so caches evicted each
+other and PRs compiled cold. Rule (Link spec §4): caches are saved only on main
+(`save-if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}`), and PRs build one Linux
+package. Check each remaining repo (Find, Look, Wheel, Shelf, Tools) the same way: `gh api
+repos/qa-p1/<repo>/actions/cache/usage`.
 
-- Test only with drafts and hidden `X.Y.Z-rc.N` prereleases. Promote byte for byte, only after every gate in PLAN.md
-  passes on the published rc files.
-- Never delete releases or tags, and never force-push main.
-- A missing decision: choose what fits README.md, record it in that repo's DECISIONS.md, and continue.
-- A Link change an app needs goes Link PR, then merge, then a Link patch tag through "Tag a release".
+## Owner-only checks (can't be done in the cloud)
+
+- Lens: the first-run install dialog on a fresh profile (LN-1 font fix), X11 Record Window stop (LN-6) and pin
+  Live (LN-7).
+- Clipboard: the relay field's look (CB-8).
+- Shelf: the shortcut-recorder UI test fails locally on the unchanged code under Xvfb; CI passes it.
+- Real-desktop install of the 1.0.7 builds, to confirm one launcher per app (PLAN "One launcher per app").

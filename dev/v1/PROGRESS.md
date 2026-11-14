@@ -33,6 +33,21 @@ None. B1 and B2 were done from the owner's PC on 2026-11-11:
 
 ## Log
 
+- 2026-11-14 (local session) — **Link v1.0.7 tagged; fleet moving onto it; Box untangle and CI started.**
+  - Link real-fleet e2e on 40ec027: tools-hub 42/42, trayhost 27/27, install 16/16 (+8 XFAIL), shortcuts 20/20,
+    after Lens main's red CI (11 Nov DNS outage) was rerun so the fleet got Lens 0.4.2. **v1.0.7 tagged** (40ec027,
+    "Tag a release"). Link #62 merged (1.0.8, unreleased: key chips, HintBar); its main checks are running.
+  - Merged: Box #35 (P2 fixes, dead code, GStreamer notices), Lens #17 (all P0/P1 + five P2), Shelf #13, Clipboard
+    #17. Tools #49 moved to Link 1.0.7 and `ammonia` 4.2.5 (RUSTSEC-2026-0533, published 12 Nov). Box #36 and
+    Lens #18 move them to 1.0.7 (Lens from 0.4.14, no code changes).
+  - Box step 2 (untangle, PR #37, D12): desktop `lib.rs` 2,542 -> 470 lines (`island`, `tray`, `instance`,
+    `commands/<feature>`); one `safe_stem` (byte cap: long CJK names could exceed the file name limit), one
+    `rgb_to_hsl`, one file-name character rule (six copies), one `fileList(tool)` (four copies).
+  - Step 6 finding across the fleet: GitHub's 10 GB cache cap was full or over in Box, Lens, Clipboard, Link and
+    Tools. Box's Linux Rust cache was always evicted (40-minute PRs); Lens, Clipboard and Link saved caches from
+    pull requests. Fixes: Box #38 (one Linux package per PR, trimmed Windows/macOS caches, D13), Lens #19,
+    Clipboard #18, Link #63 (save only on main).
+
 - 2026-11-13 (local session) — **Link 1.0.7 merged; every app's P0/P1 fixed except Look/Wheel (partner agent).**
   - Link [#61](https://github.com/qa-p1/Arcade-Link/pull/61) merged (40ec027) with BP-4 (old desktop-id icons
     retired, Rust + Qt, tested). CI and the desktop harness green on main; the real-fleet e2e failed tools-hub 39/42

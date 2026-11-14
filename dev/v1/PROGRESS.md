@@ -49,6 +49,16 @@ None. B1 and B2 were done from the owner's PC on 2026-11-11:
     `index_state` (service.rs) and `needs_compaction` (index.rs).
   - Box #37 (untangle) conflicted with #38 only in `docs/v1/DECISIONS.md` (both appended): resolved on
     `claude/sharp-cori-29w5eg` (D12 then D13), clippy on 1.88 before the push.
+  - **Runner contention (step 6 finding):** the merge wave made Dependabot rebase every open Dependabot PR, and each
+    started a full CI build: 24 queued runs (Box 6, Tools 12 incl. memory probes, Link 2, Wheel 3, plus a superseded
+    Box main run) sat ahead of the rc.11 publish job (queued for an hour after every build passed at 13:55), Link #64
+    and the main builds the v1.0.8 gate needs. Cancelled those 25 runs (re-runnable; Dependabot rebuilds its PRs
+    on the next rebase). Fix to make per repo in step 6: `rebase-strategy: disabled` (or a weekly schedule with
+    grouped updates) in `.github/dependabot.yml`, so a merge to main doesn't queue one build per Dependabot PR.
+  - **Box, found while preparing step 6:** `release.yml` ran on every pushed `v*` tag and published it as the
+    latest stable release, so the first `v1.0.0-rc.1` would have reached users untested. Fixed locally with Tools'
+    shape (rc-only `tag.yml`, test-channel `release.yml` via Link `app-publish`, `promote.yml`, `nightly.yml`;
+    Box D15), together with step 5 (memory, D14). Pushed once #39 merges (the branch is #39's head).
   - `LEGACY_PENDING` plan: one Link PR drops every app whose 1.0.7 main build is green (Tools, Lens, Box, Find,
     Look, Wheel), then CI + harness + real-fleet e2e on that commit, then tag v1.0.8 there (the strict XFAIL fails
     a run if a listed app passes, so the list must match the fleet when the e2e runs).

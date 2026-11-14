@@ -64,7 +64,7 @@ None. B1 and B2 were done from the owner's PC on 2026-11-11:
     a run if a listed app passes, so the list must match the fleet when the e2e runs).
   - This session pushes to `claude/sharp-cori-29w5eg` in every repo (this file included), which continues
     `claude/tender-feynman-3vt7dg`.
-  - 15:10 UTC: Tools rc.11 Release ([43600684898](https://github.com/qa-p1/Arcade-tools/actions/runs/43600684898))
+  - 14:16 UTC: Tools rc.11 Release ([43600684898](https://github.com/qa-p1/Arcade-tools/actions/runs/43600684898))
     green, 14/14 jobs (published to the test channel); Gates dispatched on `v1.0.0-rc.11` with `update-from`
     v1.0.0-rc.10, `previous` v0.4.6 ([43604006265](https://github.com/qa-p1/Arcade-tools/actions/runs/43604006265)).
     Link #64 green on every check, squash-merged (e1a543b, `Cargo.toml` 1.0.8).

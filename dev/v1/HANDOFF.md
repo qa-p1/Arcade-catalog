@@ -1,3 +1,147 @@
+# Handoff to the local session (2026-11-15 ~20:25 UTC, from the cloud session)
+
+Read, in order: `README.md` (owner decisions win), `PLAN.md`, this file, `PROGRESS.md` (the Status table predates
+this file; this file is the current state), `LOCAL.md`, then each repo's `docs/v1/PROGRESS.md` and `DECISIONS.md`.
+The older cloud handoff is kept at the bottom for its rules.
+
+**Everything is on GitHub.** No local-only work was left in the cloud container. Branch names are below.
+
+## Rules (still apply; the owner set the last three)
+
+- Rule zero: no broken releases. rc → Gates on the *published* rc → Promote byte for byte → verify the digests.
+- Merge only when every check on the PR head is green. Squash for Link; merge commits for the apps.
+- Never force-push (except `--force-with-lease` to restart a branch whose history is already merged).
+- Clippy before every Rust push with the repo's pinned toolchain (`+1.88.0`: Link, Box, Lens, Find, Look; `1.98.1`:
+  Clipboard) and `-D warnings`.
+- Commit as `git -c user.name=Claude -c user.email=noreply@anthropic.com commit`. **No trailers anywhere**: no
+  Co-Authored-By, no Claude-Session, no "Generated with" in commits, PRs or comments (owner's rule).
+- **At most 3 apps in flight at once**, finish one before taking another; Box first.
+- Subagents only for concrete, time-consuming jobs with exact instructions; check their output before using it.
+  Never ask an agent a judgement question ("is Box ready?").
+
+## 1. Box — finish v1.0.0 (top priority)
+
+- [#46](https://github.com/qa-p1/Arcade-box/pull/46) merged (merge commit 513cb3f): Link 1.0.11 (D22). It fixes
+  rc.1's Gates failure (GitHub renamed `Arcade Box_…` assets to `Arcade.Box_…`, so they didn't match
+  `SHA256SUMS.txt`/manifest) and Restart's successor running from the FUSE mount instead of the unpacked copy.
+- `v1.0.0-rc.2` tagged on 513cb3f ("Tag a release" run 43754130400, green).
+- **Release run 43754158123 on `v1.0.0-rc.2` was in progress** at handoff (about 25 min, Windows is the long pole).
+- rc.1 stays unpromoted.
+
+Next:
+1. When Release is green, check the rc.2 release: asset names `Arcade-Box_1.0.0_…` (hyphen) and every name in
+   `SHA256SUMS.txt`, `arcade-release.json` and `manifest.json` present as an asset. If Release fails, find the
+   cause, fix on a PR, cut rc.3.
+2. Dispatch `gates.yml` on ref `v1.0.0-rc.2` with input `previous: v0.4.3`. All jobs must be green: published files,
+   Linux (native notices, verify-appimage, verify-upgrade, verify-resident incl. "Restart stays on the copy", tray),
+   budgets, delta, N-1, Windows, macOS, Tier 1 Hyprland, Tier 2.
+3. Dispatch `promote.yml` for rc.2 → `v1.0.0`. Download both releases' assets
+   (`gh api -H 'Accept: application/octet-stream' repos/qa-p1/Arcade-box/releases/assets/<id>`) and compare
+   SHA-256 of every file; check the signed `manifest.json` (trusted comment `app=arcade.box version=1.0.0 … channel=stable`).
+4. Box `docs/STATUS.md`, Box `docs/v1/PROGRESS.md`, the catalog entry for Box (catalog.json has no version field:
+   decide whether to add one or leave it to the release feed, and write the decision down), catalog `PROGRESS.md`.
+
+## 2. Lens — PR [#24](https://github.com/qa-p1/Arcade-lens/pull/24) open, head 34b1dbb
+
+Branch `claude/sharp-cori-29w5eg`: Link 1.0.11 (D10), Keep a Changelog, Tier 1 `tests/desktop/lens_desktop.py`
+(CI `desktop` job after `linux`; gates `desktop` job), BACKLOG.md (LN-10, RD-LENS-4 with reasons, D11).
+Local `scripts/check.py` passed on 57a71b3 (216 tests).
+
+**Finding (fixed in 34b1dbb, not yet through CI):** Tier 1's first run (job 132936292488) failed "the overlay opens
+on an image". `--window analyze` (Link's "Analyze with Lens") called `lens_platform::monitors()`, which exists only
+on X11, so on any Wayland desktop it exited with "monitor geometry is not exposed on Wayland". Now
+`gui::analyze_monitor`: X11 monitors as before; Hyprland → focused monitor in physical pixels
+(`hyprland::focused_monitor_pixels`); other Wayland → a canvas the size of the image. Tests:
+`gui::tests::the_analyze_overlay_has_a_monitor_on_every_desktop`,
+`hyprland::tests::monitor_pixels_are_physical_and_follow_the_transform`. Clippy 1.88 and the lens-platform/arcade-lens
+tests passed locally. The test script now prints Lens's log when a check stops it early. Add a CHANGELOG
+`[Unreleased]` Fixed line for this (not done).
+
+Next: watch #24's CI; if Tier 1 fails further on, read the uploaded `desktop-lens` artifact (lens.log, screenshots).
+
+**Security pass (Sonnet agent) on `claude/sharp-cori-29w5eg-wip-security` (295444b, 7 commits on top of 5999313)**,
+not reviewed or merged yet:
+- SECURITY.md (every "Tested by" names an existing test; 9 new tests), deny.toml + `deny` CI job, notices generator
+  extended (`--check`, `--check-appimage`), licences and notices shipped in all packages.
+- Advisories fixed with `cargo update --precise`: rustls 0.23.46, rustls-webpki 0.103.17, webpki-roots 1.0.12,
+  tokio 1.54.1, rustix 1.1.6, yanked async-executor/clipboard-win. Accepted with reasons: RUSTSEC-2024-0429/0370
+  (gtk via tray-icon, not on Linux builds), 2024-0436 (paste), 2026-0192 (ttf-parser), 2026-0370/0371/0372 (zbus 5).
+- cargo deny ran with `--disable-fetch` (cloud had no GitHub access for the DB); CI's live DB may find more.
+- To merge: cherry-pick or merge it onto the PR branch. **Its decision is numbered D11, which clashes with the Tier 1
+  D11: renumber to D12** (DECISIONS.md, PROGRESS.md, any reference). Windows/macOS packaging changes are unbuilt.
+- Real issues it documented in SECURITY.md but did not fix (decide: fix or BACKLOG with reason):
+  KDE Connect share leaves `arcade-lens-share-<pid>.png` in the shared temp dir with default permissions and sends to
+  the first reachable device; `/tmp/arcade-lens` chmod 0700 fails silently if another user created it; confirmed
+  chains bypass `guard_secrets`; plugins with `read-text` receive secret text and are unsandboxed; settings, chains,
+  history and logs take the umask.
+
+Then: Round 5 rest (a11y as Box D21, docs/screenshots, schema/downgrade), 1.0.0 bump, rc.1, Gates, Promote.
+
+## 3. Look — branch `claude/sharp-cori-29w5eg` at 8973daa, pushed, **no PR yet**
+
+- a82463d: Link 1.0.11; `lib.rs`/`memory.rs` ask `arcade_link::runtime::is_unpacked_copy()` (D14).
+- 8973daa: Tier 1 `tests/desktop/look_desktop.py` + `tests/desktop/other_window.py` (GTK helper window), CI and
+  gates `desktop` jobs (D15). Same early-exit log gap as Lens had: on `raise SystemExit(1)` it doesn't print
+  look.log; fix like Lens's 34b1dbb.
+- Local `scripts/check`: everything passed except the last stage, `check-native.py`, which needs
+  `pip install psutil` and the H.264 GStreamer decoder (`gstreamer1.0-libav`, `gstreamer1.0-plugins-bad`) locally.
+  CI installs both and main's CI is green, so run it locally with those installed or let CI judge it.
+
+**Security pass on `claude/sharp-cori-29w5eg-wip-security-2` (71c2481, on top of a82463d)**, not reviewed or
+merged yet (the older `-wip-security` 5282ef7 is superseded):
+- vite 8.3.8; calamine 0.38, zip 9 (archive.rs adapted to `name()` returning Result), pulldown-cmark 0.13.6,
+  ruzstd 0.9.1, tokio 1.54.1, rustix 1.1.6; deny.toml + `deny` job; Dependabot (grouped, weekly, no auto-rebase);
+  `scripts/notices.py` and `scripts/native-notices.py` with `--check`; notices + LICENSE bundled as Tauri resources,
+  Settings → About → "Open notices"; `tests/security_config.rs` (CSP, permissions, no HTTP client),
+  `scripts/ui-checks/sanitize.mjs` in `scripts/check`.
+- Accepted advisories in deny.toml with reasons: RUSTSEC-2024-0429, 0370, 0436, 2026-0192, unic-* (2025-0075/0080/
+  0081/0098/0100), zbus 5 (2026-0370/0371/0372).
+- **Its decision is numbered D15, clashing with the Tier 1 D15: renumber to D16.**
+- **`packaging/linux/native/packages.json` was mapped from the published 0.4.3 AppImage via the jammy archive, not
+  from a build of this commit**, so build.yml's new native-notices step is expected to fail once on the 22.04
+  runner; it prints the corrected packages.json and uploads `native-notices` → commit that folder, run
+  `scripts/notices.py`, push.
+- Documented, not changed: a previewed document's `https` images are fetched (CSP `img-src https:`), telling the
+  server the file was opened; script plugins have the window's full IPC and command plugins the user's rights.
+- Not run there: full `scripts/check` Linux part; the deny job and build.yml steps on GitHub.
+
+Next: merge the security branch into the Look branch (resolve D15/D16, PROGRESS), run `scripts/check`, push, open the
+PR, get CI green incl. Tier 1, merge. Then a11y pass (as Box D21), docs/screenshots, schema/downgrade, rc.1, Gates,
+Promote.
+
+## 4. CI speed (owner approved; do after Box v1.0.0 is promoted, before the next app's rc)
+
+Measured on Box: PR CI ~16–18 min (Linux `scripts/check` 5.5 min + AppImage 4.5 min); Release ~25 min (Windows:
+"Stage the CLI and trusted plugin worker" 640 s + "Build the installer" 521 s, two release compiles); then Gates.
+Repos are public, so Actions minutes are free; only wall time matters.
+1. **Link 1.0.12:** Release publishes the files that CI-on-main built for the same SHA instead of rebuilding
+   (~25 min per rc). Gates still tests the published files.
+2. Windows: one shared release compile for the CLI/plugin worker and the app.
+3. Keep CI on push to main: it is the only run that saves the Rust cache (`save-if`), which warms PRs and tags.
+Record it as a decision in PLAN/PROGRESS, release Link 1.0.12 the usual way, re-pin apps as they reach rc.
+
+## 5. Paused apps (all pushed)
+
+- **Find:** [#22](https://github.com/qa-p1/Arcade-Find/pull/22) open, head 6a00747 (drop_target
+  `Gdk.DragAction.COPY | MOVE` fix, verified locally). Its Tier 1 now fails on `--show report` timing out after 30 s;
+  not investigated. Security WIP: `claude/sharp-cori-29w5eg-wip-security` (6c492b4).
+- **Clipboard:** step 5 + security WIP on `claude/sharp-cori-29w5eg-wip-step5-security` (0c406f1).
+- **Shelf:** step 5 WIP on `claude/sharp-cori-29w5eg-wip-step5` (f6617a9; `appimage_resident.py` expects the marker to
+  be the copy's folder). Needs re-vendoring to Link 1.0.11 (vendored at 2748ebf).
+- **Wheel:** step 5 WIP on `claude/sharp-cori-29w5eg-wip-step5` (593704b; removes the restart workaround). Needs
+  re-vendoring to Link 1.0.11.
+- **Link:** v1.0.11 tagged on b00a1ca (main). `claude/sharp-cori-29w5eg-wip-link-unpacked` (c544547) is the
+  pre-squash branch of work already in 1.0.11, pushed only so nothing is lost.
+
+## Local tool notes
+
+- `cargo-deny` 0.18.9; its advisory DB fetch needs GitHub access.
+- Box's `scripts/check` needs `luac` (lua5.4) and Chromium for Playwright (`PLAYWRIGHT_CHROMIUM`).
+- The Link desktop harness needs python3-gi (GTK3) for `other_window.py`.
+- Look's check needs `ARCADE_LINK=<path to Arcade-Link checkout>`.
+
+---
+
 # Handoff to the cloud session (2026-11-14, from the local session)
 
 The work moves from the owner's PC to Claude Code cloud. Read, in order: `README.md` (owner decisions win),

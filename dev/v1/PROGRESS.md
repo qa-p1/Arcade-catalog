@@ -35,6 +35,13 @@ None. B1 and B2 were done from the owner's PC on 2026-11-11:
 
 ## Log
 
+- 2026-11-16 (cloud session) — **Link 1.0.12 tagged; Look's v1 PR merged; Box rc.3 on its way.**
+  - Box rc.2 [Gates](https://github.com/qa-p1/Arcade-box/actions/runs/43921442645): published files, budgets, delta, N-1, Windows and macOS smoke passed; Linux conformance failed with "GLIBC_2.39 not found" (Link's CLI cache keyed by `runner.os` only, so a ubuntu-24.04 CLI was restored on ubuntu-22.04); the Linux checks and both desktop suites did not run.
+  - Link [#74](https://github.com/qa-p1/Arcade-Link/pull/74) (88915ce): CLI cache keyed by runner image; the desktop harness accepts a one-pixel cursor difference. **v1.0.12 tagged** after CI, the Desktop harness and the real-fleet e2e passed on 88915ce.
+  - Box [#47](https://github.com/qa-p1/Arcade-box/pull/47): workflows on Link 1.0.12 (D23), app unchanged; then rc.3 → Gates → Promote.
+  - Look [#25](https://github.com/qa-p1/Arcade-look/pull/25) merged (4248b77): Link 1.0.11, Tier 1 on Hyprland (12/12 in CI), Round 5 security (D16, cargo deny green on the live database), native notices from the built AppImage. Accessibility pass (D17) in progress.
+  - Lens [#24](https://github.com/qa-p1/Arcade-lens/pull/24): the Wayland analyze fix passed Tier 1's overlay checks in CI; security pass merged in (D12); macOS test job got no runner (re-run).
+
 - 2026-11-15 (cloud session, evening) — **Box rc.2 releasing; Lens Tier 1 found a Wayland bug; work handed to the local session.**
   - Link v1.0.11 tagged (b00a1ca). Box [#46](https://github.com/qa-p1/Arcade-box/pull/46) merged (513cb3f), `v1.0.0-rc.2` tagged, Release run 43754158123 in progress.
   - Lens [#24](https://github.com/qa-p1/Arcade-lens/pull/24): Link 1.0.11, CHANGELOG, Tier 1 desktop test. Its first run found that `--window analyze` ("Analyze with Lens") never opened on Wayland; fixed in 34b1dbb.

@@ -35,6 +35,27 @@ None. B1 and B2 were done from the owner's PC on 2026-11-11:
 
 ## Log
 
+- 2026-11-17 (cloud session) — **Link 1.0.13 merged; Box #48 and Lens #28 merged; Look's Restart hang found.**
+  - Look rc.2 [Gates](https://github.com/qa-p1/Arcade-look/actions/runs/43960628849): every job passed except the
+    Linux checks: `verify-resident.py` "explicit Restart replaces the process" timed out (it passed in the release
+    build). A diagnostic branch on the Gates setup (Look `claude/sharp-cori-29w5eg-wip-restart`, 12 runs) failed once:
+    the successor's unpacked copy hung in its `AppRun` on `gsettings`, crashed in `systemd-coredump`. Cause: Link's
+    `relaunch_unpacked` gave the copy the launcher's environment (`GSETTINGS_SCHEMA_DIR`, `GIO_EXTRA_MODULES` in the
+    FUSE mount the launcher releases at once); linuxdeploy's GTK hook runs `gsettings` when the portal does not
+    answer. Every app on U1 has it, Tools 1.0.0 included.
+  - Link [#75](https://github.com/qa-p1/Arcade-Link/pull/75) squash-merged (a24146f): the copy gets no reference to the
+    mount (Rust and `qt/arcade_unpacked.h`, with tests); release 1.0.13. Tag after main CI and the real-fleet e2e.
+    The CI speed-up moves to 1.0.14.
+  - Box [#48](https://github.com/qa-p1/Arcade-box/pull/48) merged (4b354ac): AppImage built on ubuntu-22.04 (D24),
+    libvips tests on a 24.04 checks-only entry, native notices from 22.04, `XInitThreads()` first in `main` (the
+    Island aborted on 22.04's libX11 1.7 with "[xcb] Too much data requested from _XRead"); all six checks green.
+  - Lens [#28](https://github.com/qa-p1/Arcade-lens/pull/28) merged (fea7951): conformance (icons, dependabot, step
+    timeouts, LINK-2 wording; D17). rc.2's Release built everything but its publish failed: the `"*-*"` artifact
+    pattern also took Tier 1's `desktop-lens` logs and GitHub refused the empty `keyring.log`; nothing was left
+    published. Fixed by naming the installer artifacts (Lens D18).
+  - Next: tag Link v1.0.13; Box, Look and Lens move to it (staged locally), then Box rc.4, Look rc.3, Lens rc.3 →
+    Gates → Promote.
+
 - 2026-11-16 (cloud session) — **Link 1.0.12 tagged; Look's v1 PR merged; Box rc.3 on its way.**
   - Box rc.2 [Gates](https://github.com/qa-p1/Arcade-box/actions/runs/43921442645): published files, budgets, delta, N-1, Windows and macOS smoke passed; Linux conformance failed with "GLIBC_2.39 not found" (Link's CLI cache keyed by `runner.os` only, so a ubuntu-24.04 CLI was restored on ubuntu-22.04); the Linux checks and both desktop suites did not run.
   - Link [#74](https://github.com/qa-p1/Arcade-Link/pull/74) (88915ce): CLI cache keyed by runner image; the desktop harness accepts a one-pixel cursor difference. **v1.0.12 tagged** after CI, the Desktop harness and the real-fleet e2e passed on 88915ce.

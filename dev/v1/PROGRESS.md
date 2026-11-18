@@ -35,6 +35,33 @@ None. B1 and B2 were done from the owner's PC on 2026-11-11:
 
 ## Log
 
+- 2026-11-18 (cloud session, night) — **Shelf and Wheel 1.0.0 stable; Clipboard rc.2 on its way; Link 1.0.14.**
+  - **Shelf [1.0.0](https://github.com/qa-p1/Arcade-Shelf/releases/tag/v1.0.0)** promoted from `v1.0.0-rc.4`
+    (e8b4a26, Link 1.0.13) after [Gates](https://github.com/qa-p1/Arcade-Shelf/actions/runs/44222853395) 13/13, the
+    upgrade from 0.4.0 and both desktop suites included; AppImage, dmg, setup.exe and SHA256SUMS byte for byte as rc.4,
+    metadata differs only in channel, tag and notes link. Earlier rcs: rc.1 gates runner missing `libEGL.so.1`
+    ([#22](https://github.com/qa-p1/Arcade-Shelf/pull/22)), rc.2 an unknown option exited 1, not 2
+    ([#23](https://github.com/qa-p1/Arcade-Shelf/pull/23)), rc.3 the upgrade job lacked libOpenGL and Tier 2 timed out
+    on a slow mirror ([#24](https://github.com/qa-p1/Arcade-Shelf/pull/24)). Docs
+    [#25](https://github.com/qa-p1/Arcade-Shelf/pull/25) merged.
+  - **Wheel [1.0.0](https://github.com/qa-p1/Arcade-wheel/releases/tag/v1.0.0)** promoted from `v1.0.0-rc.4`
+    (5481c63, Link 1.0.13) after [Gates](https://github.com/qa-p1/Arcade-wheel/actions/runs/44226061986) 12/12;
+    AppImage, both dmgs, setup.exe, zip and SHA256SUMS byte for byte as rc.4. Earlier rcs: rc.1 gates runner missing
+    `libEGL.so.1` ([#25](https://github.com/qa-p1/Arcade-wheel/pull/25)), rc.2 Release failed on a tray test that
+    assumed Tools answers within the 300 ms cap ([#26](https://github.com/qa-p1/Arcade-wheel/pull/26)), rc.3 Release
+    Tier 2 timed out on a slow mirror ([#27](https://github.com/qa-p1/Arcade-wheel/pull/27)). Docs in
+    [#28](https://github.com/qa-p1/Arcade-wheel/pull/28).
+  - **Link v1.0.14** tagged (a5a3783): Tier 2 caches its ~90 MB of desktop packages per runner image, prefetches them
+    16 at a time with a mirror fallback, unlocks a gnome-keyring for apps that need the Secret Service, and waits up to
+    60 s for the compositor. Shelf, Wheel and Clipboard use it for Tier 2.
+  - **Clipboard**: [#22](https://github.com/qa-p1/Arcade-clipboard/pull/22) merged (e5ec844): gates and
+    `verify-upgrade.py` (0.3.2 → 1.0.0 with the user's history and keyring). rc.1
+    [Gates](https://github.com/qa-p1/Arcade-clipboard/actions/runs/44226756864) failed Linux conformance: `release.yml`
+    built the AppImage on ubuntu-24.04 (CI and the changelog say 22.04), so it needed a newer glibc than 22.04 has.
+    Fixed in [#34](https://github.com/qa-p1/Arcade-clipboard/pull/34) (163f958); rc.2 is building.
+  - Box: parked by the owner. Tools 1.0.1 (later): a quit right after start can leave a stale endpoint (Link replaces
+    it, so low impact).
+
 - 2026-11-17 (cloud session, afternoon) — **Lens and Find 1.0.0 stable; Box rc.7 on its way.**
   - **Lens [1.0.0](https://github.com/qa-p1/Arcade-lens/releases/tag/v1.0.0)** promoted from `v1.0.0-rc.4` (3dad560,
     Link 1.0.13) after [Gates](https://github.com/qa-p1/Arcade-lens/actions/runs/44075745595) 12/12; installers and

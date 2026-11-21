@@ -1,4 +1,94 @@
-# Handoff to the local session (2026-11-15 ~20:25 UTC, from the cloud session)
+# Handoff to the local session (2026-11-21, from the cloud session)
+
+Read, in order: `README.md` (owner decisions win), `PLAN.md`, this section, `LOCAL-PROMPT.md` (the prompt to paste),
+the newest entries of `PROGRESS.md` (its Status table is old; this section is the current state), `LOCAL.md`, then
+each repo's `docs/v1/PROGRESS.md` and `DECISIONS.md`.
+
+**Everything is on GitHub.** Every repo's working tree in the cloud container was clean and pushed when this was
+written. No scheduled check-ins are left running.
+
+**Box is out of scope for the local session (owner's call: they have plans for it). Don't touch Arcade-box.** Its
+last state, for reference only: `v1.0.0-rc.7` published, Gates failed the upgrade test (0.4.3 needs glibc 2.38, the
+job ran on 22.04); a fix sits on branch `claude/sharp-cori-29w5eg-wip-upgrade` (33f133d), not in a PR.
+
+## Where the fleet stands
+
+| App | State |
+|---|---|
+| Link | `v1.0.14` tagged (a5a3783): Tier 2 package cache, parallel prefetch with mirror fallback, gnome-keyring unlock, 60 s compositor wait. Apps' gates still call `app-gates.yml@v1.0.13`; Tier 2 uses `desktop-tier2.yml@v1.0.14`. |
+| Tools | 1.0.0 stable. 1.0.1 open items below. |
+| Find, Lens, Look | 1.0.0 stable, docs merged. |
+| Shelf | **1.0.0 stable** from rc.4 (Gates 13/13, run 44222853395; Promote 44226166895); every installer and SHA256SUMS byte for byte as rc.4. Docs [#25](https://github.com/qa-p1/Arcade-Shelf/pull/25) merged. Done. |
+| Wheel | **1.0.0 stable** from rc.4 (Gates 12/12, run 44226061986; Promote 44228311950); every installer and SHA256SUMS byte for byte as rc.4. Docs [#28](https://github.com/qa-p1/Arcade-wheel/pull/28) merged. Done. |
+| Clipboard | **Not released.** `v1.0.0-rc.2` (163f958) published, Gates failed (details below). Latest stable is still 0.3.2. |
+| Box | Parked by the owner. Leave it. |
+
+## Clipboard: what's left (the only app still in flight)
+
+History:
+- [#22](https://github.com/qa-p1/Arcade-clipboard/pull/22) merged (e5ec844): `gates.yml` (app-gates@v1.0.13,
+  previous default v0.3.2), `scripts/verify-upgrade.py` (0.3.2 → 1.0.0 keeps history and keyring; passed locally),
+  Tier 2 on Link 1.0.14.
+- rc.1 Gates (run 44226756864): CLI-1 to CLI-4 failed, `GLIBC_2.3x not found`: `release.yml` built the Linux
+  packages on ubuntu-24.04 while CI and the changelog say 22.04. Fixed in
+  [#34](https://github.com/qa-p1/Arcade-clipboard/pull/34) (merged, 163f958).
+- rc.2 Release (run 44230687136) green, Linux packages built on ubuntu-22.04.
+- **rc.2 Gates (run 44232113005) failed two jobs**; upgrade, Tier 1 and Tier 2 were skipped because they wait on
+  the Linux job, so they have never run against a published Clipboard rc:
+  1. **Linux conformance, CLI-2 and CLI-4** (CLI-1, CLI-3 and the rest pass now):
+     - CLI-2: `--arcade-conformance-unknown-flag` exits **0** with empty stderr. Required: exit 2 and the usage on
+       stderr (`--help` exits 0 already). Shelf had the same bug (Shelf #23).
+     - CLI-4: `--arcade-manifest` exits **1** with empty stdout and stderr. Required: exit 0 and the manifest JSON
+       on stdout. CI's AppImage smoke runs `--arcade-manifest` under `xvfb-run` and passes, so the likely cause is
+       that conformance runs it **without a display** and the Flutter side needs one; the launcher
+       (`usr/lib/arcade-clipboard/arcade-clipboard-launcher`) should answer `--arcade-manifest`, `--version`,
+       `--help` and unknown flags itself, before any GTK/Flutter start. Not confirmed: reproduce first by running
+       the extracted rc.2 AppImage with no `DISPLAY`/`WAYLAND_DISPLAY`, and read Link
+       `crates/arcade-link-cli/src/conformance.rs` (CLI checks around lines 355-397) for the exact contract.
+     - Add a CI step that runs these without a display so CI catches it before an rc.
+  2. **Delta gate** (Tools' `tests/releases.rs`, `gate_published_files_delta_signature_and_tampered_chunk`): the
+     delta from 0.3.2 fetched 7,908,165 of 15,751,672 bytes (50.2%) and the test asserts the delta fetches **less
+     than half** (`total * 2 < new_bytes.len()`, line ~356). The update itself worked (digest matched). This conflicts
+     with the owner's decision in Tools #54 (accept whatever Tools' own rule chooses: a delta only when it saves at
+     least 20%, otherwise the whole file, always checking digest, tampered chunk and signature). Recommended fix: in
+     Tools, make the gate assert Tools' own rule instead of the 50% bound (Tools 1.0.1), then bump the `tools-ref`
+     Clipboard's gates use. Record the decision in Tools' `DECISIONS.md`.
+
+Next for Clipboard: fix 1 in Clipboard (PR, every check green, merge commit), fix 2 in Tools (PR; release per Tools'
+flow if a new tag is needed), point Clipboard's gates at the fixed Tools, cut rc.3 with "Tag a release" (inputs `tag`,
+`sha`), dispatch `gates.yml` on ref `v1.0.0-rc.3` with `previous: v0.3.2`, and only if **every** job is green
+(including the first real runs of the upgrade test and both desktop suites) run `promote.yml` with `rc-tag`, verify
+byte for byte (method below), then Clipboard docs and the catalog.
+
+Also open in Clipboard: 11 Dependabot PRs (opened 2026-11-18). Their CI runs crowded the shared runners that night.
+Don't merge them during the release; look at them after 1.0.0.
+
+## Other open items
+
+- **Tools 1.0.1:** (a) the delta gate bound above; (b) quit race: `Presence::start` (desktop.rs ~725) runs before the
+  presence is stored in state (~741), so an `app.quit` in between exits and leaves a stale endpoint. Link replaces
+  stale endpoints, so the impact is low.
+- Leftover `-wip-*` branches on several repos (deleting them from the cloud failed with "remote hung up"). They're
+  merged or superseded; delete them if you like, except Box's.
+- Catalog: this branch (`claude/sharp-cori-29w5eg`) holds the progress/handoff commits and has not been merged to
+  main.
+
+## How a release goes (unchanged)
+
+1. Merge to main (apps: merge commit with `expectedHeadSha`; Link: squash) only when every check on the PR head is green.
+2. "Tag a release" (`tag.yml`, inputs `tag`, `sha`) → Release publishes a hidden prerelease and runs the full CI
+   (Tier 2 included). A gates fix needs a new rc, because Gates runs the `gates.yml` inside the tag.
+3. `gates.yml` dispatched on the rc tag ref with `previous`. Every job green; at most one re-run per job, and a flake
+   is not a root cause.
+4. `promote.yml` with `rc-tag`. Verify: list both releases' assets with their `digest`, download `manifest.json`,
+   `arcade-release.json` and `SHA256SUMS.txt` with `gh api -H 'Accept: application/octet-stream'
+   repos/qa-p1/<repo>/releases/assets/<id>` (`gh release download` uses GraphQL and fails in the cloud), and confirm
+   the binaries and SHA256SUMS are identical, the JSON differs only in channel/tag/notes, and `manifest.json.sig`
+   exists. Then repo `docs/v1/PROGRESS.md` and the catalog `PROGRESS.md`.
+
+---
+
+# Older handoff (2026-11-15 ~20:25 UTC) — superseded, kept for history
 
 Read, in order: `README.md` (owner decisions win), `PLAN.md`, this file, `PROGRESS.md` (the Status table predates
 this file; this file is the current state), `LOCAL.md`, then each repo's `docs/v1/PROGRESS.md` and `DECISIONS.md`.

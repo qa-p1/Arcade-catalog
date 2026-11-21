@@ -35,7 +35,9 @@ None. B1 and B2 were done from the owner's PC on 2026-11-11:
 
 ## Log
 
-- 2026-11-18 (cloud session, night) — **Shelf and Wheel 1.0.0 stable; Clipboard rc.2 on its way; Link 1.0.14.**
+- 2026-11-21 (cloud session, end) — **Handoff to the local session** (`HANDOFF.md` top section, `LOCAL-PROMPT.md`).
+  Box is left out of the local session (owner's call). Clipboard is the only app still in flight.
+- 2026-11-18 (cloud session, night) — **Shelf and Wheel 1.0.0 stable; Clipboard rc.2 failed Gates; Link 1.0.14.**
   - **Shelf [1.0.0](https://github.com/qa-p1/Arcade-Shelf/releases/tag/v1.0.0)** promoted from `v1.0.0-rc.4`
     (e8b4a26, Link 1.0.13) after [Gates](https://github.com/qa-p1/Arcade-Shelf/actions/runs/44222853395) 13/13, the
     upgrade from 0.4.0 and both desktop suites included; AppImage, dmg, setup.exe and SHA256SUMS byte for byte as rc.4,
@@ -58,7 +60,12 @@ None. B1 and B2 were done from the owner's PC on 2026-11-11:
     `verify-upgrade.py` (0.3.2 → 1.0.0 with the user's history and keyring). rc.1
     [Gates](https://github.com/qa-p1/Arcade-clipboard/actions/runs/44226756864) failed Linux conformance: `release.yml`
     built the AppImage on ubuntu-24.04 (CI and the changelog say 22.04), so it needed a newer glibc than 22.04 has.
-    Fixed in [#34](https://github.com/qa-p1/Arcade-clipboard/pull/34) (163f958); rc.2 is building.
+    Fixed in [#34](https://github.com/qa-p1/Arcade-clipboard/pull/34) (163f958). rc.2 (built on 22.04)
+    [Gates](https://github.com/qa-p1/Arcade-clipboard/actions/runs/44232113005) failed: CLI-2 (an unknown flag exits 0)
+    and CLI-4 (`--arcade-manifest` exits 1 with no output, likely because conformance runs without a display), and
+    Tools' delta gate (the delta from 0.3.2 fetched 50.2% of the file; the gate demands under half, which conflicts
+    with the Tools #54 decision). Upgrade and both desktop suites were skipped. Next steps in `HANDOFF.md`.
+  - Wheel docs [#28](https://github.com/qa-p1/Arcade-wheel/pull/28) merged (debd7f6).
   - Box: parked by the owner. Tools 1.0.1 (later): a quit right after start can leave a stale endpoint (Link replaces
     it, so low impact).
 

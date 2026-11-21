@@ -37,6 +37,13 @@ None. B1 and B2 were done from the owner's PC on 2026-11-11:
 
 - 2026-11-21 (cloud session, end) — **Handoff to the local session** (`HANDOFF.md` top section, `LOCAL-PROMPT.md`).
   Box is left out of the local session (owner's call). Clipboard is the only app still in flight.
+- 2026-11-21 (cloud session) — **Clipboard 1.0.0 stable; real-user run; Tools 1.0.1 in flight.** Box left out.
+  - **Clipboard:** rc.3 (#35: CLI-2/CLI-4 answered by the launcher) passed all 13 Gates jobs, including the upgrade
+    from 0.3.2 with history and keyring and both desktop suites; promoted; files byte for byte rc.3's; docs #36.
+  - **Tools 1.0.1:** #55 (the owner's bug: a self-installed Tools never offered its own update; the delta gate
+    follows Tools' rule; quit during start-up) merged; rc.1 published and superseded by #56, the real-user run's
+    fixes (D27–D33). Next: #56 green → merge → rc.2 → Gates (update-from rc.1) → Promote.
+  - **Real-user run on Linux:** see `dev/v1/REAL-USER-RUN.md`.
 - 2026-11-18 (cloud session, night) — **Shelf and Wheel 1.0.0 stable; Clipboard rc.2 failed Gates; Link 1.0.14.**
   - **Shelf [1.0.0](https://github.com/qa-p1/Arcade-Shelf/releases/tag/v1.0.0)** promoted from `v1.0.0-rc.4`
     (e8b4a26, Link 1.0.13) after [Gates](https://github.com/qa-p1/Arcade-Shelf/actions/runs/44222853395) 13/13, the

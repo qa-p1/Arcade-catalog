@@ -43,6 +43,31 @@ Each fix has a test that fails without it.
 - **D32:** a Tools killed right after an update lost that update from Recent activity.
 - **D33:** after that kill, the page offered "Roll back to v1.0.0" while 1.0.0 was installed.
 
+## Second pass: rc.2 and rc.3 (Tools 1.0.1 PRs qa-p1/Arcade-tools#57 and #58)
+
+| Flow | Result |
+| --- | --- |
+| Tools rc.1 → rc.2 from inside Tools (Updates page, test channel) | Installed file = the rc.2 asset; history recorded |
+| Tools rc.2 → rc.3 by hand (download, "Update or open installed Arcade Tools?" → Install) | Installed file = the rc.3 asset, download removed, one Tools, from its unpacked copy |
+| Updates page and tray agree | "Updates (2)" in the tray, badge 2 on the page (Wheel 0.5.0 and Clipboard 0.3.1, "installed outside Tools") |
+| Update Clipboard 0.3.1, installed from its own download (rc.3) | One step: file = published 1.0.0, Tools manages it, both clips kept, delta download 7.9 of 15.8 MB |
+| Update Wheel 0.5.0 the same way | File = published 1.0.0, settings identical, delta download 3.8 of 48 MB |
+| Every app off its AppImage mount | After restarts from Tools: Tools and all six apps run from their unpacked copies, no FUSE mount left |
+| Home: "Lens needs Tesseract" → Open Engines | Clear: the apt command to copy, and Download with Arcade |
+
+Fixed (each with a test that fails without the fix):
+
+- **D34:** programs Tools started inherited its "already unpacked" marker, so Lens, Look, Shelf and the new Tools
+  after a self-update stayed on their AppImage mounts with a FUSE helper each.
+- **D35:** Update on an app installed from its own download refused with "Choose Let Tools manage it", although the
+  page offered it (the one-step path required no record; Tools builds one from the app's receipt). Recent activity
+  showed the internal code "unmanaged:".
+- **D36:** that one-step update's history line had no target version ("from 0.3.1" only); and an rc that Tools had
+  installed under the test override was never offered the next rc of the same version.
+- **D37:** Download with Arcade for Tesseract failed: "curl: symbol lookup error" (the system curl loaded Tools'
+  bundled libnghttp2). Broken on current distributions since 1.0.0. Tools now runs the download with the user's
+  environment; the same fix is merged in Link (qa-p1/Arcade-Link#79, not yet tagged).
+
 Also released today: Clipboard 1.0.0 (rc.3 passed all 13 gates; files byte for byte the rc's).
 
 ## Noted, not changed
@@ -53,6 +78,14 @@ Also released today: Clipboard 1.0.0 (rc.3 passed all 13 gates; files byte for b
   that matters has a compositor; noted for X11 setups without one.
 - Lens follows "System" to dark while Tools shows light on the same desktop (no portal colour scheme on openbox).
 - Lens 1.0.0's install dialog window is much taller than its content.
+- An app restarted by itself keeps the environment it was started with: Shelf, first started by rc.2 (D34), stayed on
+  its mount after its own Restart until it was quit and started again. Users updating from Tools 1.0.0 get clean
+  starts at the next login or app start.
+- The one-step update keeps no rollback copy of the app's own 0.x install (the two-step "Let Tools manage it", then
+  Update, does). Owner's call (Tools DECISIONS D36).
+- On Linux the Tesseract download dialog still says "On Windows, finish the installer that opens".
+- rc builds all say "1.0.1", so with the test override Recent activity shows "v1.0.1 reinstalled" and Previous
+  versions "Roll back to v1.0.1" between two rcs (test channel only).
 
 ## Not covered
 

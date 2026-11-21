@@ -60,7 +60,8 @@ flow if a new tag is needed), point Clipboard's gates at the fixed Tools, cut rc
 (including the first real runs of the upgrade test and both desktop suites) run `promote.yml` with `rc-tag`, verify
 byte for byte (method below), then Clipboard docs and the catalog.
 
-Also open in Clipboard: 11 Dependabot PRs (opened 2026-11-18). Their CI runs crowded the shared runners that night.
+Also open in Clipboard: [#35](https://github.com/qa-p1/Arcade-clipboard/pull/35), docs only (the rc.1/rc.2 findings in its
+`docs/v1/PROGRESS.md`); merge it when its checks are green. And 11 Dependabot PRs (opened 2026-11-18). Their CI runs crowded the shared runners that night.
 Don't merge them during the release; look at them after 1.0.0.
 
 ## Other open items

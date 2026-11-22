@@ -1,4 +1,47 @@
-# Handoff (2026-11-22, cloud session, end of the real-user run)
+# Handoff (2026-11-22, cloud session, after the fix round)
+
+**Everything is on GitHub; no scheduled check-ins are left running.** Box is still parked (owner's call): don't
+touch Arcade-box. Next step: plan Box with the owner.
+
+## Where the fleet stands
+
+| App | State |
+|---|---|
+| Link | **v1.0.15** tagged on 09d52ee ([#81](https://github.com/qa-p1/Arcade-Link/pull/81)): Tesseract download with the user's environment (#79), theme from GTK/GNOME without a portal, e2e per-session `TMPDIR`. |
+| Tools | **1.0.2 stable** from rc.2 (e098fc8), Gates 11/11, files byte for byte rc.2's. On Link 1.0.15, `url` 2.5.9. |
+| Find | **1.0.1 stable** from rc.2 (961f0ad), Gates 12/12. |
+| Lens | **1.0.1 stable** from rc.1 (f59d0d4), Gates 12/12. |
+| Shelf | **1.0.1 stable** from rc.1 (28d2033), Gates 13/13. |
+| Clipboard, Look, Wheel | 1.0.0 stable, unchanged this round (older Link: they move to 1.0.15 with their next release). |
+| Box | Parked by the owner. |
+
+What changed and how it was checked: `REAL-USER-RUN.md` (§Noted in the third pass…, §Fourth pass).
+
+## Open
+
+For the owner (this session can't):
+- **Delete 12 old wip branches** (GitHub refused the session, 403). All their work is in main. Each name starts with
+  `claude/sharp-cori-29w5eg-`: Link `wip-link-unpacked`; Clipboard `wip-gates`, `wip-step5-security`; Find
+  `wip-security`; Lens `wip-security`; Look `wip-restart`, `wip-security`, `wip-security-2`; Shelf `wip-step5`,
+  `wip-tier2`; Wheel `wip-step5`, `wip-tier2`.
+- **Add a line to the Lens v0.4.1 and v0.4.2 release notes** (they crash on start on Linux):
+  > **Update to [Arcade Lens 1.0.0](https://github.com/qa-p1/Arcade-lens/releases/tag/v1.0.0) or later.** On Linux
+  > this release can crash on start with a font error (found on 2026-11-21); 1.0.0 fixes it. Arcade Tools offers the
+  > update.
+
+For the next release of each app:
+- **RUSTSEC-2026-0592:** Clipboard, Look, Box and Link itself still lock `url` 2.5.8, so their next `cargo deny` fails
+  until they move to 2.5.9.
+- **Clipboard Dependabot:** #28 (setup-java 6.3.0) merged, all 11 checks green including the Android build that uses
+  it; #32 closed. #25, #26, #27 (download-artifact 8, upload-artifact 7, checkout 7) are green but change the gates
+  and release workflows, so take them with an rc that proves them. #23, #24, #29, #30, #31, #33 fail CI and need work.
+- **Unexplained:** Find's main CI once failed "0.4.3 did not load pins/history" (5/5 locally, one re-run passed).
+- **Small:** Look's card says "Not running" for a few seconds after login while Look starts.
+- Windows and macOS had no real-user run; their gates smoke-test the published installers.
+
+---
+
+# Handoff (2026-11-22, cloud session, end of the real-user run) — superseded, kept for history
 
 **Everything is on GitHub; no scheduled check-ins are left running.** Box is still parked (owner's call): don't
 touch Arcade-box (its last state is in the section below).

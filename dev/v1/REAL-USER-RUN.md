@@ -82,24 +82,80 @@ Tools 1.0.1 was promoted from rc.4 after both Gates runs passed 11 of 11 (one wi
 
 Also released: Clipboard 1.0.0 (rc.3 passed all 13 gates; files byte for byte the rc's).
 
-## Noted, not changed
+## Noted in the third pass, and what happened to each
 
-- The tray mark is white on Linux by design (GNOME, Plasma and Hyprland panels are dark). On a light panel (XFCE's
-  default) it is hard to see. Suggestion: a thin dark outline so it reads on both.
-- Without a compositor, Find's bar and Shelf's capsule sit in a grey or black box (no transparency). Every desktop
-  that matters has a compositor; noted for X11 setups without one.
-- Lens follows "System" to dark while Tools shows light on the same desktop (no portal colour scheme on openbox).
-- Lens 1.0.0's install dialog window is much taller than its content.
-- An app restarted by itself keeps the environment it was started with: Shelf, first started by rc.2 (D34), stayed on
-  its mount after its own Restart until it was quit and started again. Users updating from Tools 1.0.0 get clean
-  starts at the next login or app start.
-- The one-step update keeps no rollback copy of the app's own 0.x install (the two-step "Let Tools manage it", then
-  Update, does). Owner's call (Tools DECISIONS D36).
-- On Linux the Tesseract download dialog still says "On Windows, finish the installer that opens".
-- A hand-installed rc over one that Tools installed keeps the older hash in Tools' record, so released 1.0.1 was
-  offered "1.0.1 → 1.0.1" once (Update fixed it). Only the owner's rc testing reaches this; for 1.0.2.
-- rc builds all say "1.0.1", so with the test override Recent activity shows "v1.0.1 reinstalled" and Previous
-  versions "Roll back to v1.0.1" between two rcs (test channel only).
+The owner asked for all of them to be fixed where it made sense (2026-11-22). Outcomes, verified in the fourth pass
+below unless it says "test only":
+
+| Noted | Outcome |
+| --- | --- |
+| White tray mark hard to see on a light panel | Tools 1.0.2: the mark has a thin dark edge. Test only (`the_white_mark_has_a_dark_edge_and_keeps_its_white`): this pass's panel (tint2) shows no StatusNotifier icons |
+| No transparency without a compositor | Shelf 1.0.1 detects that nothing composites and draws a square surface (seen). Find needed no change: without a compositor its bar showed no box |
+| Lens dark vs Tools light on openbox | Link 1.0.15 reads the desktop's GTK/GNOME setting when there is no portal; Find and Lens 1.0.1 use it. Both light under System (seen) |
+| Lens's install dialog much taller than its content | Lens 1.0.1: as tall as its content (seen) |
+| An app restarted by itself keeps its start environment | **Not changed.** Link's harnesses start real AppImages with `ARCADE_UNPACKED=1` on purpose, so treating an inherited marker differently would change the tests of eight repos. Tools 1.0.1 already stops passing the marker on (D34), so only apps first started by Tools 1.0.0 are affected, until their next start |
+| One-step update keeps no rollback copy | Tools 1.0.2 keeps the replaced version, and a rollback leaves the app managed by Tools. Rollback seen on Find; the one-step path is test only (no app here was in that state any more) |
+| Tesseract dialog says "On Windows…" on Linux | Tools 1.0.2: "Arcade verifies the download and sets it up for you. Nothing else to install." (seen) |
+| "1.0.1 → 1.0.1" after a hand-installed rc | Tools 1.0.2: at equal versions the installed file's hash decides. Test only (rc channel) |
+| "v1.0.1 reinstalled" between two rcs | Tools 1.0.2 names the rc builds. Test only (rc channel) |
+
+Also fixed from the third pass's notes: error messages fade after 12 seconds (seen: gone between 10 and 16 s), and Home
+no longer says an engine is missing when its version check is slow at login (Tools 1.0.2). Lens 0.4.1 and 0.4.2 still
+crash on start; their release notes need a line pointing to 1.0.0 (owner, text in `HANDOFF.md`).
+
+## Fourth pass: Link 1.0.15, Tools 1.0.2, Find, Lens and Shelf 1.0.1 (2026-11-22)
+
+Each app went rc → Gates on the published files → Promote, and each stable release was checked against its rc: same
+commit, same digests for every package and SHA256SUMS, `arcade-release.json` and `manifest.json` differing only in
+channel, tag and notes, the manifest signed, the release marked latest.
+
+| Release | Promoted from | Gates on the rc |
+| --- | --- | --- |
+| Link v1.0.15 | tag on 09d52ee after CI, desktop harness and real-fleet e2e ([#81](https://github.com/qa-p1/Arcade-Link/pull/81)) | — |
+| Tools 1.0.2 | rc.2 (e098fc8) | 11/11 (run 45017370828) |
+| Find 1.0.1 | rc.2 (961f0ad) | 12/12 (run 45013880691) |
+| Lens 1.0.1 | rc.1 (f59d0d4) | 12/12 (run 45016208047) |
+| Shelf 1.0.1 | rc.1 (28d2033) | 13/13 (run 45008430296) |
+
+Not promoted, and why:
+
+- **Tools rc.1** passed Gates 11/11, but RUSTSEC-2026-0592 (`url` before 2.5.9: stack overflow in `Url::origin` on
+  nested `blob:` URLs) came out while it was in flight. rc.2 has `url` 2.5.9; so do Find rc.2 and Lens rc.1. Shelf
+  has no Rust build.
+- **Find rc.1** failed Gates in the upgrade test. Since Link's relaunch, the process `--quit` talks to is the launcher;
+  the app runs as an unpacked copy that saves the user's data as it exits, and the test compared the data before that
+  copy had finished. The test now waits until no Find from its own folder is running
+  ([#33](https://github.com/qa-p1/Arcade-Find/pull/33)), which is stricter, not looser. rc.2 passed.
+- **Link 1.0.15** also fixed its real-fleet e2e: two sessions shared `/tmp`, where AppImages run with
+  `APPIMAGE_EXTRACT_AND_RUN` rewrite one unpack folder per AppImage on every start, so one session's start broke the
+  other's (Find exited 127). Each session now has its own `TMPDIR`.
+
+Unexplained, recorded: Find's main CI failed once with "0.4.3 did not load pins/history". It passed 5 of 5 times
+locally and on its one re-run.
+
+Real-user check on the released files (openbox with tint2, no compositor):
+
+| Flow | Result |
+| --- | --- |
+| Tools 1.0.1 updates itself to 1.0.2 from inside Tools | File = published (4c77050a…); 1.0.1 kept; runs from its unpacked copy; no mount left |
+| Find, Lens, Shelf 1.0.0 → 1.0.1 from Updates | Files = published (722283af…, 8fd93d58…, 86d4a205…); each keeps 1.0.0 |
+| Recent activity and Previous versions | Every update listed; a kept copy for Tools, Find, Lens and Shelf |
+| Roll back Find to 1.0.0 | Record 1.0.0, previous 1.0.1, still managed by Tools, 1.0.0 running; Updates offers 1.0.1 again |
+| Update Find to 1.0.1 again | File = published 1.0.1, kept copy = published 1.0.0 (26fbb8ca…), managed by Tools, runs from its unpacked copy |
+| Shelf with no compositor | Square surface, no black box |
+| Find and Lens under Appearance "System" | Light, like Tools |
+| Lens install dialog | As tall as its content |
+| Tesseract removed, then Engines → Download with Arcade | Linux wording in the dialog; "Tesseract is ready" in about 3 s; 5.5.3 with eight languages. While it was missing, Home's "1 thing needs attention" was right |
+| Every app started at once, as at login | No false "engine missing" on Home. Look showed "Not running" for a few seconds while it started, then Running |
+
+A mistake in my test setup, not in the apps: the first login restart used `su` without a clean environment, so the
+apps inherited the container's `CURL_CA_BUNDLE`, a file the test user can't read, and the first download failed with
+"curl: (77) error setting certificate file". That is what Link 1.0.15 is meant to do: curl runs with the user's own
+environment, and it fails the way the user's own curl would. After a clean restart every process was checked free of
+those variables, and the download worked.
+
+Noted, not changed: Look's card says "Not running", with a Start button, for a few seconds after login while Look is
+still starting (its process was already running). What Start does in that moment was not tested.
 
 ## Not covered
 

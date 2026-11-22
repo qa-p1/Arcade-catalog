@@ -35,6 +35,14 @@ None. B1 and B2 were done from the owner's PC on 2026-11-11:
 
 ## Log
 
+- 2026-11-22 (cloud session) — **Fix round released: Link 1.0.15, Tools 1.0.2, Find, Lens and Shelf 1.0.1.** Box left
+  out.
+  - Each app rc → Gates → Promote, stable files byte for byte the rc's: Tools rc.2 (11/11), Find rc.2 (12/12), Lens
+    rc.1 (12/12), Shelf rc.1 (13/13). Tools rc.1 was replaced for RUSTSEC-2026-0592 (`url` 2.5.9); Find rc.1 failed
+    its upgrade gate on a test race, fixed in the test ([#33](https://github.com/qa-p1/Arcade-Find/pull/33)).
+  - Real-user check on the released files passed, including rollback and re-update; see `REAL-USER-RUN.md`
+    §Fourth pass. Clipboard [#28](https://github.com/qa-p1/Arcade-clipboard/pull/28) merged. Open items:
+    `HANDOFF.md`.
 - 2026-11-22 (cloud session) — **Tools 1.0.1 stable; real-user run finished.** Box left out.
   - **Tools 1.0.1** promoted from rc.4 (b23b113) after Gates 11/11 twice (update-from rc.3; from v0.4.6); files byte
     for byte rc.4's. rc.2 and rc.3 passed Gates but were superseded by the run's fixes: #57 (D34 unpacked-copy marker,

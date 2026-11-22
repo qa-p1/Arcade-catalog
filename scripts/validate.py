@@ -45,7 +45,7 @@ KEY_NAMES = {
 }
 MATCH_FIELDS = {"class", "exe", "bundle"}
 INSTALL_KEYS = {"arch", "debian", "fedora", "windows", "macos"}
-CATALOG_FIELDS = {"schema", "updated", "apps", "tools", "bundles"}
+CATALOG_FIELDS = {"schema", "updated", "apps", "tools", "bundles", "rules"}
 ENGINES_FIELDS = {"schema", "engines"}
 INDEX_FIELDS = {"schema", "sheets"}
 SHEET_FIELDS = {"schema", "id", "name", "checkedVersion", "sources", "match", "groups"}
@@ -242,6 +242,61 @@ def _check_pairs(obj: dict[str, Any], file: str, path: str, reporter: Reporter) 
     return refs
 
 
+RULE_REF = re.compile(r"^arcade\.[a-z][a-z0-9-]*/\S+$")
+RULE_KEYS = {"hide", "rename", "boost", "jobs"}
+
+
+def _check_rules(data: dict[str, Any], app_ids: set[str], file: str, reporter: Reporter) -> None:
+    """Optional corrections to offers (Arcade Link SPEC §5.5). References are <app-id>/<action-id>."""
+    if "rules" not in data:
+        return
+    rules = data["rules"]
+    if not isinstance(rules, dict):
+        reporter.error(file, "/rules", "expected an object")
+        return
+    for key in sorted(set(rules) - RULE_KEYS):
+        reporter.error(file, f"/rules/{key}", "unknown rule")
+
+    def ref_ok(ref: Any, where: str) -> bool:
+        if not isinstance(ref, str) or not RULE_REF.fullmatch(ref):
+            reporter.error(file, where, "expected an action reference such as arcade.box/box.open")
+            return False
+        if ref.split("/", 1)[0] not in app_ids:
+            reporter.error(file, where, f"unknown app id {ref.split('/', 1)[0]!r}")
+            return False
+        return True
+
+    hide = rules.get("hide", [])
+    if not isinstance(hide, list):
+        reporter.error(file, "/rules/hide", "expected an array of action references")
+    else:
+        for index, ref in enumerate(hide):
+            ref_ok(ref, f"/rules/hide/{index}")
+    for key, check in (("rename", "title"), ("jobs", "job")):
+        table = rules.get(key, {})
+        if not isinstance(table, dict):
+            reporter.error(file, f"/rules/{key}", "expected an object keyed by action reference")
+            continue
+        for ref, value in table.items():
+            where = f"/rules/{key}/{ref}"
+            if ref_ok(ref, where) and (not isinstance(value, str) or not value.strip() or len(value) > 60):
+                reporter.error(file, where, f"expected a {check} of 1-60 characters")
+    boost = rules.get("boost", {})
+    if not isinstance(boost, dict):
+        reporter.error(file, "/rules/boost", "expected an object keyed by action reference")
+        return
+    for ref, table in boost.items():
+        where = f"/rules/boost/{ref}"
+        if not ref_ok(ref, where):
+            continue
+        if not isinstance(table, dict) or not table:
+            reporter.error(file, where, "expected an object of type pattern → points")
+            continue
+        for pattern, points in table.items():
+            if isinstance(points, bool) or not isinstance(points, int) or not -100 <= points <= 100:
+                reporter.error(file, f"{where}/{pattern}", "expected whole points from -100 to 100")
+
+
 def _check_bad(obj: dict[str, Any], file: str, path: str, reporter: Reporter) -> None:
     """Withdrawn releases: Tools never offers them and asks anyone who has one installed to roll back."""
     if "bad" not in obj:
@@ -423,6 +478,7 @@ def _validate_catalog(data: Any, root: Path, reporter: Reporter) -> set[str]:
     for where, peer in pair_refs:
         if peer not in seen_ids:
             reporter.error(file, where, f"unknown app id {peer!r}")
+    _check_rules(data, set(seen_ids), file, reporter)
 
     bundles = data.get("bundles")
     if "bundles" in data:

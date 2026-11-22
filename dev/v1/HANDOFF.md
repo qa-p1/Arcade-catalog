@@ -1,4 +1,45 @@
-# Handoff to the local session (2026-11-21, from the cloud session)
+# Handoff (2026-11-22, cloud session, end of the real-user run)
+
+**Everything is on GitHub; no scheduled check-ins are left running.** Box is still parked (owner's call): don't
+touch Arcade-box (its last state is in the section below).
+
+## Where the fleet stands
+
+| App | State |
+|---|---|
+| Tools | **1.0.1 stable** from rc.4 (b23b113). Gates 11/11 twice (runs 44965715622 with update-from rc.3, 44965712696 from v0.4.6); AppImage, dmg, setup.exe, SHA256SUMS byte for byte as rc.4; the manifest differs only in `channel`/`tag` and is signed. Docs [#59](https://github.com/qa-p1/Arcade-tools/pull/59). |
+| Clipboard | **1.0.0 stable** from rc.3 (13/13 Gates). Docs #36 merged. |
+| Find, Lens, Look, Shelf, Wheel | 1.0.0 stable. |
+| Link | `v1.0.14` tagged. [#79](https://github.com/qa-p1/Arcade-Link/pull/79) merged on main (5bcc6b8), **not tagged**: the engines download runs with the user's environment (root fix of Tools D37). |
+| Box | Parked by the owner. |
+
+## What the real-user run found and fixed (details: `REAL-USER-RUN.md`)
+
+Tools 1.0.1 carries D24–D37. Tonight's additions, each with a test that fails without it:
+- D34: programs Tools started inherited its unpacked-copy marker and stayed on their AppImage mounts.
+- D35: Update on an app installed from its own download refused ("Choose Let Tools manage it").
+- D36: that update's history had no target version; an rc that Tools installed was never offered the next rc.
+- D37: Download with Arcade for Tesseract failed on current distributions (curl loaded Tools' libnghttp2).
+
+Verified on the released files in the desktop session: every app updated from an old release to 1.0.0 with its file
+equal to the published asset and its data kept; Tools updated itself from inside Tools; Tesseract downloaded and
+Lens's warning cleared; after restarts no Arcade AppImage mount is left.
+
+## Open, for the owner
+
+- **Tools 1.0.2:** move to a current Link (Tools pins 1.0.7; then drop Tools' own Tesseract download and the
+  `ARCADE_UNPACKED` removal, which Link does). At equal versions, compare the cached executable hash in
+  `Manager::record` (a hand-installed rc over a Tools-installed one keeps the old hash and is offered "1.0.1 → 1.0.1";
+  owner's rc testing only). The Tesseract dialog mentions Windows on Linux.
+- **Decide:** the one-step update of an app installed outside Tools keeps no rollback copy of its 0.x install (Tools
+  DECISIONS D36).
+- **Link:** tag a release with #79 when convenient (no app needs it before Tools moves).
+- Noted, not changed: white tray mark on light panels; no transparency without a compositor; Lens dark vs Tools light
+  on openbox; Lens's install dialog is too tall.
+
+---
+
+# Handoff to the local session (2026-11-21, from the cloud session) — superseded, kept for history
 
 Read, in order: `README.md` (owner decisions win), `PLAN.md`, this section, `LOCAL-PROMPT.md` (the prompt to paste),
 the newest entries of `PROGRESS.md` (its Status table is old; this section is the current state), `LOCAL.md`, then

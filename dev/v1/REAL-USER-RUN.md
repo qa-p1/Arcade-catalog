@@ -1,4 +1,4 @@
-# Real-user run, 2026-11-21 (Linux)
+# Real-user run, 2026-11-21 and 22 (Linux)
 
 A desktop session as an ordinary user (`tester`, not root): Xvfb, openbox, an xfce4 panel with a StatusNotifier
 tray, D-Bus and gnome-keyring. Everything was done the way a person would do it: downloads into `~/Downloads`,
@@ -55,7 +55,7 @@ Each fix has a test that fails without it.
 | Every app off its AppImage mount | After restarts from Tools: Tools and all six apps run from their unpacked copies, no FUSE mount left |
 | Home: "Lens needs Tesseract" → Open Engines | Clear: the apt command to copy, and Download with Arcade |
 
-Fixed (each with a test that fails without the fix):
+Fixed in 1.0.1 (each with a test that fails without the fix):
 
 - **D34:** programs Tools started inherited its "already unpacked" marker, so Lens, Look, Shelf and the new Tools
   after a self-update stayed on their AppImage mounts with a FUSE helper each.
@@ -68,7 +68,19 @@ Fixed (each with a test that fails without the fix):
   bundled libnghttp2). Broken on current distributions since 1.0.0. Tools now runs the download with the user's
   environment; the same fix is merged in Link (qa-p1/Arcade-Link#79, not yet tagged).
 
-Also released today: Clipboard 1.0.0 (rc.3 passed all 13 gates; files byte for byte the rc's).
+## Third pass: rc.4 and the released 1.0.1
+
+| Flow | Result |
+| --- | --- |
+| Tools rc.3 → rc.4 by hand | File = the rc.4 asset, download removed, one Tools from its unpacked copy |
+| Engines → Download with Arcade (Tesseract) | "Tesseract is ready"; 5.5.3 runs with eight languages; Home's "Lens needs Tesseract" cleared |
+| Released 1.0.1 updates itself from inside Tools | File and record = the published 1.0.1, Tools reopened from its unpacked copy, no mount left, then "up to date" |
+| Home at the end | 6 installed, 6 running, nothing needs attention, no updates |
+
+Tools 1.0.1 was promoted from rc.4 after both Gates runs passed 11 of 11 (one with update-from rc.3, one from
+0.4.6); its files are byte for byte rc.4's.
+
+Also released: Clipboard 1.0.0 (rc.3 passed all 13 gates; files byte for byte the rc's).
 
 ## Noted, not changed
 
@@ -84,6 +96,8 @@ Also released today: Clipboard 1.0.0 (rc.3 passed all 13 gates; files byte for b
 - The one-step update keeps no rollback copy of the app's own 0.x install (the two-step "Let Tools manage it", then
   Update, does). Owner's call (Tools DECISIONS D36).
 - On Linux the Tesseract download dialog still says "On Windows, finish the installer that opens".
+- A hand-installed rc over one that Tools installed keeps the older hash in Tools' record, so released 1.0.1 was
+  offered "1.0.1 → 1.0.1" once (Update fixed it). Only the owner's rc testing reaches this; for 1.0.2.
 - rc builds all say "1.0.1", so with the test override Recent activity shows "v1.0.1 reinstalled" and Previous
   versions "Roll back to v1.0.1" between two rcs (test channel only).
 

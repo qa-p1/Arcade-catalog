@@ -35,6 +35,13 @@ None. B1 and B2 were done from the owner's PC on 2026-11-11:
 
 ## Log
 
+- 2026-11-22 (cloud session) — **Tools 1.0.1 stable; real-user run finished.** Box left out.
+  - **Tools 1.0.1** promoted from rc.4 (b23b113) after Gates 11/11 twice (update-from rc.3; from v0.4.6); files byte
+    for byte rc.4's. rc.2 and rc.3 passed Gates but were superseded by the run's fixes: #57 (D34 unpacked-copy marker,
+    D35 one-step update of an app installed outside Tools), #58 (D36 history and next-rc offer, D37 Tesseract
+    download). Docs [#59](https://github.com/qa-p1/Arcade-tools/pull/59).
+  - **Link [#79](https://github.com/qa-p1/Arcade-Link/pull/79)** merged (not tagged): engines download sanitized.
+  - **Real-user run:** see `dev/v1/REAL-USER-RUN.md`; open items in `HANDOFF.md`.
 - 2026-11-21 (cloud session, end) — **Handoff to the local session** (`HANDOFF.md` top section, `LOCAL-PROMPT.md`).
   Box is left out of the local session (owner's call). Clipboard is the only app still in flight.
 - 2026-11-21 (cloud session) — **Clipboard 1.0.0 stable; real-user run; Tools 1.0.1 in flight.** Box left out.

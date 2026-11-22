@@ -3,6 +3,9 @@
 **Everything is on GitHub; no scheduled check-ins are left running.** Box is still parked (owner's call): don't
 touch Arcade-box. Next step: plan Box with the owner.
 
+**Update (2026-11-22, later): the plan is agreed: `dev/everywhere/PLAN.md` (Arcade everywhere + Box 1.0.0 + every
+leftover below). Box is no longer parked; it is stage 3 of that plan. Owner-only steps: `dev/everywhere/LOCAL-PROMPTS.md`.**
+
 ## Where the fleet stands
 
 | App | State |

@@ -218,6 +218,30 @@ def _check_tagline(obj: dict[str, Any], file: str, path: str, reporter: Reporter
         reporter.error(file, f"{path}/tagline", "must end with . ! or ?")
 
 
+def _check_pairs(obj: dict[str, Any], file: str, path: str, reporter: Reporter) -> list[tuple[str, str]]:
+    """Optional "what these two do together" sentences, keyed by peer id (Link SPEC §3.1).
+
+    Returns (path, peer id) pairs so the caller can check each peer exists once every id is known.
+    """
+    if "pairs" not in obj:
+        return []
+    pairs = obj["pairs"]
+    if not isinstance(pairs, dict):
+        reporter.error(file, f"{path}/pairs", "expected an object of peer id → sentence")
+        return []
+    refs: list[tuple[str, str]] = []
+    for peer, sentence in pairs.items():
+        where = f"{path}/pairs/{peer}"
+        if peer == obj.get("id"):
+            reporter.error(file, where, "an app can't pair with itself")
+        if not isinstance(sentence, str) or not sentence.strip():
+            reporter.error(file, where, "expected a sentence")
+        elif "\n" in sentence or len(sentence) > 100 or _count_sentences(sentence) != 1 or not sentence.endswith("."):
+            reporter.error(file, where, "must be one sentence of at most 100 characters ending with .")
+        refs.append((where, peer))
+    return refs
+
+
 def _check_bad(obj: dict[str, Any], file: str, path: str, reporter: Reporter) -> None:
     """Withdrawn releases: Tools never offers them and asks anyone who has one installed to roll back."""
     if "bad" not in obj:
@@ -358,6 +382,7 @@ def _validate_catalog(data: Any, root: Path, reporter: Reporter) -> set[str]:
 
     seen_ids: dict[str, str] = {}
     app_ids: set[str] = set()
+    pair_refs: list[tuple[str, str]] = []
     apps = data.get("apps")
     names: list[str] = []
     if "apps" in data:
@@ -366,6 +391,8 @@ def _validate_catalog(data: Any, root: Path, reporter: Reporter) -> set[str]:
         else:
             for index, app in enumerate(apps):
                 app_id, name = _validate_app(app, index, root, reporter, seen_ids)
+                if isinstance(app, dict):
+                    pair_refs += _check_pairs(app, file, f"/apps/{index}", reporter)
                 if app_id is not None:
                     app_ids.add(app_id)
                 if name is not None:
@@ -392,6 +419,10 @@ def _validate_catalog(data: Any, root: Path, reporter: Reporter) -> set[str]:
                 _check_semver(tools["minTools"], file, "/tools/minTools", reporter)
             _check_icon(tools.get("icon"), root, file, "/tools/icon", reporter)
             _check_bad(tools, file, "/tools", reporter)
+            pair_refs += _check_pairs(tools, file, "/tools", reporter)
+    for where, peer in pair_refs:
+        if peer not in seen_ids:
+            reporter.error(file, where, f"unknown app id {peer!r}")
 
     bundles = data.get("bundles")
     if "bundles" in data:

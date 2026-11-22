@@ -33,7 +33,7 @@ For the owner (this session can't):
   > update.
 
 For the next release of each app:
-- **RUSTSEC-2026-0592:** Clipboard, Look, Box and Link itself still lock `url` 2.5.8, so their next `cargo deny` fails
+- **RUSTSEC-2026-0592:** Clipboard, Look, Box and Link's app template still lock `url` 2.5.8, so their next `cargo deny` fails
   until they move to 2.5.9.
 - **Clipboard Dependabot:** #28 (setup-java 6.3.0) merged, all 11 checks green including the Android build that uses
   it; #32 closed. #25, #26, #27 (download-artifact 8, upload-artifact 7, checkout 7) are green but change the gates

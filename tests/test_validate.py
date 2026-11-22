@@ -258,6 +258,25 @@ class ValidatorTests(unittest.TestCase):
         self.assert_error(with_pairs({tools_id: "Two sentences. Not allowed."}), "one sentence")
         self.assert_error(with_pairs(["arcade.x"]), "expected an object")
 
+    def test_rules_name_known_apps_and_sane_values(self) -> None:
+        def with_rules(rules: Any) -> Path:
+            root = self.new_root()
+            catalog = json.loads((root / "catalog.json").read_text())
+            catalog["rules"] = rules
+            write_json(root / "catalog.json", catalog)
+            return root
+
+        app = json.loads((self.new_root() / "catalog.json").read_text())["apps"][0]["id"]
+        good = {"hide": [f"{app}/x.open"], "rename": {f"{app}/x.ocr": "Copy text"}, "boost": {f"{app}/x.ocr": {"file/image": 20}},
+                "jobs": {f"{app}/x.ocr": "image.read-text"}}
+        errors, _ = validate_repository(with_rules(good))
+        self.assertEqual(errors, [])
+        self.assert_error(with_rules({"hide": ["arcade.nobody/x"]}), "unknown app id 'arcade.nobody'")
+        self.assert_error(with_rules({"hide": ["box.open"]}), "expected an action reference")
+        self.assert_error(with_rules({"boost": {f"{app}/x": {"file/image": 500}}}), "whole points")
+        self.assert_error(with_rules({"rename": {f"{app}/x": ""}}), "title of 1-60")
+        self.assert_error(with_rules({"pin": []}), "unknown rule")
+
     def test_tools_owner_and_semver_are_checked(self) -> None:
         root = self.new_root()
         catalog = json.loads((root / "catalog.json").read_text())

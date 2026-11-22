@@ -33,6 +33,61 @@
       "items": {
         "$ref": "#/$defs/bundle"
       }
+    },
+    "rules": {
+      "type": "object",
+      "description": "Optional corrections to offers (Arcade Link SPEC §5.5), keyed by action reference <app-id>/<action-id>. Older apps ignore it.",
+      "additionalProperties": false,
+      "properties": {
+        "hide": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^arcade\\.[a-z][a-z0-9-]*/\\S+$"
+          },
+          "description": "Never offered."
+        },
+        "rename": {
+          "type": "object",
+          "propertyNames": {
+            "pattern": "^arcade\\.[a-z][a-z0-9-]*/\\S+$"
+          },
+          "additionalProperties": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 60
+          },
+          "description": "Shown with this title."
+        },
+        "boost": {
+          "type": "object",
+          "propertyNames": {
+            "pattern": "^arcade\\.[a-z][a-z0-9-]*/\\S+$"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "minProperties": 1,
+            "additionalProperties": {
+              "type": "integer",
+              "minimum": -100,
+              "maximum": 100
+            }
+          },
+          "description": "Points added to the rank for offered types a pattern takes."
+        },
+        "jobs": {
+          "type": "object",
+          "propertyNames": {
+            "pattern": "^arcade\\.[a-z][a-z0-9-]*/\\S+$"
+          },
+          "additionalProperties": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 60
+          },
+          "description": "Treated as doing this job."
+        }
+      }
     }
   },
   "$defs": {

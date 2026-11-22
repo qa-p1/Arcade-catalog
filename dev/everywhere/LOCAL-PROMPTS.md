@@ -2,11 +2,14 @@
 
 Short, self-contained prompts for the few things the cloud sessions can't do. Paste one into Claude Code (Sonnet is
 fine) on your own computer, in any folder. Each one says what to do, what not to do, and what to report back.
-`PLAN.md` says when each is needed.
+
+**When:** the cloud session hands over A and B together when it reaches stage 5 (the browser extension), and the
+local session takes over for that stretch. A includes the old wip branch deletion and the Lens 0.4.1/0.4.2 note.
+C and D come at stage 8, once everything is released.
 
 ---
 
-## Prompt A: GitHub chores (any time; stage 0)
+## Prompt A: GitHub chores (with Prompt B, at stage 5)
 
 ```text
 You are helping with the Arcade apps (GitHub owner: qa-p1). Use the gh CLI (run `gh auth status` first; if it isn't
@@ -48,7 +51,7 @@ URL, and whether both secrets are set (`gh secret list --repo qa-p1/Arcade-brows
 
 ---
 
-## Prompt B: where Zen looks for the native messaging file (before stage 5)
+## Prompt B: where Zen looks for the native messaging file (with Prompt A, at stage 5)
 
 ```text
 I use the Zen browser (Firefox-based). I need to know exactly which folder (or registry key on Windows) Zen reads

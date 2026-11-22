@@ -334,11 +334,13 @@ byte-for-byte check; merge only when every check on the PR head is green; at mos
 re-run per job and never to hide a failure; no Co-Authored-By, session links or footers; push only to
 `claude/sharp-cori-29w5eg`; plain-language reports.
 
-### Stage 0: owner chores (any time, 10 minutes)
+### Stage 0: owner chores (moved: handed over at stage 5)
 
 `LOCAL-PROMPTS.md` prompt A: delete the 12 wip branches; add the note to Lens v0.4.1/v0.4.2; create the empty repo
 `qa-p1/Arcade-browser`; create the free Mozilla developer account and put its API key into that repo's secrets
-(`AMO_JWT_ISSUER`, `AMO_JWT_SECRET`). Prompt B (Zen's native messaging folder) any time before stage 5.
+(`AMO_JWT_ISSUER`, `AMO_JWT_SECRET`). Prompt B: Zen's native messaging folder. The owner chose to run A and B
+together when the cloud session reaches stage 5; the cloud session hands both over then and the local session takes
+over for that stretch. Nothing before stage 5 needs them.
 
 ### Stage 1: Link 1.1.0
 
@@ -400,7 +402,7 @@ re-run per job and never to hide a failure; no Co-Authored-By, session links or 
 
 ### Stage 5: the browser extension 1.0.0
 
-1. Repo `Arcade-browser` (owner created it in stage 0): build for Chromium and Firefox, surfaces in 4.7, tests in 5.6,
+1. Repo `Arcade-browser` (owner creates it with prompt A at the start of this stage): build for Chromium and Firefox, surfaces in 4.7, tests in 5.6,
    release workflow attaching the zip and the signed `.xpi`.
 2. `catalog.json` `browser.sites` for YouTube and the other downloader sites; the image hover rules.
 3. Zen's host folder (from prompt B) added to the helper's writer, with a Link patch release if needed.

@@ -91,26 +91,33 @@ Per action, new fields:
 
 | Field | Meaning |
 |---|---|
-| `options` | The action's options form, in Box's catalog form format generalized for every app: `{version, input?, controls:[{key, label, type, options?, default?, min?, max?, placeholder?, help?, when?}]}`. Types: `text`, `number`, `select`, `toggle`, `password`, `directory` (Box's six), plus `file` and `color`. Defaults are the values a one-click run uses. |
+| `options` | The action's options form, in Box's catalog form format generalized for every app: `{version, input?, controls:[{key, label, type, default?, choices?:[{value,label}], minimum?, maximum?, step?, placeholder?, help?, showWhen?:{key, equals \| oneOf}, advanced?}]}`. Types: `text`, `number`, `select`, `toggle`, `password`, `directory` (Box's six), plus `file` and `color`. Defaults are the values a one-click run uses. (Built: Link `form` module.) |
 | `surfaces` | Where it makes sense: `file-menu`, `folder-menu`, `browser-image`, `browser-link`, `browser-video`, `browser-audio`, `browser-selection`, `browser-page`, `browser-pdf`, `browser-download` (a finished download), `palette` (searchable lists: the browser popup, the Island, Find, Wheel), `screen` (Lens's capture flows). Empty means "derive from `accepts`". |
 | `rank` | Per input type, how strongly the app suggests it (0–100). Replaces `featuredFor` (kept as a fallback reader). |
-| `category`, `keywords` | For grouping menus ("Convert ▸ Image") and for search in the palettes. Box already has both. |
+| `group` (exists), `keywords` | For grouping menus ("Convert ▸ Image") and for search in the palettes. Box already has both. |
+| `job` | A shared name for what the action does (`image.read-text`), so two apps doing the same job are recognized from their cards (both show until the user picks a default), with `rules` in the catalog only for corrections. |
 | `oneClick` | Safe to run with defaults straight from a menu (no form). Actions with effects `overwrites-files`, `deletes-files`, `uploads-content`, `executes-commands` are never one-click. |
 | `maxBytes`, `maxItems` | Already in the spec; now filled in by every app (Clipboard: 16 MiB per clip, 32 KiB text). |
 | `requires` | Engines or apps it needs (`engine:ffmpeg`, `app:arcade.lens`), so callers can offer "Install FFmpeg" or "Install Arcade Box" instead of hiding the entry. |
 | `output` | Where results go by default: `beside` (next to the input), `downloads`, `ask`, `none` (results are shown, not saved). |
 
 New content types (added to SPEC §5.1 and `spec/vectors/content.json`, with the extension table): `file/subtitle`,
-`file/csv`, `file/json`, `file/markdown`, `file/html`, `file/svg`, `file/ebook`, `text/markdown`, `text/html`
-(alias of `text/rich`), `network/host`. Matching stays as SPEC §5.2; `file/any` still matches every file, so old
-cards keep working.
+`file/csv`, `file/json`, `file/markdown`, `file/html`, `file/svg`, `file/ebook`, `text/markdown`. Each refined type
+has a parent (`file/csv` → `file/spreadsheet`, `file/json`/`file/html` → `file/code`, `file/svg` → `file/image`,
+`file/ebook` → `file/document`, `file/markdown` → `file/text`, `text/markdown` → `text/plain`) and matches its
+parent's patterns, and callers send each input as the type the target's card names (so an app built before a kind
+existed never sees it). `text/html` and `network/host` were dropped: `text/rich` already carries HTML, and no action
+needs a host type yet. (Built in Link 1.1: refined kinds, `type_for`, `adapt_inputs`, Qt the same.)
 
 ### 4.2 The app list becomes data
 
 - `catalog.json` (this repo) gains for each app: `name`, `tagline`, `releases`, `icon` (already there), `pairs`
   (the "what these two do together" sentences, keyed by peer), and `linkActionsHint` (which actions to show in
-  install prompts). Tools already downloads it; Tools now also writes the copy it has to the shared Arcade folder
-  (`<registry parent>/catalog.json`) so every app and the helper read it locally and offline.
+  install prompts; stage 2). The release page comes from `repo`; Arcade Tools' own entry stays the top-level `tools`
+  object. Tools already downloads it; Tools now also writes the copy it has to the shared Arcade folder
+  (`<registry parent>/catalog.json`, Link `catalog::write_shared`) so every app and the helper read it locally and
+  offline. Connected apps pages list the known apps in today's order, then new catalog apps (the catalog itself must
+  stay alphabetical). (Built: Link `catalog` module / Qt `Catalog`; `pairs` in the schema, validator and data.)
 - Link's compiled `app_name`, `app_pitch`, `peer_description`, `releases_url` and the `ids::APPS` list become
   fallbacks used only when no `catalog.json` is readable. A card's own `name` and `icon` win over both.
 - Tools' tray glyphs come from the card's `icon` (with the compiled glyphs as a fallback).
@@ -335,7 +342,7 @@ re-run per job and never to hide a failure; no Co-Authored-By, session links or 
 
 ### Stage 1: Link 1.1.0
 
-1. `url` 2.5.9 (RUSTSEC-2026-0592).
+1. `url` 2.5.9 (RUSTSEC-2026-0592) in the app template (Link's own crates don't use `url`).
 2. Card fields and types (4.1), SPEC sections 3, 5 and 11 updated, vectors added.
 3. App data from `catalog.json` with compiled fallback (4.2); `catalog.schema.json` and `scripts/validate.py` in
    this repo gain `pairs`, `rules`, `browser.sites`; Tools' snapshot updated in stage 2.
@@ -346,7 +353,8 @@ re-run per job and never to hide a failure; no Co-Authored-By, session links or 
 7. e2e and file-manager tests (5.2, 5.3); Windows/macOS helper tests (5.4, 5.5).
 8. Dependabot sweep for Link (#33–#43, #69): merge what is green and safe; for majors needing code (ed25519-dalek 3,
    sha2 0.11, blake2 0.11, base64 0.23, egui 0.37, actions v7/v8) do the change in this stage or close with the reason
-   written in the PR. Same rule in every stage below.
+   written in the PR. Same rule in every stage below. Done in Link #82 except egui: Find and Lens draw with Link's
+   egui design kit, so egui 0.37 moves to stage 4/6 with them.
 9. Release through Link's flow (PR → post-merge CI + e2e + desktop harness → tag v1.1.0).
 
 ### Stage 2: Tools 1.1.0
@@ -442,7 +450,7 @@ macOS: Developer ID signing and notarization, a Finder Action extension. Not nee
 | Delete 12 wip branches; Lens 0.4.1/0.4.2 note | 0 (prompt A) |
 | Box rc.7 Gates failure (upgrade test on 22.04) | 3 (33f133d, rc.8) |
 | Box on Link 1.0.13 | 3 |
-| RUSTSEC-2026-0592 `url` 2.5.8: Link, Box, Clipboard, Look | 1, 3, 6, 6 |
+| RUSTSEC-2026-0592 `url` 2.5.8: Link's template, Box, Clipboard, Look | 1, 3, 6, 6 |
 | Clipboard, Look, Wheel on older Link | 6 |
 | All open Dependabot PRs (~85 across 9 repos) | each repo's stage |
 | Clipboard #25–#27 need an rc to prove; #23/#24/#29–#31/#33 failing | 6 |

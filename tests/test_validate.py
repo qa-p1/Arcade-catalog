@@ -242,6 +242,22 @@ class ValidatorTests(unittest.TestCase):
         write_json(root / "catalog.json", catalog)
         self.assert_error(root, "/apps: apps must be sorted alphabetically")
 
+    def test_pairs_name_known_peers_with_one_sentence(self) -> None:
+        def with_pairs(pairs: Any) -> Path:
+            root = self.new_root()
+            catalog = json.loads((root / "catalog.json").read_text())
+            catalog["apps"][0]["pairs"] = pairs
+            write_json(root / "catalog.json", catalog)
+            return root
+
+        tools_id = json.loads((self.new_root() / "catalog.json").read_text())["tools"]["id"]
+        errors, _ = validate_repository(with_pairs({tools_id: "Manage updates and shortcuts."}))
+        self.assertEqual(errors, [])
+        self.assert_error(with_pairs({"arcade.nobody": "Do things together."}), "unknown app id 'arcade.nobody'")
+        self.assert_error(with_pairs({tools_id: "No full stop"}), "one sentence")
+        self.assert_error(with_pairs({tools_id: "Two sentences. Not allowed."}), "one sentence")
+        self.assert_error(with_pairs(["arcade.x"]), "expected an object")
+
     def test_tools_owner_and_semver_are_checked(self) -> None:
         root = self.new_root()
         catalog = json.loads((root / "catalog.json").read_text())

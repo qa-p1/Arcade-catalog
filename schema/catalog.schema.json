@@ -160,6 +160,19 @@
             "$ref": "#/$defs/badRelease"
           },
           "uniqueItems": true
+        },
+        "pairs": {
+          "type": "object",
+          "description": "Optional: one sentence per peer app id saying what this app and that peer do together (Arcade Link SPEC §3.1), shown on Connected apps pages. Older apps ignore it.",
+          "propertyNames": {
+            "pattern": "^arcade\\.[a-z][a-z0-9-]*$"
+          },
+          "additionalProperties": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 100,
+            "pattern": "^[^\\n]*\\.$"
+          }
         }
       }
     },
@@ -210,6 +223,19 @@
             "$ref": "#/$defs/badRelease"
           },
           "uniqueItems": true
+        },
+        "pairs": {
+          "type": "object",
+          "description": "Optional: one sentence per peer app id saying what this app and that peer do together (Arcade Link SPEC §3.1), shown on Connected apps pages. Older apps ignore it.",
+          "propertyNames": {
+            "pattern": "^arcade\\.[a-z][a-z0-9-]*$"
+          },
+          "additionalProperties": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 100,
+            "pattern": "^[^\\n]*\\.$"
+          }
         }
       }
     },

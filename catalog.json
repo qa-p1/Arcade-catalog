@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated": "2026-10-28",
+  "updated": "2026-11-22",
   "apps": [
     {
       "id": "arcade.box",
@@ -69,7 +69,16 @@
       "minTools": "0.2.0",
       "docs": "README.md",
       "resident": true,
-      "homepage": "https://github.com/qa-p1/Arcade-Find"
+      "homepage": "https://github.com/qa-p1/Arcade-Find",
+      "pairs": {
+        "arcade.box": "Run tools on files from your search.",
+        "arcade.clipboard": "Send search results to your copy history.",
+        "arcade.lens": "Search for files from a screen selection.",
+        "arcade.look": "Preview files from your search.",
+        "arcade.shelf": "Keep search results on a shelf.",
+        "arcade.tools": "Manage Find's updates and shortcuts.",
+        "arcade.wheel": "Open a file search from the wheel."
+      }
     },
     {
       "id": "arcade.lens",
@@ -92,7 +101,16 @@
       "minTools": "0.2.0",
       "docs": "README.md",
       "resident": true,
-      "homepage": "https://github.com/qa-p1/Arcade-lens"
+      "homepage": "https://github.com/qa-p1/Arcade-lens",
+      "pairs": {
+        "arcade.box": "Run Box tools and pipelines on a selection.",
+        "arcade.clipboard": "Send a selection to your copy history.",
+        "arcade.find": "Search your files for selected text.",
+        "arcade.look": "Preview a selection in Look.",
+        "arcade.shelf": "Keep a selection on a shelf.",
+        "arcade.tools": "Manage Lens's updates and shortcuts.",
+        "arcade.wheel": "Add a selected link or file to the wheel."
+      }
     },
     {
       "id": "arcade.look",

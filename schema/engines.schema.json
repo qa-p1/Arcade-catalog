@@ -112,7 +112,12 @@
               },
               "for": {
                 "type": "string",
-                "minLength": 1
+                "minLength": 1,
+                "description": "What the app does with it, as a sentence starting with a verb: \"Recognize text in images.\""
+              },
+              "optional": {
+                "type": "boolean",
+                "description": "The app works fully without it (an example plugin or extra). Tools lists it but never reports it as needing attention."
               }
             }
           }

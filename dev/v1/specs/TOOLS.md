@@ -34,7 +34,7 @@ references), `AUDIT/real-desktop.md` §Tools and `AUDIT/FINDINGS.md` T1–T4.
 | TL-10 | P2 | About says "Development build" for the released, self-installed Tools. | Settings › About |
 | TL-12 | P2 | Health list shows the raw id `arcade.tools`; optional Look plugin engines show as "needs attention"; backup shows no progress; guides lag the running version. | Home, Engines, Backup |
 | T3 | P2 | Legacy `~/.local/share/arcade-tools` and `app.arcadetools` folders are never retired, and every start logs "Left … in place". | migration code |
-| RD-TOOLS-6 | P2 | Window class is `arcade-tools`, not `dev.arcade.Tools`. | Tauri config |
+| RD-TOOLS-6 | P2 | Window class is `arcade-tools`, not `dev.arcade.Tools`. Renaming the desktop id must leave one launcher: keep `app.arcadetools` and `arcade-tools` in `legacy_desktop_ids`, use Link ≥ 1.0.7, and remove Tools from Link's `LEGACY_PENDING` (PLAN.md "One launcher per app"). | Tauri config |
 
 ## Updater work (detailed design in `specs/LINK.md` §3)
 

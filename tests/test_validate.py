@@ -252,6 +252,27 @@ class ValidatorTests(unittest.TestCase):
         self.assertTrue(any("/tools/repo" in error for error in errors))
         self.assertTrue(any("/tools/minTools" in error for error in errors))
 
+    def test_bad_releases_name_a_tag_and_a_reason(self) -> None:
+        root = self.new_root()
+        catalog = json.loads((root / "catalog.json").read_text())
+        catalog["apps"][0]["bad"] = [
+            {"tag": "v1.2.0", "reason": "Crashes at start on Wayland."},
+            {"tag": "v1.3.0-nightly.20261107.1", "reason": "Loses settings."},
+        ]
+        catalog["tools"]["bad"] = [{"tag": "v1.0.0-rc.2", "reason": "Test build."}]
+        write_json(root / "catalog.json", catalog)
+        self.assertEqual(self.errors_for(root), [])
+        catalog["apps"][0]["bad"] = [
+            {"tag": "1.2.0", "reason": "No v."},
+            {"tag": "v1.2.1", "reason": ""},
+            {"tag": "v1.2.2", "reason": "x", "since": "today"},
+            {"tag": "v1.2.2", "reason": "Twice."},
+        ]
+        write_json(root / "catalog.json", catalog)
+        errors = self.errors_for(root)
+        for fragment in ("/bad/0/tag", "/bad/1/reason", "/bad/2/since", "/bad/3/tag"):
+            self.assertTrue(any(fragment in error for error in errors), (fragment, errors))
+
     def test_icon_files_and_github_urls_are_checked(self) -> None:
         root = self.new_root()
         catalog = json.loads((root / "catalog.json").read_text())
@@ -312,12 +333,14 @@ class ValidatorTests(unittest.TestCase):
         engines = json.loads((root / "engines.json").read_text())
         engines["schema"] = 2
         engines["engines"][0]["usedBy"][0]["app"] = "arcade.missing"
+        engines["engines"][0]["usedBy"][0]["optional"] = "yes"
         engines["engines"][0]["detect"]["binaries"] = []
         engines["engines"][0]["install"] = {"unknown": "install this"}
         write_json(root / "engines.json", engines)
         errors = self.errors_for(root)
         self.assertTrue(any("engines.json:/schema" in error for error in errors))
         self.assertTrue(any("unknown catalog app" in error for error in errors))
+        self.assertTrue(any("/usedBy/0/optional" in error for error in errors))
         self.assertTrue(any("/detect/binaries" in error for error in errors))
         self.assertTrue(any("unknown package manager" in error for error in errors))
 

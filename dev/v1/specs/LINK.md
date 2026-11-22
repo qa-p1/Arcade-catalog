@@ -172,6 +172,11 @@ Link gets the same loop as every app:
 
 Then release `v1.0.0`. Every app pins Link by tag (`v1.0.0` or later patches), never by rev.
 
+**One launcher per app (1.0.7, owner request 2026-11-11):** the Rust and Qt installers retire launcher and login
+entries under `legacy_desktop_ids` on every install, update and repair, including ones that run the installed file,
+and carry Start at login over. Unit tests in `tests/install.rs` and `qt/tests/tst_Install.cpp`; real-fleet e2e
+`*_update_retires_old_desktop_ids` (XFAIL per app while it is in `LEGACY_PENDING`). See `PLAN.md` fleet rules.
+
 ## Acceptance
 
 - The harness proof (§1.4) passes, or the documented fallback is in place.

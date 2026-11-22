@@ -97,7 +97,8 @@ Commit in small, reviewable PRs, with conventional commit titles. Never force-pu
 - [ ] The desktop end-to-end suite is green: Tier 1 headless Hyprland, plus Tier 2 smoke tests (sway, KWin, Mutter,
       X11) with no crash and no data loss. No coredumps during any test.
 - [ ] Upgrade test: install the real previous release from its published files, populate data, update to the rc,
-      and everything is kept. The Nightly → Stable downgrade path also works.
+      and everything is kept. The Nightly → Stable downgrade path also works. Afterwards there is exactly one
+      launcher and at most one login item for the app (fleet rule "One launcher per app").
 - [ ] (Apps and Tools; not Link) A delta update from the previous release works through Tools, the signed manifest verifies, and a tampered
       chunk is rejected.
 - [ ] N-1 test: the rc talks to the previous released versions of its peers over Link.
@@ -130,6 +131,15 @@ Hotfix after 1.0.0: the same path, `1.0.1-rc.1` → promote, target under one ho
 - Restart re-executes `$APPIMAGE` (or the installed launcher), never the inner binary of a mount (CB-4, TL-1).
 - Data, config, cache and logs live only under `arcade/<app>` XDG paths. Legacy folders are migrated once and
   retired.
+- **One launcher per app (owner request, 2026-11-11).** After any install, update or repair there is exactly one
+  menu entry (`dev.arcade.<App>.desktop`) and at most one login item per app. Every older desktop id the app ever
+  used is listed in its `legacy_desktop_ids` / `legacyDesktopIds`, and Link (≥ 1.0.7) retires entries under those
+  ids, even when they run the installed file, carrying Start at login over. Root cause of the duplicates on the
+  owner's desktop: Link ≤ 1.0.6 kept old-id entries that pointed at the same AppImage, so Box, Look, Shelf,
+  Clipboard and Wheel each showed twice. Each app moves to Link ≥ 1.0.7 (Shelf and Wheel re-vendor `qt/`) and, in
+  the same change, is removed from `LEGACY_PENDING` in Link `tools/e2e_checks/real_hub.py`, so its
+  `*_update_retires_old_desktop_ids` e2e check must pass. Tools' rename from `app.arcadetools` to its OS id must
+  pass the same check. A new rename adds the old id to the app's list and to `LEGACY_DESKTOP_IDS` there.
 - Logs have levels, rotate, contain no secrets or clip contents, and drop known-harmless toolkit noise.
 - Crash reports stay local. Tools offers "Copy report" and "Open GitHub issue" after the user reviews it.
 - Child processes are always reaped (Lens LN-3).
@@ -190,4 +200,7 @@ The final summary in `PROGRESS.md` ticks each item with a link to its evidence (
   - [ ] clean uninstall.
 - [ ] Shelf's hover panel never auto-closes. Clipboard retention plus storage budget works, and Private mode is always
       visible.
+- [ ] One launcher per app: after upgrading the real 0.x fleet to 1.0, the app menu shows each app once and each
+      starts once at login (fleet rule; Link `*_update_retires_old_desktop_ids` passes for all 8, `LEGACY_PENDING`
+      empty).
 - [ ] No feature was added beyond the plan; ideas went to `BACKLOG.md`.

@@ -1,0 +1,302 @@
+From 24032d4affc59dec0a11dfa20b3f666d3fb31ce4 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Mon, 9 Nov 2026 05:50:02 +0000
+Subject: [PATCH 1/4] feat: Link 1.0.6, crash reports, arena cap and CLI-2
+ argument check
+
+Box moves from Link 0.4.15 to 1.0.6. It installs Link's crash reports at
+start (RT-4; the folder appears with the first report), caps glibc's malloc
+arenas before any thread starts (Link D13), and refuses an argument it does
+not know with usage on stderr and exit 2 before doing anything (CLI-2).
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_015owd4wcAhMR1xnKP9qs3Tf
+---
+ Cargo.lock                          | 20 +++----
+ Cargo.toml                          |  2 +-
+ apps/desktop/src-tauri/src/main.rs  | 55 +++++++++++++++++
+ apps/desktop/src-tauri/tests/cli.rs | 92 +++++++++++++++++++++++++----
+ 4 files changed, 148 insertions(+), 21 deletions(-)
+
+diff --git a/Cargo.lock b/Cargo.lock
+index 16e03fa..d11040e 100644
+--- a/Cargo.lock
++++ b/Cargo.lock
+@@ -303,7 +303,7 @@ dependencies = [
+  "objc2-foundation",
+  "parking_lot",
+  "percent-encoding",
+- "windows-sys 0.59.0",
++ "windows-sys 0.60.2",
+  "wl-clipboard-rs",
+  "x11rb",
+ ]
+@@ -416,8 +416,8 @@ dependencies = [
+ 
+ [[package]]
+ name = "arcade-link"
+-version = "0.4.15"
+-source = "git+https://github.com/qa-p1/Arcade-link?tag=v0.4.15#56798545d263c104ded54877239750f9645c32a3"
++version = "1.0.6"
++source = "git+https://github.com/qa-p1/Arcade-link?rev=ce140ae5ba09df5f9fc7ac054d0d11615fb13ecf#ce140ae5ba09df5f9fc7ac054d0d11615fb13ecf"
+ dependencies = [
+  "getrandom 0.4.3",
+  "interprocess",
+@@ -2036,7 +2036,7 @@ dependencies = [
+  "libc",
+  "option-ext",
+  "redox_users",
+- "windows-sys 0.59.0",
++ "windows-sys 0.61.2",
+ ]
+ 
+ [[package]]
+@@ -2337,7 +2337,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
+ checksum = "39cab71617ae0d63f51a36d69f866391735b51691dbda63cf6f96d042b63efeb"
+ dependencies = [
+  "libc",
+- "windows-sys 0.59.0",
++ "windows-sys 0.61.2",
+ ]
+ 
+ [[package]]
+@@ -3746,7 +3746,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
+ checksum = "20fd6de4ccfcc187e38bc21cfa543cb5a302cb86a8b114eb7f0bf0dc9f8ac00f"
+ dependencies = [
+  "io-lifetimes 3.0.1",
+- "windows-sys 0.59.0",
++ "windows-sys 0.60.2",
+ ]
+ 
+ [[package]]
+@@ -3790,7 +3790,7 @@ checksum = "3640c1c38b8e4e43584d8df18be5fc6b0aa314ce6ebf51b53313d4306cca8e46"
+ dependencies = [
+  "hermit-abi",
+  "libc",
+- "windows-sys 0.59.0",
++ "windows-sys 0.61.2",
+ ]
+ 
+ [[package]]
+@@ -6043,7 +6043,7 @@ dependencies = [
+  "errno",
+  "libc",
+  "linux-raw-sys 0.12.1",
+- "windows-sys 0.59.0",
++ "windows-sys 0.61.2",
+ ]
+ 
+ [[package]]
+@@ -7199,7 +7199,7 @@ dependencies = [
+  "getrandom 0.3.4",
+  "once_cell",
+  "rustix 1.1.5",
+- "windows-sys 0.59.0",
++ "windows-sys 0.61.2",
+ ]
+ 
+ [[package]]
+@@ -8615,7 +8615,7 @@ version = "0.1.11"
+ source = "registry+https://github.com/rust-lang/crates.io-index"
+ checksum = "c2a7b1c03c876122aa43f3020e6c3c3ee5c05081c9a00739faf7503aeba10d22"
+ dependencies = [
+- "windows-sys 0.59.0",
++ "windows-sys 0.61.2",
+ ]
+ 
+ [[package]]
+diff --git a/Cargo.toml b/Cargo.toml
+index db9f1b6..2f93bb6 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -23,7 +23,7 @@ serde = { version = "1.0", features = ["derive"] }
+ serde_json = { version = "1.0", features = ["preserve_order"] }
+ thiserror = "2.0"
+ # Released shared install and tray-host APIs.
+-arcade-link = { git = "https://github.com/qa-p1/Arcade-link", tag = "v0.4.15", features = ["engines", "install", "trayhost"] }
++arcade-link = { git = "https://github.com/qa-p1/Arcade-link", rev = "ce140ae5ba09df5f9fc7ac054d0d11615fb13ecf", features = ["engines", "install", "trayhost"] }
+ 
+ # zxing-cpp's bundled C++ build follows the opt-level: at 0 CMake builds Debug,
+ # which links MSVC's debug runtime (unresolved _CrtDbgReport on Windows).
+diff --git a/apps/desktop/src-tauri/src/main.rs b/apps/desktop/src-tauri/src/main.rs
+index dc02c1b..ceb26a6 100644
+--- a/apps/desktop/src-tauri/src/main.rs
++++ b/apps/desktop/src-tauri/src/main.rs
+@@ -27,11 +27,25 @@ const HELP: &str = "Arcade Box
+ Terminal tools: arcade-box (alias arcadebox) --help";
+ 
+ fn main() {
++    // First, while Box has one thread: WebKit's processes inherit it (Link D13, Tools D18).
++    arcade_link::runtime::cap_malloc_arenas();
+     arcade_link::childenv::on_startup();
++    // RT-4: a panic or fatal signal leaves a local report that Tools shows; the folder is made with the first one.
++    arcade_link::runtime::install_crash_reports(
++        "Arcade Box",
++        env!("CARGO_PKG_VERSION"),
++        arcade_link::runtime::crash_dir(arcade_link::ids::BOX),
++    );
+     let args: Vec<String> = std::env::args().skip(1).collect();
+     if let Some(code) = arcade_desktop::installer::run_terminal_alias(&args) {
+         std::process::exit(code);
+     }
++    // ARCADE_APP.md CLI-2: anything else is a mistake, reported before Box starts or hands it to a running copy.
++    if let Err(arg) = check_args(&args) {
++        arcade_desktop::attach_console();
++        eprintln!("arcade-desktop: unknown argument {arg:?}\n\n{HELP}");
++        std::process::exit(2);
++    }
+     // The terminal tools above resolve relative paths against the user's
+     // directory; the Island and Settings are webviews, and WebKit needs the
+     // AppImage's own directory.
+@@ -117,3 +131,44 @@ fn integration_command(args: &[String]) -> Result<(), String> {
+     }
+     Ok(())
+ }
++
++/// Every argument `arcade-desktop` accepts; `--channel` takes a value.
++const FLAGS: &[&str] = &[
++    "--background",
++    "--show",
++    "--hide",
++    "--toggle",
++    "--dashboard",
++    "--settings",
++    "--pipelines",
++    "--restart",
++    "--quit",
++    "--install",
++    "--silent",
++    "--no-launch",
++    "--keep-download",
++    "--uninstall",
++    "--remove-data",
++    "--repair",
++    "--integration-status",
++    "--status",
++    "--version",
++    "-V",
++    "--help",
++    "-h",
++    "--arcade-manifest",
++    "--arcade-invoke",
++];
++
++fn check_args(args: &[String]) -> Result<(), String> {
++    let mut rest = args.iter();
++    while let Some(arg) = rest.next() {
++        if arg == "--channel" {
++            rest.next().ok_or_else(|| arg.clone())?;
++        } else if !FLAGS.contains(&arg.as_str()) && !arg.starts_with("-psn_") {
++            // -psn_* is added by macOS when Finder starts an app bundle.
++            return Err(arg.clone());
++        }
++    }
++    Ok(())
++}
+diff --git a/apps/desktop/src-tauri/tests/cli.rs b/apps/desktop/src-tauri/tests/cli.rs
+index 696b03f..7c120bf 100644
+--- a/apps/desktop/src-tauri/tests/cli.rs
++++ b/apps/desktop/src-tauri/tests/cli.rs
+@@ -110,17 +110,89 @@ fn status_prints_one_json_line_without_starting_box() {
+ }
+ 
+ #[test]
+-#[should_panic(expected = "KNOWN BUG CLI-2")]
+-fn known_bug_an_unknown_argument_prints_usage_and_exits_2() {
++fn an_unknown_argument_prints_usage_and_exits_2() {
+     let home = profile();
+-    let out = run(home.path(), &["--no-such-option"]);
+-    let ok = out.as_ref().is_some_and(|out| {
+-        out.status.code() == Some(2)
+-            && String::from_utf8_lossy(&out.stderr).contains("arcade-desktop --status")
+-    });
++    for args in [
++        &["--no-such-option"][..],
++        &["--show", "extra"],
++        &["--install", "--channel"],
++    ] {
++        let out = run(home.path(), args).expect("arcade-desktop ran");
++        assert_eq!(out.status.code(), Some(2), "{args:?}");
++        assert!(
++            String::from_utf8_lossy(&out.stderr).contains("arcade-desktop --status"),
++            "{args:?}: no usage on stderr"
++        );
++    }
++    assert_eq!(
++        files(home.path()),
++        ["run"],
++        "a refused argument created files"
++    );
++}
++
++/// RT-4: a fatal signal leaves one report in Box's crash folder, which nothing created before the crash.
++#[cfg(target_os = "linux")]
++#[test]
++fn a_fatal_signal_leaves_a_crash_report() {
++    use std::os::unix::process::ExitStatusExt;
++    let home = profile();
++    let crashes = home.path().join(".local/share/arcade/box/crashes");
++    let mut child = Command::new(env!("CARGO_BIN_EXE_arcade-desktop"))
++        .arg("--arcade-invoke")
++        .env_clear()
++        .env("PATH", std::env::var_os("PATH").unwrap_or_default())
++        .env("HOME", home.path())
++        .env("ARCADE_HOME", home.path().join(".local/share/arcade"))
++        .env("XDG_DATA_HOME", home.path().join(".local/share"))
++        .env("XDG_CONFIG_HOME", home.path().join(".config"))
++        .env("XDG_RUNTIME_DIR", home.path().join("run"))
++        .stdin(Stdio::piped())
++        .stdout(Stdio::null())
++        .stderr(Stdio::null())
++        .spawn()
++        .unwrap();
++    // The handler is installed first thing in main; once Box blocks reading its request from stdin it is in place.
++    let reading = |pid: u32| {
++        std::fs::read_to_string(format!("/proc/{pid}/syscall")).is_ok_and(|s| {
++            let mut fields = s.split_whitespace();
++            let (call, fd) = (fields.next(), fields.next());
++            // read(2) is 0 on x86_64 and 63 on aarch64; the first argument is fd 0.
++            matches!(call, Some("0" | "63")) && fd == Some("0x0")
++        })
++    };
++    let start = Instant::now();
++    while !reading(child.id()) {
++        assert!(
++            child.try_wait().unwrap().is_none(),
++            "--arcade-invoke exited early"
++        );
++        assert!(
++            start.elapsed() < Duration::from_secs(20),
++            "--arcade-invoke never read stdin"
++        );
++        std::thread::sleep(Duration::from_millis(20));
++    }
+     assert!(
+-        ok,
+-        "KNOWN BUG CLI-2: {:?}",
+-        out.map(|out| out.status.code())
++        !crashes.exists(),
++        "the crash folder exists before any crash"
+     );
++    unsafe { libc::kill(child.id() as i32, libc::SIGSEGV) };
++    let status = child.wait().unwrap();
++    assert_eq!(status.signal(), Some(libc::SIGSEGV), "{status:?}");
++    let reports: Vec<_> = std::fs::read_dir(&crashes)
++        .expect("no crash folder")
++        .flatten()
++        .map(|e| e.path())
++        .filter(|p| p.extension().is_some_and(|e| e == "crash"))
++        .collect();
++    assert_eq!(reports.len(), 1, "{reports:?}");
++    let text = std::fs::read_to_string(&reports[0]).unwrap();
++    for needle in [
++        "app: Arcade Box",
++        concat!("version: ", env!("CARGO_PKG_VERSION")),
++        "signal: 11",
++    ] {
++        assert!(text.contains(needle), "missing {needle:?} in\n{text}");
++    }
+ }
+-- 
+2.43.0
+

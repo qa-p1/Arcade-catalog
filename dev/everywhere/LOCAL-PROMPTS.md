@@ -3,9 +3,12 @@
 Short, self-contained prompts for the few things the cloud sessions can't do. Paste one into Claude Code (Sonnet is
 fine) on your own computer, in any folder. Each one says what to do, what not to do, and what to report back.
 
-**When:** the cloud session hands over A and B together when it reaches stage 5 (the browser extension), and the
-local session takes over for that stretch. A includes the old wip branch deletion and the Lens 0.4.1/0.4.2 note.
-C and D come at stage 8, once everything is released.
+**When (owner's instruction):** no separate prompts. When the cloud session reaches stage 5 (the browser extension),
+it writes **one takeover prompt** and the owner's local session continues everything from there on their own
+computer. That one prompt covers all that is left: A (wip branch deletion, the Lens 0.4.1/0.4.2 note, the
+`Arcade-browser` repo, the Mozilla key), B (Zen's folder), the rest of the plan's stages, and C/D (the real-user
+checks). It must stand alone: where things are, the rules, what's done, and what's next. The prompts below are the
+pieces it includes.
 
 ---
 

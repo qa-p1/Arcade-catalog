@@ -338,9 +338,9 @@ re-run per job and never to hide a failure; no Co-Authored-By, session links or 
 
 `LOCAL-PROMPTS.md` prompt A: delete the 12 wip branches; add the note to Lens v0.4.1/v0.4.2; create the empty repo
 `qa-p1/Arcade-browser`; create the free Mozilla developer account and put its API key into that repo's secrets
-(`AMO_JWT_ISSUER`, `AMO_JWT_SECRET`). Prompt B: Zen's native messaging folder. The owner chose to run A and B
-together when the cloud session reaches stage 5; the cloud session hands both over then and the local session takes
-over for that stretch. Nothing before stage 5 needs them.
+(`AMO_JWT_ISSUER`, `AMO_JWT_SECRET`). Prompt B: Zen's native messaging folder. The owner's instruction: when the
+cloud session reaches stage 5 it writes one takeover prompt (A, B, the remaining stages, C and D, everything) and the
+owner's local session continues the whole plan from there. Nothing before stage 5 needs the owner's computer.
 
 ### Stage 1: Link 1.1.0
 

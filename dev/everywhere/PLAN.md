@@ -4,7 +4,8 @@
 (every Arcade ability reachable from the file manager and the browser, wired by data instead of code), Box's first
 proper release (1.0.0), and every leftover from the v1 round. When this plan is done, nothing from v1 is left open
 and nothing needs a separate week of local testing: each stage below says how it is tested, and the few checks only
-the owner's own computers can do are short prompts in `LOCAL-PROMPTS.md`.
+the owner's own computers can do are short prompts in `LOCAL-PROMPTS.md`. From stage 5 on, the work continues on the
+owner's computer from the single prompt in `TAKEOVER.md` (written by the cloud session when it stopped, 2026-11-23).
 
 Read `dev/v1/HANDOFF.md` for the state of the fleet when this plan starts and `dev/v1/REAL-USER-RUN.md` for how
 real-user checks are done.

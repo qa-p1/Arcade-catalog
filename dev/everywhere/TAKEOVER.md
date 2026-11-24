@@ -67,9 +67,11 @@ is green (squash), and fix what isn't:
   Box's output if it doesn't start: read it if it still fails.
 - Arcade-catalog PR #22: the catalog's `browser` section (sites, CSS anchors, action; hover settings) with
   validate.py rules and tests. Until it merges the extension uses its built-in copy.
-- Arcade-Link PR #90: the helper runs actions that take no input (calculators, password generator) and doesn't
-  show a desktop notification for browser jobs (the extension shows its own). Released helper 1.1.1 answers those
-  runs "nothing to run on"; the extension says "update Arcade Tools" then. Release it with Zen's folder (step 2.3).
+- Arcade-Link #90 (merged): the helper runs actions that take no input (calculators, password generator) and
+  doesn't show a desktop notification for browser jobs (the extension shows its own). Helper 1.1.1 answers those
+  runs "nothing to run on"; the extension says "update Arcade Tools" then. Link 1.1.2 (PR #91) releases it: check
+  `gh release view v1.1.2 --repo qa-p1/Arcade-Link` or the tag; if it isn't tagged, finish that release (post-merge
+  CI, Ecosystem e2e, Desktop harness, then tag). Tools 1.1.2 ships it to users (step 2.3).
 What stage 5 still needs (step 2 lists them in full):
 - Live results for selected amounts/dates (needs a fast preview method in the helper first).
 - "Send to my devices ▸ <device>" listing Clipboard's devices (today Clipboard's own "Send to my devices" offer is
@@ -154,10 +156,10 @@ owner's Zen reads native messaging host manifests from; clean up everything. Rep
    browser, and shows "Connected" once the extension pings the helper.
 2. Arcade-catalog: `browser.sites` for YouTube and the downloader's other sites (PR #22; add sites once checked on
    the real pages, e.g. the downloader's other supported sites).
-3. Arcade-Link: add Zen's folder from step 1 B to the helper's host-file writer (crates/arcade-helper/src/
-   integrations/browsers.rs lists both candidates today), together with PR #90, as Link patch release v1.1.2 after
-   its CI and real-fleet e2e; then Tools picks it up (Tools 1.1.2 through the release flow), and Arcade-browser's
-   test/e2e/apps.json moves to that Tools release.
+3. Arcade-Link: the helper writes host files to both Zen candidates (crates/arcade-helper/src/integrations/
+   browsers.rs). If step 1 B finds Zen reads a third place, add it (Link 1.1.3 after its CI and real-fleet e2e);
+   if it reads one of the two, remove the other in the same way. Then Tools ships the newest Link (Tools 1.1.2
+   through the release flow), and Arcade-browser's test/e2e/apps.json moves to that Tools release.
 4. Release the extension 1.0.0 after its CI, the e2e with the released helper and Box, and a check that the .xpi is
    signed.
 

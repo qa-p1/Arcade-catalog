@@ -85,6 +85,16 @@ What stage 5 still needs (step 2 lists them in full):
 STATUS.md files are current in every repo; each app README has a "Use it from anywhere" section that says the
 browser extension "comes in a later update" or "will offer ... when it ships": update those sentences when it ships.
 
+== Updating the apps on this computer (the owner's wish) ==
+Update ONLY Arcade Tools on this computer, and only through Tools' own updater (not a fresh download), so the owner
+sees the delta update happen. Don't install, reinstall or update any other Arcade app (Box, Lens, Look, Find, Shelf,
+Wheel, Clipboard) yourself: the owner updates those from Tools to watch their delta updates. If a step needs a newer
+app than the one installed, stop and tell the owner which app and version, and let them update it.
+The browser extension is not part of Tools: Tools ships the Arcade helper, which writes the native messaging host
+files for the browsers it finds, but the extension itself is installed in each browser (unpacked from a build or,
+after its 1.0.0, from the release files). Tools' Everywhere page doesn't show browser install steps or "Connected"
+yet (stage 5 below).
+
 == Step 1: GitHub chores and the Zen check (LOCAL-PROMPTS.md prompts A and B) ==
 A: (1) delete the 12 merged `claude/sharp-cori-29w5eg-wip-*` branches listed in prompt A after checking each is
 fully in main; nothing else. (2) Add the "Update to Arcade Lens 1.0.0 or later" note at the top of Arcade-lens

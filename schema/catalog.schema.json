@@ -8,7 +8,8 @@
     "updated",
     "apps",
     "tools",
-    "bundles"
+    "bundles",
+    "browser"
   ],
   "properties": {
     "schema": {
@@ -86,6 +87,22 @@
             "maxLength": 60
           },
           "description": "Treated as doing this job."
+        }
+      }
+    },
+    "browser": {
+      "type": "object",
+      "description": "Where the Arcade browser extension adds its own buttons to pages (Arcade-browser). Selectors are data, so a site's layout change is fixed here, not by releasing the extension. Older apps ignore it.",
+      "additionalProperties": false,
+      "properties": {
+        "sites": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/browserSite"
+          }
+        },
+        "hover": {
+          "$ref": "#/$defs/browserHover"
         }
       }
     }
@@ -352,6 +369,150 @@
           "minLength": 1,
           "maxLength": 200,
           "description": "One sentence shown to users."
+        }
+      }
+    },
+    "browserMatch": {
+      "type": "string",
+      "pattern": "^(https?|\\*)://(\\*|\\*\\.[^/*:]+|[^/*:]+)(:[0-9]+)?/.*$",
+      "description": "A WebExtension match pattern, such as https://www.youtube.com/*."
+    },
+    "browserSite": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "matches",
+        "buttons"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9-]*$"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "matches": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/browserMatch"
+          }
+        },
+        "buttons": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/browserButton"
+          }
+        }
+      }
+    },
+    "browserButton": {
+      "type": "object",
+      "required": [
+        "id",
+        "label",
+        "action",
+        "anchors"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9-]*$"
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 24
+        },
+        "action": {
+          "type": "string",
+          "pattern": "^arcade\\.[a-z][a-z0-9-]*/\\S+$",
+          "description": "The action the button runs, <app-id>/<action-id>; its options form opens first unless it is one click."
+        },
+        "input": {
+          "enum": [
+            "page"
+          ],
+          "default": "page",
+          "description": "What the action gets: the page's address."
+        },
+        "anchors": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "description": "CSS selectors tried in order; the first one on the page places the button."
+        },
+        "position": {
+          "enum": [
+            "append",
+            "prepend",
+            "before",
+            "after"
+          ],
+          "default": "append"
+        },
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "A regular expression the page's path (with its query) must match, such as ^/watch."
+        }
+      }
+    },
+    "browserHover": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "The small Arcade button over pictures and videos (a setting in the extension, on by default).",
+      "properties": {
+        "minWidth": {
+          "type": "integer",
+          "minimum": 16,
+          "maximum": 2000,
+          "default": 120
+        },
+        "minHeight": {
+          "type": "integer",
+          "minimum": 16,
+          "maximum": 2000,
+          "default": 80
+        },
+        "video": {
+          "type": "object",
+          "required": [
+            "label",
+            "action"
+          ],
+          "additionalProperties": false,
+          "description": "What the button over a video does: an action on the page's address.",
+          "properties": {
+            "label": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 24
+            },
+            "action": {
+              "type": "string",
+              "pattern": "^arcade\\.[a-z][a-z0-9-]*/\\S+$"
+            }
+          }
+        },
+        "exclude": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/browserMatch"
+          },
+          "description": "Pages where no hover button shows."
         }
       }
     }

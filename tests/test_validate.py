@@ -277,6 +277,38 @@ class ValidatorTests(unittest.TestCase):
         self.assert_error(with_rules({"rename": {f"{app}/x": ""}}), "title of 1-60")
         self.assert_error(with_rules({"pin": []}), "unknown rule")
 
+    def test_browser_sites_name_known_actions_and_safe_selectors(self) -> None:
+        def with_browser(browser: Any) -> Path:
+            root = self.new_root()
+            catalog = json.loads((root / "catalog.json").read_text())
+            catalog["browser"] = browser
+            write_json(root / "catalog.json", catalog)
+            return root
+
+        app = json.loads((self.new_root() / "catalog.json").read_text())["apps"][0]["id"]
+        button = {"id": "download", "label": "Download", "action": f"{app}/x.get", "input": "page",
+                  "anchors": ["#actions"], "position": "append", "path": "^/watch"}
+        site = {"id": "tube", "name": "Tube", "matches": ["https://www.example.com/*"], "buttons": [button]}
+        hover = {"minWidth": 120, "minHeight": 80, "video": {"label": "Download", "action": f"{app}/x.get"},
+                 "exclude": ["https://docs.example.com/*"]}
+        errors, _ = validate_repository(with_browser({"sites": [site], "hover": hover}))
+        self.assertEqual(errors, [])
+
+        def site_with(**changes: Any) -> dict[str, Any]:
+            return {"sites": [{**site, "buttons": [{**button, **changes}]}]}
+
+        self.assert_error(with_browser(site_with(action="arcade.nobody/x")), "unknown app id 'arcade.nobody'")
+        self.assert_error(with_browser(site_with(anchors=["<script>"])), "expected a CSS selector")
+        self.assert_error(with_browser(site_with(anchors=["a { color: red }"])), "expected a CSS selector")
+        self.assert_error(with_browser(site_with(path="(")), "not a regular expression")
+        self.assert_error(with_browser(site_with(position="inside")), "append, prepend")
+        self.assert_error(with_browser(site_with(label="A label that is far too long")), "1-24")
+        self.assert_error(with_browser({"sites": [{**site, "matches": ["youtube.com"]}]}), "match pattern")
+        self.assert_error(with_browser({"sites": [site, site]}), "duplicate site id")
+        self.assert_error(with_browser({"hover": {**hover, "minWidth": 5}}), "whole pixels")
+        self.assert_error(with_browser({"hover": {"video": {"label": "Get", "action": "nope"}}}), "action reference")
+        self.assert_error(with_browser({"sites": [], "pages": []}), "unknown field")
+
     def test_tools_owner_and_semver_are_checked(self) -> None:
         root = self.new_root()
         catalog = json.loads((root / "catalog.json").read_text())

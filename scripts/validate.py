@@ -45,7 +45,7 @@ KEY_NAMES = {
 }
 MATCH_FIELDS = {"class", "exe", "bundle"}
 INSTALL_KEYS = {"arch", "debian", "fedora", "windows", "macos"}
-CATALOG_FIELDS = {"schema", "updated", "apps", "tools", "bundles", "rules"}
+CATALOG_FIELDS = {"schema", "updated", "apps", "tools", "bundles", "rules", "browser"}
 ENGINES_FIELDS = {"schema", "engines"}
 INDEX_FIELDS = {"schema", "sheets"}
 SHEET_FIELDS = {"schema", "id", "name", "checkedVersion", "sources", "match", "groups"}
@@ -297,6 +297,119 @@ def _check_rules(data: dict[str, Any], app_ids: set[str], file: str, reporter: R
                 reporter.error(file, f"{where}/{pattern}", "expected whole points from -100 to 100")
 
 
+BROWSER_MATCH = re.compile(r"^(https?|\*)://(\*|\*\.[^/*:]+|[^/*:]+)(:[0-9]+)?/.*$")
+BROWSER_ID = re.compile(r"^[a-z0-9][a-z0-9-]*$")
+BROWSER_POSITIONS = {"append", "prepend", "before", "after"}
+
+
+def _check_browser(data: dict[str, Any], app_ids: set[str], file: str, reporter: Reporter) -> None:
+    """Where the Arcade browser extension adds buttons to pages (Arcade-browser). Selectors and patterns are data."""
+    if "browser" not in data:
+        return
+    browser = data["browser"]
+    if not isinstance(browser, dict):
+        reporter.error(file, "/browser", "expected an object")
+        return
+    for key in sorted(set(browser) - {"sites", "hover"}):
+        reporter.error(file, f"/browser/{key}", "unknown field")
+
+    def action_ok(ref: Any, where: str) -> None:
+        if not isinstance(ref, str) or not RULE_REF.fullmatch(ref):
+            reporter.error(file, where, "expected an action reference such as arcade.box/box.open")
+        elif ref.split("/", 1)[0] not in app_ids:
+            reporter.error(file, where, f"unknown app id {ref.split('/', 1)[0]!r}")
+
+    def matches_ok(value: Any, where: str, *, required: bool) -> None:
+        if not isinstance(value, list) or (required and not value):
+            reporter.error(file, where, "expected a list of match patterns")
+            return
+        for index, pattern in enumerate(value):
+            if not isinstance(pattern, str) or not BROWSER_MATCH.fullmatch(pattern):
+                reporter.error(file, f"{where}/{index}", "expected a match pattern such as https://www.youtube.com/*")
+
+    def text_ok(obj: dict[str, Any], key: str, where: str, limit: int) -> None:
+        value = obj.get(key)
+        if not isinstance(value, str) or not value.strip() or len(value) > limit:
+            reporter.error(file, f"{where}/{key}", f"expected text of 1-{limit} characters")
+
+    sites = browser.get("sites", [])
+    if not isinstance(sites, list):
+        reporter.error(file, "/browser/sites", "expected an array")
+        sites = []
+    seen: dict[str, str] = {}
+    for index, site in enumerate(sites):
+        where = f"/browser/sites/{index}"
+        if not _required_object(site, file, where, ("id", "name", "matches", "buttons"), reporter):
+            continue
+        for key in sorted(set(site) - {"id", "name", "matches", "buttons"}):
+            reporter.error(file, f"{where}/{key}", "unknown field")
+        site_id = site.get("id")
+        if not isinstance(site_id, str) or not BROWSER_ID.fullmatch(site_id):
+            reporter.error(file, f"{where}/id", "site id must be lowercase kebab-case")
+        elif site_id in seen:
+            reporter.error(file, f"{where}/id", f"duplicate site id also used at {seen[site_id]}")
+        else:
+            seen[site_id] = f"{where}/id"
+        text_ok(site, "name", where, 40)
+        matches_ok(site.get("matches"), f"{where}/matches", required=True)
+        buttons = site.get("buttons")
+        if not isinstance(buttons, list) or not buttons:
+            reporter.error(file, f"{where}/buttons", "expected at least one button")
+            continue
+        for b_index, button in enumerate(buttons):
+            b_where = f"{where}/buttons/{b_index}"
+            if not _required_object(button, file, b_where, ("id", "label", "action", "anchors"), reporter):
+                continue
+            for key in sorted(set(button) - {"id", "label", "action", "input", "anchors", "position", "path"}):
+                reporter.error(file, f"{b_where}/{key}", "unknown field")
+            if not isinstance(button.get("id"), str) or not BROWSER_ID.fullmatch(button["id"]):
+                reporter.error(file, f"{b_where}/id", "button id must be lowercase kebab-case")
+            text_ok(button, "label", b_where, 24)
+            action_ok(button.get("action"), f"{b_where}/action")
+            if button.get("input", "page") != "page":
+                reporter.error(file, f"{b_where}/input", "expected page")
+            if button.get("position", "append") not in BROWSER_POSITIONS:
+                reporter.error(file, f"{b_where}/position", "expected append, prepend, before or after")
+            anchors = button.get("anchors")
+            if not isinstance(anchors, list) or not anchors:
+                reporter.error(file, f"{b_where}/anchors", "expected at least one CSS selector")
+            else:
+                for a_index, anchor in enumerate(anchors):
+                    # A selector, never markup or a style block.
+                    if not isinstance(anchor, str) or not anchor.strip() or len(anchor) > 200 or any(c in anchor for c in "<>{};"):
+                        reporter.error(file, f"{b_where}/anchors/{a_index}", "expected a CSS selector")
+            if "path" in button:
+                path = button["path"]
+                try:
+                    if not isinstance(path, str) or not path or len(path) > 200:
+                        raise re.error("expected a regular expression of 1-200 characters")
+                    re.compile(path)
+                except re.error as exc:
+                    reporter.error(file, f"{b_where}/path", f"not a regular expression: {exc}")
+
+    hover = browser.get("hover")
+    if hover is None:
+        return
+    if not isinstance(hover, dict):
+        reporter.error(file, "/browser/hover", "expected an object")
+        return
+    for key in sorted(set(hover) - {"minWidth", "minHeight", "video", "exclude"}):
+        reporter.error(file, f"/browser/hover/{key}", "unknown field")
+    for key in ("minWidth", "minHeight"):
+        value = hover.get(key, 100)
+        if isinstance(value, bool) or not isinstance(value, int) or not 16 <= value <= 2000:
+            reporter.error(file, f"/browser/hover/{key}", "expected whole pixels from 16 to 2000")
+    if "exclude" in hover:
+        matches_ok(hover["exclude"], "/browser/hover/exclude", required=False)
+    video = hover.get("video")
+    if video is not None:
+        if _required_object(video, file, "/browser/hover/video", ("label", "action"), reporter):
+            for key in sorted(set(video) - {"label", "action"}):
+                reporter.error(file, f"/browser/hover/video/{key}", "unknown field")
+            text_ok(video, "label", "/browser/hover/video", 24)
+            action_ok(video.get("action"), "/browser/hover/video/action")
+
+
 def _check_bad(obj: dict[str, Any], file: str, path: str, reporter: Reporter) -> None:
     """Withdrawn releases: Tools never offers them and asks anyone who has one installed to roll back."""
     if "bad" not in obj:
@@ -479,6 +592,7 @@ def _validate_catalog(data: Any, root: Path, reporter: Reporter) -> set[str]:
         if peer not in seen_ids:
             reporter.error(file, where, f"unknown app id {peer!r}")
     _check_rules(data, set(seen_ids), file, reporter)
+    _check_browser(data, set(seen_ids), file, reporter)
 
     bundles = data.get("bundles")
     if "bundles" in data:

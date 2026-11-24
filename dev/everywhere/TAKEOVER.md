@@ -4,9 +4,9 @@ Paste everything in the block below into Claude Code on your own computer, in an
 
 ```text
 You are taking over the "Arcade everywhere" plan for the Arcade apps (GitHub owner: qa-p1) on the owner's own
-computer. A cloud session did stages 1-4 and 6, most of 7, and stopped at stage 5 because it needs this computer
-(GitHub chores with the owner's login, the Mozilla signing key, and the Zen browser). You continue from here to the
-end. Work in plain, simple words with the owner. Never ask the owner to paste a secret into the chat.
+computer. A cloud session did stages 1-4 and 6, most of 7, and most of stage 5 (the browser extension, see "Stage 5
+so far"). What's left of stage 5 needs this computer (the Mozilla signing key, the Zen browser, real YouTube). You
+continue from here to the end. Work in plain, simple words with the owner. Never ask the owner to paste a secret into the chat.
 
 == Where things are ==
 Repos (github.com/qa-p1/...): Arcade-Link (the shared library: protocol, offers, helper, design kit, test runner),
@@ -50,22 +50,53 @@ What works today: every app's actions are on its Link 1.1 card (surfaces, ranks,
 "other apps" list comes from Link's shared offers (catalog rules + the user's pins/hides/defaults); Tools 1.1 ships
 the Arcade helper: file manager menus on Linux (Open With + Files, Caja, Dolphin, Nemo, Thunar), Windows (Explorer,
 "Show more options" on 11) and macOS (Finder Quick Actions + Services, Tools 1.1.1), and an Everywhere page (pins,
-output folder, a default per job). Not yet: the browser extension (stage 5).
+output folder, a default per job). The browser extension: see "Stage 5 so far" below.
+
+== Stage 5 so far (cloud session, 2026-11-24) ==
+qa-p1/Arcade-browser exists (the owner made it). Check where each of these PRs stands with `gh pr view`; merge what
+is green (squash), and fix what isn't:
+- Arcade-browser PR #1: the whole extension so far: helper connection, right-click menus from offers, runs and
+  jobs, the popup (search every action and run it on typed text, this tab's address, a picked file, or nothing;
+  pin), the settings page, buttons on pages (catalog-driven site buttons such as YouTube's Download, the hover
+  button on pictures and videos, in a closed shadow root, real clicks only), finished-download notifications, the
+  release workflow (Chromium zip; Firefox .xpi signed unlisted only when AMO_JWT_ISSUER/AMO_JWT_SECRET are set,
+  else an unsigned zip; rc tags never go to Mozilla), web-ext lint in CI. Tests: 53 unit tests; e2e in Chromium
+  (Playwright, 15 scenarios) and Firefox (its own WebDriver BiDi, no Selenium or geckodriver, 7 scenarios) against
+  the released helper (Tools 1.1.1) and Box 1.0.0, all passing locally. On the runners the e2e jobs first failed
+  because Box never wrote its card (fine locally); the fleet now starts Box as Arcade-Link's runs do and prints
+  Box's output if it doesn't start: read it if it still fails.
+- Arcade-catalog PR #22: the catalog's `browser` section (sites, CSS anchors, action; hover settings) with
+  validate.py rules and tests. Until it merges the extension uses its built-in copy.
+- Arcade-Link #90 (merged): the helper runs actions that take no input (calculators, password generator) and
+  doesn't show a desktop notification for browser jobs (the extension shows its own). Helper 1.1.1 answers those
+  runs "nothing to run on"; the extension says "update Arcade Tools" then. Link 1.1.2 (PR #91) releases it: check
+  `gh release view v1.1.2 --repo qa-p1/Arcade-Link` or the tag; if it isn't tagged, finish that release (post-merge
+  CI, Ecosystem e2e, Desktop harness, then tag). Tools 1.1.2 ships it to users (step 2.3).
+What stage 5 still needs (step 2 lists them in full):
+- Live results for selected amounts/dates (needs a fast preview method in the helper first).
+- "Send to my devices ▸ <device>" listing Clipboard's devices (today Clipboard's own "Send to my devices" offer is
+  in the menus, without the device list).
+- Box's downloader card has no `browser-video` surface, so the video button finds it through the page or link
+  offers; Transcript/Thumbnail/Audio-only offers on videos need Box card entries too.
+- The settings page's "Test connection" (the popup shows the connection today).
+- Real YouTube, real downloads and Zen on this computer; the AMO keys; the 1.0.0 release.
+- Tools' Everywhere page: the browser install steps and "Connected".
 STATUS.md files are current in every repo; each app README has a "Use it from anywhere" section that says the
 browser extension "comes in a later update" or "will offer ... when it ships": update those sentences when it ships.
 
 == Step 1: GitHub chores and the Zen check (LOCAL-PROMPTS.md prompts A and B) ==
 A: (1) delete the 12 merged `claude/sharp-cori-29w5eg-wip-*` branches listed in prompt A after checking each is
 fully in main; nothing else. (2) Add the "Update to Arcade Lens 1.0.0 or later" note at the top of Arcade-lens
-releases v0.4.1 and v0.4.2. (3) Create the empty repo qa-p1/Arcade-browser (same visibility as Arcade-Link,
-Dependabot alerts on). (4) The owner creates Mozilla AMO API credentials on the website, then types them into
+releases v0.4.1 and v0.4.2. (3) qa-p1/Arcade-browser exists already; check Dependabot alerts are on. (4) The owner creates Mozilla AMO API credentials on the website, then types them into
 `gh secret set AMO_JWT_ISSUER --repo qa-p1/Arcade-browser` and `gh secret set AMO_JWT_SECRET --repo qa-p1/Arcade-browser`.
 B: find by testing (a probe native-messaging host and a temporary add-on) exactly which folder or registry key the
 owner's Zen reads native messaging host manifests from; clean up everything. Report both before going on.
 
 == Step 2: stage 5, the browser extension 1.0.0 (PLAN.md 4.7, stage 5) ==
-1. Arcade-browser (PLAN.md 4.7 is the spec; this is the full list, build all of it):
-   Base: one TypeScript codebase, no framework, two builds: Chromium-family MV3 (Chrome, Edge, Brave, Vivaldi, Opera;
+1. Arcade-browser (PLAN.md 4.7 is the spec; this is the full list. Most is built, see "Stage 5 so far": check each
+   item against the code and its tests, and build what's missing):
+   Base: one TypeScript codebase, no framework, two builds: Chromium-family MV3 (Chrome, Edge, Brave, Vivaldi; the
+   helper writes no host file for Opera;
    service worker; a fixed `key` so the extension ID is the same wherever it is unpacked) and Firefox-family MV3
    (Firefox, Zen and other forks; background script). The design kit's tokens from Arcade-Link, light and dark.
    The extension knows NO app's actions: every item it shows is an offer the Arcade helper returns over native
@@ -116,15 +147,19 @@ owner's Zen reads native messaging host manifests from; clean up everything. Rep
      menus through the extension's own handlers (Playwright can't click browser menus); the YouTube button against a
      local YouTube-like page (CI gets "confirm you're not a bot" from real YouTube); downloads from a local server;
      the 150 ms live-result budget measured.
-   - Firefox: Selenium + geckodriver with the add-on installed as temporary, the same scenarios.
+   - Firefox: the add-on installed as temporary through Firefox's own WebDriver BiDi (what the repo does; Selenium
+     and geckodriver aren't needed), the same scenarios.
    - Native messaging end to end through the real host files the helper writes, for both families.
    Distribution: the release workflow attaches Arcade-browser-chromium-<v>.zip and Arcade-browser-firefox-<v>.xpi,
    signed (unlisted) with `web-ext sign` using the AMO_JWT_ISSUER / AMO_JWT_SECRET secrets from step 1; rc → test
    → stable like the apps. Tools' Everywhere page shows the install steps, opens the right page in the right
    browser, and shows "Connected" once the extension pings the helper.
-2. Arcade-catalog: `browser.sites` for YouTube and the downloader's other sites (squash PR, schema + validate.py).
-3. Arcade-Link: add Zen's folder from step 1 B to the helper's host-file writer (Link patch release v1.1.2 after its
-   CI and real-fleet e2e), then Tools picks it up (Tools 1.1.2 through the release flow).
+2. Arcade-catalog: `browser.sites` for YouTube and the downloader's other sites (PR #22; add sites once checked on
+   the real pages, e.g. the downloader's other supported sites).
+3. Arcade-Link: the helper writes host files to both Zen candidates (crates/arcade-helper/src/integrations/
+   browsers.rs). If step 1 B finds Zen reads a third place, add it (Link 1.1.3 after its CI and real-fleet e2e);
+   if it reads one of the two, remove the other in the same way. Then Tools ships the newest Link (Tools 1.1.2
+   through the release flow), and Arcade-browser's test/e2e/apps.json moves to that Tools release.
 4. Release the extension 1.0.0 after its CI, the e2e with the released helper and Box, and a check that the .xpi is
    signed.
 

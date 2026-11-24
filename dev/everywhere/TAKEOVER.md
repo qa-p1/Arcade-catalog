@@ -28,7 +28,9 @@ file's exact text when you run them. Clone what you need with `gh repo clone qa-
    (e.g. a macOS job with 0 steps, no runner name and the annotation "The job was not acquired by Runner of type
    hosted even after multiple attempts" with "Due to capacity constraints, jobs targeting macOS arm64 runners may
    experience longer queue times": GitHub had too few Apple Silicon Macs on 2026-11-23; read the job's annotations
-   with `gh api repos/qa-p1/<repo>/check-runs/<job id>/annotations`). If the re-run is starved too, wait and push the
+   with `gh api repos/qa-p1/<repo>/check-runs/<job id>/annotations`; or, on 2026-11-24, a desktop smoke job whose
+   `apt-get update` reached only packages.microsoft.com, so "Unable to locate package sway" and the job's own
+   "sway: command not found"). If the re-run is starved too, wait and push the
    next real change; never an empty commit. "Flake" is not a root cause: find the cause. Never skip,
    quarantine or loosen a test to get green.
 5. At most 3 app repos in flight at once. Don't spawn sub-agents.
@@ -42,36 +44,35 @@ file's exact text when you run them. Clone what you need with `gh repo clone qa-
    is private: never put it in commits, URLs or requests.
 8. Keep disk use sane: don't repeatedly fill and clean the disk; delete a build folder once when it's no longer needed.
 
-== State when the cloud session stopped (2026-11-23) ==
-Stable releases: Link v1.1.1 (tag), Tools 1.1.1, Box 1.0.0, Lens 1.1.0, Look 1.1.0, Wheel 1.1.0, Shelf 1.1.0,
+== State when the cloud session stopped (2026-11-24) ==
+Stable releases: Link v1.1.2 (tag), Tools 1.1.2, Box 1.0.1, Lens 1.1.0, Look 1.1.0, Wheel 1.1.0, Shelf 1.1.0,
 Find 1.1.0, Clipboard 1.1.0, all promoted from their rc and checked byte for byte (Find 1.1.0 without its macOS
-gate: see "Still open"). Confirm with `gh release view --repo qa-p1/<repo>` before you start.
+gate: see "Still open"). Confirm with `gh release view --repo qa-p1/<repo>` (Link: `git ls-remote --tags`) before
+you start.
 What works today: every app's actions are on its Link 1.1 card (surfaces, ranks, one-click, limits); every app's own
-"other apps" list comes from Link's shared offers (catalog rules + the user's pins/hides/defaults); Tools 1.1 ships
-the Arcade helper: file manager menus on Linux (Open With + Files, Caja, Dolphin, Nemo, Thunar), Windows (Explorer,
-"Show more options" on 11) and macOS (Finder Quick Actions + Services, Tools 1.1.1), and an Everywhere page (pins,
-output folder, a default per job). The browser extension: see "Stage 5 so far" below.
+"other apps" list comes from Link's shared offers (catalog rules + the user's pins/hides/defaults); Tools ships the
+Arcade helper: file manager menus on Linux (Open With + Files, Caja, Dolphin, Nemo, Thunar), Windows (Explorer,
+"Show more options" on 11) and macOS (Finder Quick Actions + Services), and an Everywhere page (pins, output folder,
+a default per job). Box 1.0.1 shows real progress for every long action (yt-dlp's own bytes/speed/time left, file
+bytes, image counts; a moving bar with a note when a step has no measure, never a fixed number) and downloads
+HLS/DASH streams 4 pieces at a time (measured 10.4 s → 3.5 s on a server that limits each connection; Box itself
+adds no slowdown over plain curl/yt-dlp). The helper (Link 1.1.2, in Tools 1.1.2) keeps "no number" as no number,
+runs no-input actions for the browser, and doesn't announce browser jobs twice. The browser extension: see below.
 
-== Stage 5 so far (cloud session, 2026-11-24) ==
-qa-p1/Arcade-browser exists (the owner made it). Check where each of these PRs stands with `gh pr view`; merge what
-is green (squash), and fix what isn't:
-- Arcade-browser PR #1: the whole extension so far: helper connection, right-click menus from offers, runs and
-  jobs, the popup (search every action and run it on typed text, this tab's address, a picked file, or nothing;
-  pin), the settings page, buttons on pages (catalog-driven site buttons such as YouTube's Download, the hover
-  button on pictures and videos, in a closed shadow root, real clicks only), finished-download notifications, the
-  release workflow (Chromium zip; Firefox .xpi signed unlisted only when AMO_JWT_ISSUER/AMO_JWT_SECRET are set,
-  else an unsigned zip; rc tags never go to Mozilla), web-ext lint in CI. Tests: 53 unit tests; e2e in Chromium
-  (Playwright, 15 scenarios) and Firefox (its own WebDriver BiDi, no Selenium or geckodriver, 7 scenarios) against
-  the released helper (Tools 1.1.1) and Box 1.0.0, all passing locally. On the runners the e2e jobs first failed
-  because Box never wrote its card (fine locally); the fleet now starts Box as Arcade-Link's runs do and prints
-  Box's output if it doesn't start: read it if it still fails.
-- Arcade-catalog PR #22: the catalog's `browser` section (sites, CSS anchors, action; hover settings) with
-  validate.py rules and tests. Until it merges the extension uses its built-in copy.
-- Arcade-Link #90 (merged): the helper runs actions that take no input (calculators, password generator) and
-  doesn't show a desktop notification for browser jobs (the extension shows its own). Helper 1.1.1 answers those
-  runs "nothing to run on"; the extension says "update Arcade Tools" then. Link 1.1.2 (PR #91) releases it: check
-  `gh release view v1.1.2 --repo qa-p1/Arcade-Link` or the tag; if it isn't tagged, finish that release (post-merge
-  CI, Ecosystem e2e, Desktop harness, then tag). Tools 1.1.2 ships it to users (step 2.3).
+== Stage 5 so far (cloud session, 2026-11-23/24) ==
+All merged on main; nothing of the cloud session is waiting in a PR:
+- qa-p1/Arcade-browser (#1, #2): helper connection, right-click menus from offers, runs and jobs, the popup (search
+  every action and run it on typed text, this tab's address, a picked file, or nothing; pin; live job progress with
+  a moving bar when there's no number yet), the settings page, buttons on pages (catalog-driven site buttons such
+  as YouTube's Download, the hover button on pictures and videos, in a closed shadow root, real clicks only),
+  finished-download notifications, the release workflow (Chromium zip; Firefox .xpi signed unlisted only when
+  AMO_JWT_ISSUER/AMO_JWT_SECRET are set, else an unsigned zip; rc tags never go to Mozilla), web-ext lint in CI.
+  Tests: unit tests; e2e in Chromium (Playwright) and Firefox 153.7.0esr from Mozilla's archive (its own WebDriver
+  BiDi, no Selenium or geckodriver) against the released helper and Box pinned in test/e2e/apps.json (Tools 1.1.2,
+  Box 1.0.1; raise them with each release that changes what the extension sees), all green on the runners. The extension's version is still 0.1.0: nothing is released yet.
+- Arcade-catalog #22: the catalog's `browser` section (sites, CSS anchors, action; hover settings) with validate.py
+  rules and tests. The extension reads it from raw.githubusercontent (12 h), with a built-in copy as fallback.
+- Arcade-Link v1.1.2 (#90, #92) and Tools 1.1.2 ship the helper side to users.
 What stage 5 still needs (step 2 lists them in full):
 - Live results for selected amounts/dates (needs a fast preview method in the helper first).
 - "Send to my devices ▸ <device>" listing Clipboard's devices (today Clipboard's own "Send to my devices" offer is
@@ -80,9 +81,20 @@ What stage 5 still needs (step 2 lists them in full):
   offers; Transcript/Thumbnail/Audio-only offers on videos need Box card entries too.
 - The settings page's "Test connection" (the popup shows the connection today).
 - Real YouTube, real downloads and Zen on this computer; the AMO keys; the 1.0.0 release.
-- Tools' Everywhere page: the browser install steps and "Connected".
+- Tools' Everywhere page: installing the extension in each browser it finds, doing ~90% of the work itself (step 2.1,
+  "Installing it"), and "Connected".
 STATUS.md files are current in every repo; each app README has a "Use it from anywhere" section that says the
 browser extension "comes in a later update" or "will offer ... when it ships": update those sentences when it ships.
+
+== Updating the apps on this computer (the owner's wish) ==
+Update ONLY Arcade Tools on this computer, and only through Tools' own updater (not a fresh download), so the owner
+sees the delta update happen. Don't install, reinstall or update any other Arcade app (Box, Lens, Look, Find, Shelf,
+Wheel, Clipboard) yourself: the owner updates those from Tools to watch their delta updates. If a step needs a newer
+app than the one installed, stop and tell the owner which app and version, and let them update it.
+The browser extension is not part of Tools: Tools ships the Arcade helper, which writes the native messaging host
+files for the browsers it finds, but the extension itself is installed in each browser (unpacked from a build or,
+after its 1.0.0, from the release files). Tools' Everywhere page doesn't show browser install steps or "Connected"
+yet (stage 5 below).
 
 == Step 1: GitHub chores and the Zen check (LOCAL-PROMPTS.md prompts A and B) ==
 A: (1) delete the 12 merged `claude/sharp-cori-29w5eg-wip-*` branches listed in prompt A after checking each is
@@ -152,14 +164,45 @@ owner's Zen reads native messaging host manifests from; clean up everything. Rep
    - Native messaging end to end through the real host files the helper writes, for both families.
    Distribution: the release workflow attaches Arcade-browser-chromium-<v>.zip and Arcade-browser-firefox-<v>.xpi,
    signed (unlisted) with `web-ext sign` using the AMO_JWT_ISSUER / AMO_JWT_SECRET secrets from step 1; rc → test
-   → stable like the apps. Tools' Everywhere page shows the install steps, opens the right page in the right
-   browser, and shows "Connected" once the extension pings the helper.
+   → stable like the apps.
+   Installing it (the owner's requirement: Tools does ~90% of the work, for Chromium- AND Firefox-family browsers,
+   and the docs make the rest obvious). Browsers never let an app install an extension silently, so the aim is
+   one click or one confirmation per browser. What browsers allow (checked 2026-11-24 against Chrome's
+   developer.chrome.com "Use alternative installation methods" and Mozilla's add-ons blog; verify each on this
+   computer before relying on it):
+   - Chromium family. Windows and macOS accept an app-registered extension only from the Chrome Web Store: a
+     registry entry (Windows, `update_url`; the docs name HKLM\Software\[Wow6432Node\]Google\Chrome\Extensions\<id>)
+     or a per-user `External Extensions/<id>.json` with `external_update_url` (macOS); the browser then asks the
+     user to enable it at its next start (one click). Linux reads only root-owned folders (/opt/google/chrome/
+     extensions, /usr/share/google-chrome/extensions), which an AppImage can't write. So: ASK THE OWNER whether to
+     publish on the Chrome Web Store (a one-time $5 developer account; "unlisted" is fine). With it: Tools writes
+     the registry/JSON entry where it can (the Windows installer runs elevated) and otherwise opens the store page
+     in that browser ("Add to Chrome", one click), and the store keeps it updated. Without it: Tools unpacks the
+     release zip to a fixed folder, opens that browser's extensions page, copies the folder path, and shows the
+     three steps (Developer mode → Load unpacked → paste) with pictures; this is the fallback either way. Check
+     Edge (its own store, or "Allow extensions from other stores"), Brave, Vivaldi, Opera on this computer.
+   - Firefox family (Firefox, Zen, LibreWolf…). Sideloading from extension folders ended in Firefox 74 (ESR and
+     enterprise policies still allow it), so: the signed unlisted .xpi from the release, opened by Tools in that
+     browser from a local file (`firefox /path/arcade.xpi`; a local file avoids the "prevented this site from
+     installing an unverified add-on" block) → Firefox's "Add Arcade?" → one click. Self-distributed add-ons only
+     update through `browser_specific_settings.gecko.update_url` → an updates.json you host (e.g. on the release
+     or GitHub Pages): add it, or the owner gets stuck on the first version. A listed AMO page is the other option;
+     ask the owner.
+   - Tools' Everywhere page: one row per browser the helper found, with "Add to <browser>" doing the above and a
+     live status: "Not added" → "Waiting for you in <browser>" → "Connected ✓" once the extension pings the helper
+     (needs a ping the helper records; the popup shows connection today). "Test connection" on the extension's
+     settings page uses the same ping.
+   - Docs: Tools' docs/user/everywhere.md and Arcade-browser's user page: per browser family, what Tools does and
+     the one click left for the user, with screenshots taken on this computer; plus the manual fallback.
+   - Tests: e2e that the Everywhere page's buttons write the right entry/open the right file (no real store in
+     CI), and that "Connected" appears after the extension's ping.
 2. Arcade-catalog: `browser.sites` for YouTube and the downloader's other sites (PR #22; add sites once checked on
    the real pages, e.g. the downloader's other supported sites).
 3. Arcade-Link: the helper writes host files to both Zen candidates (crates/arcade-helper/src/integrations/
    browsers.rs). If step 1 B finds Zen reads a third place, add it (Link 1.1.3 after its CI and real-fleet e2e);
-   if it reads one of the two, remove the other in the same way. Then Tools ships the newest Link (Tools 1.1.2
-   through the release flow), and Arcade-browser's test/e2e/apps.json moves to that Tools release.
+   if it reads one of the two, remove the other in the same way. Then Tools ships the newest Link (Tools 1.1.3
+   through the release flow), and Arcade-browser's test/e2e/apps.json moves to that Tools release. If Zen reads
+   one of the two and nothing changes, Tools 1.1.2 (Link 1.1.2) already has everything.
 4. Release the extension 1.0.0 after its CI, the e2e with the released helper and Box, and a check that the .xpi is
    signed.
 

@@ -221,5 +221,71 @@
       "description": "Install every app in the Arcade catalog.",
       "apps": "*"
     }
-  ]
+  ],
+  "browser": {
+    "sites": [
+      {
+        "id": "youtube",
+        "name": "YouTube",
+        "matches": [
+          "https://www.youtube.com/*",
+          "https://m.youtube.com/*",
+          "https://music.youtube.com/*"
+        ],
+        "buttons": [
+          {
+            "id": "download",
+            "label": "Download",
+            "action": "arcade.box/box:arcade.web.downloader",
+            "input": "page",
+            "anchors": [
+              "ytd-watch-metadata #top-level-buttons-computed",
+              "ytd-watch-metadata #actions-inner #menu",
+              "ytd-watch-metadata #actions",
+              "ytm-slim-video-action-bar-renderer .slim-video-action-bar-actions",
+              "ytmusic-player-bar .middle-controls-buttons"
+            ],
+            "position": "append",
+            "path": "^/(watch|shorts/)"
+          }
+        ]
+      },
+      {
+        "id": "vimeo",
+        "name": "Vimeo",
+        "matches": [
+          "https://vimeo.com/*"
+        ],
+        "buttons": [
+          {
+            "id": "download",
+            "label": "Download",
+            "action": "arcade.box/box:arcade.web.downloader",
+            "input": "page",
+            "anchors": [
+              "[data-testid=\"vod-actions\"]",
+              ".vp-video-actions",
+              "main h1"
+            ],
+            "position": "append",
+            "path": "^/[0-9]+"
+          }
+        ]
+      }
+    ],
+    "hover": {
+      "minWidth": 120,
+      "minHeight": 80,
+      "video": {
+        "label": "Download",
+        "action": "arcade.box/box:arcade.web.downloader"
+      },
+      "exclude": [
+        "https://docs.google.com/*",
+        "https://mail.google.com/*",
+        "https://www.figma.com/*",
+        "https://www.canva.com/*"
+      ]
+    }
+  }
 }

@@ -68,8 +68,8 @@ All merged on main; nothing of the cloud session is waiting in a PR:
   finished-download notifications, the release workflow (Chromium zip; Firefox .xpi signed unlisted only when
   AMO_JWT_ISSUER/AMO_JWT_SECRET are set, else an unsigned zip; rc tags never go to Mozilla), web-ext lint in CI.
   Tests: unit tests; e2e in Chromium (Playwright) and Firefox 153.7.0esr from Mozilla's archive (its own WebDriver
-  BiDi, no Selenium or geckodriver) against the released helper and Box pinned in test/e2e/apps.json, all green on
-  the runners. The extension's version is still 0.1.0: nothing is released yet.
+  BiDi, no Selenium or geckodriver) against the released helper and Box pinned in test/e2e/apps.json (Tools 1.1.2,
+  Box 1.0.1; raise them with each release that changes what the extension sees), all green on the runners. The extension's version is still 0.1.0: nothing is released yet.
 - Arcade-catalog #22: the catalog's `browser` section (sites, CSS anchors, action; hover settings) with validate.py
   rules and tests. The extension reads it from raw.githubusercontent (12 h), with a built-in copy as fallback.
 - Arcade-Link v1.1.2 (#90, #92) and Tools 1.1.2 ship the helper side to users.

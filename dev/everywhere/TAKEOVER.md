@@ -28,7 +28,9 @@ file's exact text when you run them. Clone what you need with `gh repo clone qa-
    (e.g. a macOS job with 0 steps, no runner name and the annotation "The job was not acquired by Runner of type
    hosted even after multiple attempts" with "Due to capacity constraints, jobs targeting macOS arm64 runners may
    experience longer queue times": GitHub had too few Apple Silicon Macs on 2026-11-23; read the job's annotations
-   with `gh api repos/qa-p1/<repo>/check-runs/<job id>/annotations`). If the re-run is starved too, wait and push the
+   with `gh api repos/qa-p1/<repo>/check-runs/<job id>/annotations`; or, on 2026-11-24, a desktop smoke job whose
+   `apt-get update` reached only packages.microsoft.com, so "Unable to locate package sway" and the job's own
+   "sway: command not found"). If the re-run is starved too, wait and push the
    next real change; never an empty commit. "Flake" is not a root cause: find the cause. Never skip,
    quarantine or loosen a test to get green.
 5. At most 3 app repos in flight at once. Don't spawn sub-agents.
@@ -42,36 +44,35 @@ file's exact text when you run them. Clone what you need with `gh repo clone qa-
    is private: never put it in commits, URLs or requests.
 8. Keep disk use sane: don't repeatedly fill and clean the disk; delete a build folder once when it's no longer needed.
 
-== State when the cloud session stopped (2026-11-23) ==
-Stable releases: Link v1.1.1 (tag), Tools 1.1.1, Box 1.0.0, Lens 1.1.0, Look 1.1.0, Wheel 1.1.0, Shelf 1.1.0,
+== State when the cloud session stopped (2026-11-24) ==
+Stable releases: Link v1.1.2 (tag), Tools 1.1.2, Box 1.0.1, Lens 1.1.0, Look 1.1.0, Wheel 1.1.0, Shelf 1.1.0,
 Find 1.1.0, Clipboard 1.1.0, all promoted from their rc and checked byte for byte (Find 1.1.0 without its macOS
-gate: see "Still open"). Confirm with `gh release view --repo qa-p1/<repo>` before you start.
+gate: see "Still open"). Confirm with `gh release view --repo qa-p1/<repo>` (Link: `git ls-remote --tags`) before
+you start.
 What works today: every app's actions are on its Link 1.1 card (surfaces, ranks, one-click, limits); every app's own
-"other apps" list comes from Link's shared offers (catalog rules + the user's pins/hides/defaults); Tools 1.1 ships
-the Arcade helper: file manager menus on Linux (Open With + Files, Caja, Dolphin, Nemo, Thunar), Windows (Explorer,
-"Show more options" on 11) and macOS (Finder Quick Actions + Services, Tools 1.1.1), and an Everywhere page (pins,
-output folder, a default per job). The browser extension: see "Stage 5 so far" below.
+"other apps" list comes from Link's shared offers (catalog rules + the user's pins/hides/defaults); Tools ships the
+Arcade helper: file manager menus on Linux (Open With + Files, Caja, Dolphin, Nemo, Thunar), Windows (Explorer,
+"Show more options" on 11) and macOS (Finder Quick Actions + Services), and an Everywhere page (pins, output folder,
+a default per job). Box 1.0.1 shows real progress for every long action (yt-dlp's own bytes/speed/time left, file
+bytes, image counts; a moving bar with a note when a step has no measure, never a fixed number) and downloads
+HLS/DASH streams 4 pieces at a time (measured 10.4 s → 3.5 s on a server that limits each connection; Box itself
+adds no slowdown over plain curl/yt-dlp). The helper (Link 1.1.2, in Tools 1.1.2) keeps "no number" as no number,
+runs no-input actions for the browser, and doesn't announce browser jobs twice. The browser extension: see below.
 
-== Stage 5 so far (cloud session, 2026-11-24) ==
-qa-p1/Arcade-browser exists (the owner made it). Check where each of these PRs stands with `gh pr view`; merge what
-is green (squash), and fix what isn't:
-- Arcade-browser PR #1: the whole extension so far: helper connection, right-click menus from offers, runs and
-  jobs, the popup (search every action and run it on typed text, this tab's address, a picked file, or nothing;
-  pin), the settings page, buttons on pages (catalog-driven site buttons such as YouTube's Download, the hover
-  button on pictures and videos, in a closed shadow root, real clicks only), finished-download notifications, the
-  release workflow (Chromium zip; Firefox .xpi signed unlisted only when AMO_JWT_ISSUER/AMO_JWT_SECRET are set,
-  else an unsigned zip; rc tags never go to Mozilla), web-ext lint in CI. Tests: 53 unit tests; e2e in Chromium
-  (Playwright, 15 scenarios) and Firefox (its own WebDriver BiDi, no Selenium or geckodriver, 7 scenarios) against
-  the released helper (Tools 1.1.1) and Box 1.0.0, all passing locally. On the runners the e2e jobs first failed
-  because Box never wrote its card (fine locally); the fleet now starts Box as Arcade-Link's runs do and prints
-  Box's output if it doesn't start: read it if it still fails.
-- Arcade-catalog PR #22: the catalog's `browser` section (sites, CSS anchors, action; hover settings) with
-  validate.py rules and tests. Until it merges the extension uses its built-in copy.
-- Arcade-Link #90 (merged): the helper runs actions that take no input (calculators, password generator) and
-  doesn't show a desktop notification for browser jobs (the extension shows its own). Helper 1.1.1 answers those
-  runs "nothing to run on"; the extension says "update Arcade Tools" then. Link 1.1.2 (PR #91) releases it: check
-  `gh release view v1.1.2 --repo qa-p1/Arcade-Link` or the tag; if it isn't tagged, finish that release (post-merge
-  CI, Ecosystem e2e, Desktop harness, then tag). Tools 1.1.2 ships it to users (step 2.3).
+== Stage 5 so far (cloud session, 2026-11-23/24) ==
+All merged on main; nothing of the cloud session is waiting in a PR:
+- qa-p1/Arcade-browser (#1, #2): helper connection, right-click menus from offers, runs and jobs, the popup (search
+  every action and run it on typed text, this tab's address, a picked file, or nothing; pin; live job progress with
+  a moving bar when there's no number yet), the settings page, buttons on pages (catalog-driven site buttons such
+  as YouTube's Download, the hover button on pictures and videos, in a closed shadow root, real clicks only),
+  finished-download notifications, the release workflow (Chromium zip; Firefox .xpi signed unlisted only when
+  AMO_JWT_ISSUER/AMO_JWT_SECRET are set, else an unsigned zip; rc tags never go to Mozilla), web-ext lint in CI.
+  Tests: unit tests; e2e in Chromium (Playwright) and Firefox 153.7.0esr from Mozilla's archive (its own WebDriver
+  BiDi, no Selenium or geckodriver) against the released helper and Box pinned in test/e2e/apps.json, all green on
+  the runners. The extension's version is still 0.1.0: nothing is released yet.
+- Arcade-catalog #22: the catalog's `browser` section (sites, CSS anchors, action; hover settings) with validate.py
+  rules and tests. The extension reads it from raw.githubusercontent (12 h), with a built-in copy as fallback.
+- Arcade-Link v1.1.2 (#90, #92) and Tools 1.1.2 ship the helper side to users.
 What stage 5 still needs (step 2 lists them in full):
 - Live results for selected amounts/dates (needs a fast preview method in the helper first).
 - "Send to my devices ▸ <device>" listing Clipboard's devices (today Clipboard's own "Send to my devices" offer is
@@ -158,8 +159,9 @@ owner's Zen reads native messaging host manifests from; clean up everything. Rep
    the real pages, e.g. the downloader's other supported sites).
 3. Arcade-Link: the helper writes host files to both Zen candidates (crates/arcade-helper/src/integrations/
    browsers.rs). If step 1 B finds Zen reads a third place, add it (Link 1.1.3 after its CI and real-fleet e2e);
-   if it reads one of the two, remove the other in the same way. Then Tools ships the newest Link (Tools 1.1.2
-   through the release flow), and Arcade-browser's test/e2e/apps.json moves to that Tools release.
+   if it reads one of the two, remove the other in the same way. Then Tools ships the newest Link (Tools 1.1.3
+   through the release flow), and Arcade-browser's test/e2e/apps.json moves to that Tools release. If Zen reads
+   one of the two and nothing changes, Tools 1.1.2 (Link 1.1.2) already has everything.
 4. Release the extension 1.0.0 after its CI, the e2e with the released helper and Box, and a check that the .xpi is
    signed.
 

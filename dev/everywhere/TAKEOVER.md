@@ -81,7 +81,8 @@ What stage 5 still needs (step 2 lists them in full):
   offers; Transcript/Thumbnail/Audio-only offers on videos need Box card entries too.
 - The settings page's "Test connection" (the popup shows the connection today).
 - Real YouTube, real downloads and Zen on this computer; the AMO keys; the 1.0.0 release.
-- Tools' Everywhere page: the browser install steps and "Connected".
+- Tools' Everywhere page: installing the extension in each browser it finds, doing ~90% of the work itself (step 2.1,
+  "Installing it"), and "Connected".
 STATUS.md files are current in every repo; each app README has a "Use it from anywhere" section that says the
 browser extension "comes in a later update" or "will offer ... when it ships": update those sentences when it ships.
 
@@ -163,8 +164,38 @@ owner's Zen reads native messaging host manifests from; clean up everything. Rep
    - Native messaging end to end through the real host files the helper writes, for both families.
    Distribution: the release workflow attaches Arcade-browser-chromium-<v>.zip and Arcade-browser-firefox-<v>.xpi,
    signed (unlisted) with `web-ext sign` using the AMO_JWT_ISSUER / AMO_JWT_SECRET secrets from step 1; rc → test
-   → stable like the apps. Tools' Everywhere page shows the install steps, opens the right page in the right
-   browser, and shows "Connected" once the extension pings the helper.
+   → stable like the apps.
+   Installing it (the owner's requirement: Tools does ~90% of the work, for Chromium- AND Firefox-family browsers,
+   and the docs make the rest obvious). Browsers never let an app install an extension silently, so the aim is
+   one click or one confirmation per browser. What browsers allow (checked 2026-11-24 against Chrome's
+   developer.chrome.com "Use alternative installation methods" and Mozilla's add-ons blog; verify each on this
+   computer before relying on it):
+   - Chromium family. Windows and macOS accept an app-registered extension only from the Chrome Web Store: a
+     registry entry (Windows, `update_url`; the docs name HKLM\Software\[Wow6432Node\]Google\Chrome\Extensions\<id>)
+     or a per-user `External Extensions/<id>.json` with `external_update_url` (macOS); the browser then asks the
+     user to enable it at its next start (one click). Linux reads only root-owned folders (/opt/google/chrome/
+     extensions, /usr/share/google-chrome/extensions), which an AppImage can't write. So: ASK THE OWNER whether to
+     publish on the Chrome Web Store (a one-time $5 developer account; "unlisted" is fine). With it: Tools writes
+     the registry/JSON entry where it can (the Windows installer runs elevated) and otherwise opens the store page
+     in that browser ("Add to Chrome", one click), and the store keeps it updated. Without it: Tools unpacks the
+     release zip to a fixed folder, opens that browser's extensions page, copies the folder path, and shows the
+     three steps (Developer mode → Load unpacked → paste) with pictures; this is the fallback either way. Check
+     Edge (its own store, or "Allow extensions from other stores"), Brave, Vivaldi, Opera on this computer.
+   - Firefox family (Firefox, Zen, LibreWolf…). Sideloading from extension folders ended in Firefox 74 (ESR and
+     enterprise policies still allow it), so: the signed unlisted .xpi from the release, opened by Tools in that
+     browser from a local file (`firefox /path/arcade.xpi`; a local file avoids the "prevented this site from
+     installing an unverified add-on" block) → Firefox's "Add Arcade?" → one click. Self-distributed add-ons only
+     update through `browser_specific_settings.gecko.update_url` → an updates.json you host (e.g. on the release
+     or GitHub Pages): add it, or the owner gets stuck on the first version. A listed AMO page is the other option;
+     ask the owner.
+   - Tools' Everywhere page: one row per browser the helper found, with "Add to <browser>" doing the above and a
+     live status: "Not added" → "Waiting for you in <browser>" → "Connected ✓" once the extension pings the helper
+     (needs a ping the helper records; the popup shows connection today). "Test connection" on the extension's
+     settings page uses the same ping.
+   - Docs: Tools' docs/user/everywhere.md and Arcade-browser's user page: per browser family, what Tools does and
+     the one click left for the user, with screenshots taken on this computer; plus the manual fallback.
+   - Tests: e2e that the Everywhere page's buttons write the right entry/open the right file (no real store in
+     CI), and that "Connected" appears after the extension's ping.
 2. Arcade-catalog: `browser.sites` for YouTube and the downloader's other sites (PR #22; add sites once checked on
    the real pages, e.g. the downloader's other supported sites).
 3. Arcade-Link: the helper writes host files to both Zen candidates (crates/arcade-helper/src/integrations/
